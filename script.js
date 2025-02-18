@@ -21,12 +21,13 @@ document.addEventListener("DOMContentLoaded", function () {
         beams.forEach(beam => {
             let beamName = beam.getAttribute("data-name").toLowerCase();
             let isMatch = beamName.includes(input) && input !== "";
-            beam.classList.toggle("highlight", isMatch);
             
             if (isMatch) {
                 console.log("✅ Highlighting Beam:", beamName);
+                beam.classList.add("highlight"); 
                 beam.style.border = "2px solid blue"; // Visual blue highlight
             } else {
+                beam.classList.remove("highlight");
                 beam.style.border = ""; // Reset if not matching
             }
         });
@@ -35,7 +36,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // ❌ Clear Search
     window.clearSearch = function () {
         beamSearch.value = "";
-        beams.forEach(beam => beam.classList.remove("highlight"));
+        beams.forEach(beam => {
+            beam.classList.remove("highlight");
+            beam.style.border = ""; 
+        });
     };
 
     // 📌 Close Details Panel
