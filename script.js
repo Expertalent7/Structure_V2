@@ -76,9 +76,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             let beamName = this.dataset.name.trim().toLowerCase();
-            let beamDataEntry = window.beamData.beams.find(b =>
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
+            let beamDataEntry = window.beamData.beams.find(b => {
+            return b.Beam_Name.toLowerCase().trim() === beamName;
+            });
+
 
             if (beamDataEntry) {
                 let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
