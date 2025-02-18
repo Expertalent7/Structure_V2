@@ -10,13 +10,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const beams = document.querySelectorAll(".beam");
 
     // ✅ Search Beams Efficiently
-    beamSearch.addEventListener("input", function () {
+        beamSearch.addEventListener("input", function () {
         let input = this.value.toLowerCase().trim();
         beams.forEach(beam => {
-            let beamName = beam.getAttribute("data-name").toLowerCase();
-            beam.classList.toggle("highlight", beamName.includes(input) && input !== "");
+        let beamName = beam.dataset.name.toLowerCase().trim(); // ✅ Ensure dataset name is correctly fetched
+        if (beamName.includes(input) && input !== "") {
+            beam.classList.add("highlight"); // ✅ Add highlight class
+        } else {
+            beam.classList.remove("highlight"); // ❌ Remove if not matching
+        }
         });
-    });
+        });
+
 
     // ❌ Clear Search
     window.clearSearch = function () {
