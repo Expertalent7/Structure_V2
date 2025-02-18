@@ -16,9 +16,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // ✅ Search Beams Efficiently & Highlight in BLUE
     beamSearch.addEventListener("input", function () {
         let input = this.value.toLowerCase().trim();
+        console.log("🔍 Searching for:", input);
+
         beams.forEach(beam => {
             let beamName = beam.getAttribute("data-name").toLowerCase();
-            beam.classList.toggle("highlight", beamName.includes(input) && input !== "");
+            let isMatch = beamName.includes(input) && input !== "";
+            beam.classList.toggle("highlight", isMatch);
+            
+            if (isMatch) {
+                console.log("✅ Highlighting Beam:", beamName);
+                beam.style.border = "2px solid blue"; // Visual blue highlight
+            } else {
+                beam.style.border = ""; // Reset if not matching
+            }
         });
     });
 
@@ -39,52 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (qrCodeUrl) {
             window.open(qrCodeUrl, "_blank");
         }
-    });
-
-    // 🎯 Show Beam Details on Click (Fix Positioning)
-    beams.forEach(beamElement => {
-        beamElement.addEventListener("click", function (event) {
-            if (!window.beamData || !window.beamData.beams) {
-                console.warn("⚠ No beam data available");
-                return;
-            }
-
-            let beamName = this.dataset.name.trim().toLowerCase();
-            let beamDataEntry = window.beamData.beams.find(b =>
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
-
-            if (beamDataEntry) {
-                let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
-                let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
-                let beamProgress = (beamDataEntry.Progress * 100).toFixed(2) + "%";
-                let beamQRCode = beamDataEntry.QR_Code || "https://via.placeholder.com/150";
-
-                document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
-                document.getElementById("beamStatus").innerText = beamStatus;
-                document.getElementById("beamWeight").innerText = beamWeight;
-                document.getElementById("beamProgress").innerText = beamProgress;
-                document.getElementById("beamQRCode").src = beamQRCode;
-
-                // ✅ Fix Positioning: Ensure Beam Details Panel is Near the Clicked Beam
-                let beamRect = event.target.getBoundingClientRect();
-                let panelWidth = beamDetailsPanel.offsetWidth;
-                let panelHeight = beamDetailsPanel.offsetHeight;
-
-                let posX = beamRect.left + window.scrollX + beamRect.width / 2 - panelWidth / 2;
-                let posY = beamRect.top + window.scrollY - panelHeight - 10; 
-
-                // ✅ Prevent Panel from Going Off-Screen
-                posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10)); 
-                posY = Math.max(10, posY); 
-
-                beamDetailsPanel.style.left = `${posX}px`;
-                beamDetailsPanel.style.top = `${posY}px`;
-                beamDetailsPanel.style.display = "block";
-            } else {
-                console.warn(`⚠ No matching data found for ${beamName}`);
-            }
-        });
     });
 
     // 🎯 Tooltip for Beam Info on Hover
