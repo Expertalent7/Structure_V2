@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("🔄 Fetching beam status...");
 
         try {
-            const response = await fetch("https://script.google.com/macros/s/AKfycbyL6GUsQ9LoiwHDo0CnT2MvnZWdd2UDI8aL1aAexz7QWxA1frEOD03kGggSYPvfY8grFg/exec", {
+            const response = await fetch("https://script.google.com/macros/s/AKfycbxG99FoAmnxAQqo7aUR6tWm4ZnVK_kQkl-Km7mVZYmU99xbXk4QM8IYpzPX9luOY5lUjw/exec", {
                 method: "GET",
                 mode: "cors",
                 headers: {
