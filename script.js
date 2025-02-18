@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
         beamSearch.value = "";
         beams.forEach(beam => beam.classList.remove("highlight"));
     };
-});
+
 
     // 📌 Close Details Panel
     window.closePanel = function () {
