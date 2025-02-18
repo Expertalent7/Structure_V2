@@ -116,25 +116,24 @@ beams.forEach(beamElement => {
     });
 
  // 🔄 Fetch Beam Status
-    async function fetchBeamStatus() {
-        console.log("🔄 Fetching beam status...");
+async function fetchBeamStatus() {
+    console.log("🔄 Fetching beam status...");
 
-        try {
-            const response = await fetch("https://script.google.com/macros/s/AKfycbxSpS5r6DTVFG3dRlUhbfNMmTRRcd2cPZNIG39wTvtagzM4OFg-zLSWs8cV2yKHe6ROMA/exec");
-            if (!response.ok) throw new Error(❌ HTTP error! Status: ${response.status});
+    try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxSpS5r6DTVFG3dRlUhbfNMmTRRcd2cPZNIG39wTvtagzM4OFg-zLSWs8cV2yKHe6ROMA/exec");
+        if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
 
-            const data = await response.json();
-            console.log("✅ JSON Data Received:", data);
-            window.beamData = data;
+        const data = await response.json();
+        console.log("✅ JSON Data Received:", data);
+        window.beamData = data;
 
-            updateBeamUI();
-            updateTotalProgress();
-        } catch (error) {
-            console.error("❌ Error fetching beam data:", error);
-        }
+        updateBeamUI();
+        updateTotalProgress();
+    } catch (error) {
+        console.error("❌ Error fetching beam data:", error);
     }
-
-    function updateBeamUI() {
+}
+function updateBeamUI() {
     if (!window.beamData || !window.beamData.beams) {
         console.error("❌ beamData is missing or incorrect!");
         return;
@@ -149,7 +148,7 @@ beams.forEach(beamElement => {
         if (beamDataEntry) {
             console.log(`🔄 Updating Beam: ${beamDataEntry.Beam_Name}, Progress: ${beamDataEntry.Progress}%`);
 
-            // ✅ Remove all previous status classes
+            // ✅ Remove previous status classes
             beamElement.classList.remove("installed", "not-installed", "in-progress");
 
             // ✅ Apply correct status
@@ -164,6 +163,8 @@ beams.forEach(beamElement => {
             console.warn(`⚠ No data found for beam: ${beamName}`);
         }
     });
+}
+
 }
 
 
