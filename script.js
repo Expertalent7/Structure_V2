@@ -120,7 +120,7 @@ beams.forEach(beamElement => {
         console.log("🔄 Fetching beam status...");
 
         try {
-            const response = await fetch("https://script.google.com/macros/s/AKfycbzeAzJ-kmw5yBYFT4DXcugPfn_VJdaeH3So6rexofFWnr4385jzvqzH3CTEq4aRjb5_uQ/exec");
+            const response = await fetch("https://script.google.com/macros/s/AKfycbxSpS5r6DTVFG3dRlUhbfNMmTRRcd2cPZNIG39wTvtagzM4OFg-zLSWs8cV2yKHe6ROMA/exec");
             if (!response.ok) throw new Error(❌ HTTP error! Status: ${response.status});
 
             const data = await response.json();
