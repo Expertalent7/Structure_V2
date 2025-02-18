@@ -4,7 +4,10 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f8f8f8;
     color: #333;
+    margin: 0;
+    padding: 0;
 }
+
 /* 📏 Structure */
 .wrapper {
     display: flex;
@@ -21,12 +24,12 @@ body {
     margin: auto;
     max-width: 600px;
 }
+
 /* 🎯 Beam Styling */
-/* ✅ Beam container styling */
 .container {
     position: relative;
-    width: 494px; /* Match the image width */
-    height: 682px; /* Match the image height */
+    width: 494px; /* Match image width */
+    height: 682px; /* Match image height */
 }
 
 /* ✅ Beams should be absolutely positioned inside the container */
@@ -36,16 +39,28 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-/* ✅ Installed beams */
+/* ✅ Installed Beam - Green */
 .beam.installed {
     background-color: rgba(0, 255, 0, 0.7);
     border: 2px solid green;
 }
 
-/* ✅ Not installed beams */
+/* 🚧 In Progress - Yellow */
+.beam.in-progress {
+    background-color: rgba(255, 204, 0, 0.7);
+    border: 2px solid orange;
+}
+
+/* ❌ Not Installed - Red */
 .beam.not-installed {
     background-color: rgba(255, 0, 0, 0.7);
     border: 2px solid red;
+}
+
+/* 🔍 Blue border for search highlights */
+.beam.highlight {
+    border: 4px solid blue !important;
+    background-color: rgba(0, 0, 255, 0.3) !important;
 }
 
 /* ✨ Hover Effect */
@@ -53,18 +68,13 @@ body {
     transform: scale(1.2);
 }
 
-/* 🔍 Blue border for search highlights */
-/* ✅ Ensure searched beams are clearly highlighted in blue */
-.beam.highlight {
-    border: 4px solid blue !important;
-    background-color: rgba(0, 0, 255, 0.3) !important;
-}
-
-
+/* ✅ Selected Beam */
 .beam.selected {
     transform: scale(1.05);
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
+
+/* 🎭 Beam Tooltip */
 .beam-tooltip {
     position: absolute;
     background: black;
@@ -74,25 +84,8 @@ body {
     font-size: 12px;
     display: none;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    pointer-events: none; /* ✅ Prevents the tooltip from interfering with mouse events */
-    z-index: 1000; /* ✅ Ensures the tooltip appears above everything */
-}
-/* ✅ Installed Beam - Green */
-.beam.installed {
-    background-color: rgba(0, 255, 0, 0.7) !important;
-    border: 2px solid green !important;
-}
-
-/* 🚧 In Progress - Yellow */
-.beam.in-progress {
-    background-color: rgba(255, 204, 0, 0.7) !important;
-    border: 2px solid orange !important;
-}
-
-/* ❌ Not Installed - Red */
-.beam.not-installed {
-    background-color: rgba(255, 0, 0, 0.7) !important;
-    border: 2px solid red !important;
+    pointer-events: none; /* ✅ Prevents tooltip from interfering with mouse events */
+    z-index: 1000;
 }
 
 /* 📌 Beam Details Panel */
@@ -108,15 +101,12 @@ body {
     width: 200px;
     text-align: left;
 }
-
-/* ✅ Ensure the panel remains visible */
 .details-panel img {
     max-width: 100%;
     height: auto;
     display: block;
     margin: 10px auto;
 }
-
 
 /* ✅ Progress Bar */
 #progressContainer {
@@ -135,6 +125,7 @@ body {
     font-weight: bold;
     transition: width 0.5s ease-in-out;
 }
+
 /* 🎭 Beam Legend */
 .legend-item {
     display: flex;
@@ -148,6 +139,8 @@ body {
     display: inline-block;
     border-radius: 5px;
 }
+
+/* 🏗️ Legend Colors */
 .installed {
     background-color: rgba(0, 255, 0, 0.7);
 }
