@@ -115,55 +115,43 @@ beams.forEach(beamElement => {
         });
     });
 
-    // 🔄 Fetch Beam Status with Auto-Retry
-async function fetchBeamStatus() {
-    console.log("🔄 Fetching beam status...");
+ // 🔄 Fetch Beam Status
+    async function fetchBeamStatus() {
+        console.log("🔄 Fetching beam status...");
 
-    try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzeAzJ-kmw5yBYFT4DXcugPfn_VJdaeH3So6rexofFWnr4385jzvqzH3CTEq4aRjb5_uQ/exec");
-        if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
+        try {
+            const response = await fetch("https://script.google.com/macros/s/AKfycbzeAzJ-kmw5yBYFT4DXcugPfn_VJdaeH3So6rexofFWnr4385jzvqzH3CTEq4aRjb5_uQ/exec");
+            if (!response.ok) throw new Error(❌ HTTP error! Status: ${response.status});
 
-        const data = await response.json();
-        console.log("✅ JSON Data Received:", data);
-        window.beamData = data;
+            const data = await response.json();
+            console.log("✅ JSON Data Received:", data);
+            window.beamData = data;
 
-        updateBeamUI();
-        updateTotalProgress();
-    } catch (error) {
-        console.error("❌ Error fetching beam data:", error);
-        console.warn("🔄 Retrying in 10 seconds...");
-        setTimeout(fetchBeamStatus, 10000); // Retry fetch after 10s
-    }
-}
-
-// 🎨 Update Beam UI with Enhanced Logic
-function updateBeamUI() {
-    if (!window.beamData || !window.beamData.beams) {
-        console.error("❌ beamData is not available or missing 'beams' array!");
-        return;
-    }
-
-    document.querySelectorAll(".beam").forEach(beamElement => {
-        let beamName = beamElement.dataset.name?.toLowerCase().trim();
-        let beamDataEntry = window.beamData.beams.find(b =>
-            b.Beam_Name.toLowerCase().trim() === beamName
-        );
-
-        if (beamDataEntry) {
-            // Remove all status classes first
-            beamElement.classList.remove("installed", "not-installed", "in-progress");
-
-            // Apply status based on progress
-            if (beamDataEntry.Progress === 100) {
-                beamElement.classList.add("installed"); // ✅ Fully installed
-            } else if (beamDataEntry.Progress > 0) {
-                beamElement.classList.add("in-progress"); // 🚧 In progress
-            } else {
-                beamElement.classList.add("not-installed"); // ❌ Not installed
-            }
+            updateBeamUI();
+            updateTotalProgress();
+        } catch (error) {
+            console.error("❌ Error fetching beam data:", error);
         }
-    });
-}
+    }
+
+    function updateBeamUI() {
+        if (!window.beamData || !window.beamData.beams) {
+            console.error("❌ beamData is not available or missing 'beams' array!");
+            return;
+        }
+
+        document.querySelectorAll(".beam").forEach(beamElement => {
+            let beamName = beamElement.dataset.name?.toLowerCase().trim();
+            let beamDataEntry = window.beamData.beams.find(b =>
+                b.Beam_Name.toLowerCase().trim() === beamName
+            );
+
+            if (beamDataEntry) {
+                beamElement.classList.toggle("installed", beamDataEntry.Progress > 0);
+                beamElement.classList.toggle("not-installed", beamDataEntry.Progress === 0);
+            }
+        });
+    }
 
 
     function updateTotalProgress() {
