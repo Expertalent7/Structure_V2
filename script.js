@@ -200,5 +200,28 @@ beams.forEach(beamElement => {
         });
     }
 
+    function updateTotalProgress() {
+    if (!window.beamData || !window.beamData.beams) return;
+
+    let totalWeight = 0, installedWeight = 0;
+    window.beamData.beams.forEach(beam => {
+        totalWeight += beam.Weight || 0;
+        if (beam.Progress > 0) installedWeight += beam.Weight || 0;
+    });
+
+    let overallProgress = totalWeight > 0 ? (installedWeight / totalWeight) * 100 : 0;
+    let progressBar = document.getElementById("progressBar");
+
+    // ✅ Update Progress Bar Width & Text
+    progressBar.style.width = `${overallProgress}%`;
+    progressBar.innerText = `${overallProgress.toFixed(2)}%`;
+
+    // ✅ Dynamically Change Background Color
+    progressBar.style.backgroundColor = overallProgress > 0 ? "#4caf50" : "#bbb";
+
+    document.getElementById("installationProgress").innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
+}
+
+
     setInterval(fetchBeamStatus, 5000);
 });
