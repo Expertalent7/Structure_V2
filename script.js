@@ -121,9 +121,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-   async function fetchBeamStatus() {
+  async function fetchBeamStatus() {
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbz2EakxyONZtd6RmkqVdwtXcpeyHd4QrQn4VEcgxO1btcA0OLdw8UPK7q4lNzHilvZePA/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbyt073RitjpY8HSOK7bTmftbAFcSIQBYlc8VRA9-h5cHyaQQs-c5Au-biU5rrylWye2uw/exec", {
             method: "GET",
             mode: "cors",
             headers: { "Content-Type": "application/json" }
@@ -140,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("❌ Error fetching beam data:", error);
     }
 }
+
 
 
     function updateBeamUI() {
