@@ -56,7 +56,9 @@ body {
 /* 🔍 Yellow border for search highlights */
 .beam.highlight {
     border: 3px solid yellow !important;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
 }
+
 .beam.selected {
     transform: scale(1.05);
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
