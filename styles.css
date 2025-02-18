@@ -119,12 +119,12 @@ body {
 }
 #progressBar {
     height: 100%;
-    background-color: #4caf50;
     color: white;
     text-align: center;
     font-weight: bold;
-    transition: width 0.5s ease-in-out;
+    transition: width 0.5s ease-in-out, background-color 0.3s ease-in-out;
 }
+
 
 /* 🎭 Beam Legend */
 .legend-item {
