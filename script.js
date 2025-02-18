@@ -122,7 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             window.beamData = beamData;
             beamDataLoaded = true; // 🟢 Mark data as loaded
-            updateBeamUI();
+
+            setTimeout(updateBeamUI, 1000); // ⏳ Delay update to ensure data is available
         } catch (error) {
             console.error("❌ Error fetching beam data:", error);
 
@@ -135,7 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateBeamUI() {
         if (!beamDataLoaded || !window.beamData || !window.beamData.beams) {
-            console.error("❌ beamData is missing!");
+            console.error("❌ beamData is still missing, delaying update...");
+            setTimeout(updateBeamUI, 1000);
             return;
         }
 
