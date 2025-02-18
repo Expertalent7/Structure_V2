@@ -7,21 +7,22 @@
 
     <!-- ✅ External Stylesheet -->
     <link rel="stylesheet" href="styles.css">
-    
+
     <!-- ✅ JavaScript -->
     <script defer src="script.js"></script>
 </head>
 <body>
 
     <!-- 🌙 Dark Mode Toggle -->
-    <button id="darkModeToggle" class="toggle-btn">🌙 Dark Mode</button>
+    <button id="darkModeToggle" class="toggle-btn" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
 
     <h1>Beam Selection Tool</h1>
 
     <!-- 🔍 Search Bar -->
     <div class="search-container">
-        <input type="text" id="beamSearch" placeholder="Search beam...">
-        <button onclick="clearSearch()">❌ Clear</button>
+        <label for="beamSearch" class="visually-hidden">Search Beam</label>
+        <input type="text" id="beamSearch" placeholder="Search beam..." aria-label="Search beam">
+        <button onclick="clearSearch()" aria-label="Clear search">❌ Clear</button>
     </div>
 
     <!-- 📌 Beam Structure -->
@@ -59,7 +60,7 @@
     	</div>
     </div>
 
-    <!-- 📊 Installation Progress -->
+<!-- 📊 Installation Progress -->
     <h2 id="installationProgress">Installation Progress: <span id="progressValue">0%</span></h2>
     <div id="progressContainer">
         <div id="progressBar">0%</div>
@@ -81,8 +82,8 @@
         </div>
     </div>
 
-	<div id="tooltip" class="beam-tooltip"></div>
-
+    <!-- 🏷️ Tooltip -->
+    <div id="tooltip" class="beam-tooltip"></div>
 
     <!-- 📌 Beam Details Panel -->
     <div id="beamDetailsPanel" class="details-panel">
@@ -97,4 +98,4 @@
     </div>
 
 </body>
-</html>
+</html>    
