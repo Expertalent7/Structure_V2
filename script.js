@@ -177,19 +177,31 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateTotalProgress() {
-        if (!window.beamData || !window.beamData.beams) return;
+    if (!window.beamData || !window.beamData.beams) return;
 
-        let totalWeight = 0, installedWeight = 0;
-        window.beamData.beams.forEach(beam => {
-            totalWeight += beam.Weight || 0;
-            if (beam.Progress > 0) installedWeight += beam.Weight || 0;
-        });
+    let totalWeight = 0, installedWeight = 0;
+    window.beamData.beams.forEach(beam => {
+        totalWeight += beam.Weight || 0;
+        if (beam.Progress > 0) installedWeight += beam.Weight || 0;
+    });
 
-        let overallProgress = totalWeight > 0 ? (installedWeight / totalWeight) * 100 : 0;
-        progressBar.style.width = `${overallProgress}%`;
-        progressBar.innerText = `${overallProgress.toFixed(2)}%`;
-        document.getElementById("installationProgress").innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
+    let overallProgress = totalWeight > 0 ? (installedWeight / totalWeight) * 100 : 0;
+
+    // ✅ Update Progress Bar Width & Text
+    let progressBar = document.getElementById("progressBar");
+    progressBar.style.width = `${overallProgress}%`;
+    progressBar.innerText = `${overallProgress.toFixed(2)}%`;
+
+    // ✅ Change Color Based on Progress Value
+    if (overallProgress > 0) {
+        progressBar.style.backgroundColor = "#4caf50"; // Green when > 0%
+    } else {
+        progressBar.style.backgroundColor = "#ddd"; // Gray when 0%
     }
+
+    document.getElementById("installationProgress").innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
+}
+
 
     setInterval(fetchBeamStatus, 5000);
 });
