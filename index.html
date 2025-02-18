@@ -8,7 +8,7 @@
     <!-- ✅ External Stylesheet -->
     <link rel="stylesheet" href="styles.css">
 
-    <!-- ✅ JavaScript -->
+    <!-- ✅ External JavaScript -->
     <script defer src="script.js"></script>
 </head>
 <body>
@@ -22,8 +22,9 @@
     <div class="search-container">
         <label for="beamSearch" class="visually-hidden">Search Beam</label>
         <input type="text" id="beamSearch" placeholder="Search beam..." aria-label="Search beam">
-        <button onclick="clearSearch()" aria-label="Clear search">❌ Clear</button>
+        <button id="clearSearchBtn" aria-label="Clear search">❌ Clear</button>
     </div>
+
 
     <!-- 📌 Beam Structure -->
     <div class="wrapper">
@@ -94,8 +95,8 @@
         <p><strong>Progress:</strong> <span id="beamProgress"></span></p>
         <p><strong>QR Code:</strong></p>
         <img id="beamQRCode" src="" alt="QR Code">
-        <button onclick="closePanel()">❌ Close</button>
+        <button id="closePanelBtn">❌ Close</button>
     </div>
 
 </body>
-</html>    
+</html>
