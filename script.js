@@ -9,25 +9,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const tooltip = document.getElementById("tooltip"); // ✅ Use the tooltip div from HTML
     const beams = document.querySelectorAll(".beam");
 
-    // ✅ Search Beams Efficiently
-        beamSearch.addEventListener("input", function () {
+// ✅ Search Beams Efficiently
+    beamSearch.addEventListener("input", function () {
         let input = this.value.toLowerCase().trim();
-        beams.forEach(beam => {
-        let beamName = beam.dataset.name.toLowerCase().trim(); // ✅ Ensure dataset name is correctly fetched
-        if (beamName.includes(input) && input !== "") {
-            beam.classList.add("highlight"); // ✅ Add highlight class
-        } else {
-            beam.classList.remove("highlight"); // ❌ Remove if not matching
-        }
-        });
-        });
 
+        beams.forEach(beam => {
+            let beamName = beam.getAttribute("data-name").toLowerCase();
+            beam.classList.toggle("highlight", beamName.includes(input) && input !== "");
+        });
+    });
 
     // ❌ Clear Search
     window.clearSearch = function () {
         beamSearch.value = "";
         beams.forEach(beam => beam.classList.remove("highlight"));
     };
+});
 
     // 📌 Close Details Panel
     window.closePanel = function () {
