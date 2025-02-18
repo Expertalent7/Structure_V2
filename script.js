@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("🔄 Fetching beam status...");
 
         try {
-            const response = await fetch("https://script.google.com/macros/s/YOUR-URL-HERE");
+            const response = await fetch("https://script.google.com/macros/s/AKfycbzatQ3y2-Dc2QQc7cA2j-URKcqVOKAYEZlErfL9mHnOYPoOuC_a-LVG5Lz-xYxuGhFspQ/exec");
             if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
 
             const data = await response.json();
