@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("✅ Page Loaded, Assigning Global Fetch Function");
 
-    // 🔄 Cache frequently accessed elements
+    // 🔄 Cache elements
     const beamSearch = document.getElementById("beamSearch");
     const beamDetailsPanel = document.getElementById("beamDetailsPanel");
     const progressText = document.getElementById("progressValue");
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
         progressBar.style.backgroundColor = "#ccc";
     }
 
-    // ✅ Search Beams Efficiently & Highlight in BLUE
+    // ✅ Search Beams Efficiently
     if (beamSearch) {
         beamSearch.addEventListener("input", function () {
             let input = this.value.toLowerCase().trim();
@@ -23,10 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 let beamName = beam.getAttribute("data-name").toLowerCase();
                 if (beamName.includes(input) && input !== "") {
                     beam.classList.add("highlight");
-                    beam.style.border = "3px solid blue";
                 } else {
                     beam.classList.remove("highlight");
-                    beam.style.border = "";
                 }
             });
         });
@@ -34,46 +32,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ✅ Clear Search
     document.getElementById("clearSearchBtn").addEventListener("click", function () {
-        if (!beamSearch || !beams) {
-            console.error("❌ Search input or beam elements not found!");
-            return;
-        }
         beamSearch.value = "";
         beams.forEach(beam => {
             beam.classList.remove("highlight");
-            beam.style.border = "";
         });
-        console.log("🔄 Search cleared");
     });
 
-    // ✅ Function to Close the Beam Details Panel
+    // ✅ Close Beam Details Panel
     function closePanel() {
         if (beamDetailsPanel) {
             beamDetailsPanel.style.display = "none";
-        } else {
-            console.error("❌ Error: Beam details panel not found!");
         }
     }
-
-    // ✅ Attach Close Button Event Listener
     if (closeButton) {
         closeButton.addEventListener("click", closePanel);
-    } else {
-        console.error("❌ Error: Close button not found!");
     }
 
-    // ✅ Make QR Code Clickable
-    const qrCodeElement = document.getElementById("beamQRCode");
-    if (qrCodeElement) {
-        qrCodeElement.addEventListener("click", function () {
-            let qrCodeUrl = this.src;
-            if (qrCodeUrl) {
-                window.open(qrCodeUrl, "_blank");
-            }
+    // ✅ Tooltip for Beam Info on Hover
+    beams.forEach(beam => {
+        beam.addEventListener("mouseenter", (e) => {
+            let beamName = e.target.dataset.name;
+            tooltip.innerText = `Beam: ${beamName}`;
+            tooltip.style.display = "block";
+            tooltip.style.left = `${e.pageX + 10}px`;
+            tooltip.style.top = `${e.pageY + 10}px`;
         });
-    }
 
-    // 🎯 Show Beam Details on Click
+        beam.addEventListener("mouseleave", () => {
+            tooltip.style.display = "none";
+        });
+    });
+
+    // ✅ Show Beam Details on Click
     beams.forEach(beamElement => {
         beamElement.addEventListener("click", function (event) {
             if (!window.beamData || !window.beamData.beams) {
@@ -98,42 +88,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("beamProgress").innerText = beamProgress;
                 document.getElementById("beamQRCode").src = beamQRCode;
 
-                // ✅ Fix Positioning: Ensure Beam Details Panel is Near the Clicked Beam
-                if (beamDetailsPanel) {
-                    let beamRect = event.target.getBoundingClientRect();
-                    let panelWidth = beamDetailsPanel.offsetWidth;
-                    let panelHeight = beamDetailsPanel.offsetHeight;
+                // ✅ Position Details Panel
+                let beamRect = event.target.getBoundingClientRect();
+                let panelWidth = beamDetailsPanel.offsetWidth;
+                let panelHeight = beamDetailsPanel.offsetHeight;
 
-                    let posX = beamRect.left + window.scrollX + beamRect.width / 2 - panelWidth / 2;
-                    let posY = beamRect.top + window.scrollY - panelHeight - 10;
+                let posX = beamRect.left + window.scrollX + beamRect.width / 2 - panelWidth / 2;
+                let posY = beamRect.top + window.scrollY - panelHeight - 10;
 
-                    // ✅ Prevent Panel from Going Off-Screen
-                    posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10));
-                    posY = Math.max(10, posY);
+                posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10));
+                posY = Math.max(10, posY);
 
-                    beamDetailsPanel.style.left = `${posX}px`;
-                    beamDetailsPanel.style.top = `${posY}px`;
-                    beamDetailsPanel.style.display = "block";
-                }
+                beamDetailsPanel.style.left = `${posX}px`;
+                beamDetailsPanel.style.top = `${posY}px`;
+                beamDetailsPanel.style.display = "block";
             } else {
                 console.warn(`⚠ No matching data found for ${beamName}`);
             }
-        });
-    });
-
-    // ✅ Fix Tooltip Positioning
-    beams.forEach(beam => {
-        beam.addEventListener("mouseenter", function (e) {
-            let beamName = e.target.dataset.name;
-
-            tooltip.innerText = `Beam: ${beamName}`;
-            tooltip.style.display = "block";
-            tooltip.style.left = `${e.pageX + 10}px`;
-            tooltip.style.top = `${e.pageY + 10}px`;
-        });
-
-        beam.addEventListener("mouseleave", function () {
-            tooltip.style.display = "none";
         });
     });
 
