@@ -135,23 +135,36 @@ beams.forEach(beamElement => {
     }
 
     function updateBeamUI() {
-        if (!window.beamData || !window.beamData.beams) {
-            console.error("❌ beamData is not available or missing 'beams' array!");
-            return;
-        }
-
-        document.querySelectorAll(".beam").forEach(beamElement => {
-            let beamName = beamElement.dataset.name?.toLowerCase().trim();
-            let beamDataEntry = window.beamData.beams.find(b =>
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
-
-            if (beamDataEntry) {
-                beamElement.classList.toggle("installed", beamDataEntry.Progress > 0);
-                beamElement.classList.toggle("not-installed", beamDataEntry.Progress === 0);
-            }
-        });
+    if (!window.beamData || !window.beamData.beams) {
+        console.error("❌ beamData is missing or incorrect!");
+        return;
     }
+
+    document.querySelectorAll(".beam").forEach(beamElement => {
+        let beamName = beamElement.dataset.name?.toLowerCase().trim();
+        let beamDataEntry = window.beamData.beams.find(b =>
+            b.Beam_Name.toLowerCase().trim() === beamName
+        );
+
+        if (beamDataEntry) {
+            console.log(`🔄 Updating Beam: ${beamDataEntry.Beam_Name}, Progress: ${beamDataEntry.Progress}%`);
+
+            // ✅ Remove all previous status classes
+            beamElement.classList.remove("installed", "not-installed", "in-progress");
+
+            // ✅ Apply correct status
+            if (beamDataEntry.Progress === 100) {
+                beamElement.classList.add("installed");  // ✅ Fully installed
+            } else if (beamDataEntry.Progress > 0) {
+                beamElement.classList.add("in-progress"); // 🚧 In progress
+            } else {
+                beamElement.classList.add("not-installed"); // ❌ Not installed
+            }
+        } else {
+            console.warn(`⚠ No data found for beam: ${beamName}`);
+        }
+    });
+}
 
 
     function updateTotalProgress() {
