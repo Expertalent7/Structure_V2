@@ -30,14 +30,25 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ❌ Clear Search
     window.clearSearch = function () {
-        beamSearch.value = "";
-        beams.forEach(beam => {
-            beam.classList.remove("highlight");
-            beam.style.border = "";
-        });
-    };
+    let beamSearch = document.getElementById("beamSearch");
+    let beams = document.querySelectorAll(".beam");
+
+    if (!beamSearch || !beams) {
+        console.error("❌ Search input or beam elements not found!");
+        return;
+    }
+
+    beamSearch.value = "";  // Reset search input
+
+    beams.forEach(beam => {
+        beam.classList.remove("highlight");
+        beam.style.border = "";  // Reset border
+    });
+
+    console.log("🔄 Search cleared");
+};
+
 
     // 📌 Close Details Panel
     window.closePanel = function () {
