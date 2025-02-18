@@ -73,107 +73,55 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 🎯 Show Beam Details on Click
-    beams.forEach(beamElement => {
-        beamElement.addEventListener("click", function (event) {
-            if (!window.beamData || !window.beamData.beams) {
-                console.warn("⚠ No beam data available");
-                return;
-            }
+    // 🎯 Fetch Latest Beam Data from GitHub
+    async function fetchBeamStatus() {
+        console.log("🔄 Fetching latest beam scans from GitHub...");
+        const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
-            let beamName = this.dataset.name.trim().toLowerCase();
-            let beamDataEntry = window.beamData.beams.find(b => 
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
+        try {
+            const response = await fetch(GITHUB_API_URL);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
 
-            if (beamDataEntry) {
-                let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
-                let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
-                let beamProgress = `${(beamDataEntry.Progress * 100).toFixed(2)}%`;
-                let beamQRCode = beamDataEntry.QR_Code || "https://via.placeholder.com/150";
+            const beamData = await response.json();
+            console.log("✅ Beam Data Loaded:", beamData);
 
-                document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
-                document.getElementById("beamStatus").innerText = beamStatus;
-                document.getElementById("beamWeight").innerText = beamWeight;
-                document.getElementById("beamProgress").innerText = beamProgress;
-                document.getElementById("beamQRCode").src = beamQRCode;
-
-                // ✅ Fix Positioning: Ensure Beam Details Panel is Near the Clicked Beam
-                if (beamDetailsPanel) {
-                    let beamRect = event.target.getBoundingClientRect();
-                    let panelWidth = beamDetailsPanel.offsetWidth;
-                    let panelHeight = beamDetailsPanel.offsetHeight;
-
-                    let posX = beamRect.left + window.scrollX + beamRect.width / 2 - panelWidth / 2;
-                    let posY = beamRect.top + window.scrollY - panelHeight - 10;
-
-                    // ✅ Prevent Panel from Going Off-Screen
-                    posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10));
-                    posY = Math.max(10, posY);
-
-                    beamDetailsPanel.style.left = `${posX}px`;
-                    beamDetailsPanel.style.top = `${posY}px`;
-                    beamDetailsPanel.style.display = "block";
-                }
-            } else {
-                console.warn(`⚠ No matching data found for ${beamName}`);
-            }
-        });
-    });
-
-async function fetchBeamStatus() {
-    try {
-        const corsProxy = "https://cors-anywhere.herokuapp.com/";  // Free proxy to handle CORS
-        const apiUrl = "https://script.google.com/macros/s/AKfycbz7c-qT5namYRZ4JkZT16yKFAFohwfN-t04KTuKYiR75wL6KvrDmjIRPrgLAa9J5FE64g/exec";
-
-        const response = await fetch(corsProxy + apiUrl, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" }
-        });
-
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-        const data = await response.json();
-        console.log("✅ JSON Data Received:", data);
-        window.beamData = data;
-        updateBeamUI();
-        updateTotalProgress();
-    } catch (error) {
-        console.error("❌ Error fetching beam data:", error);
+            window.beamData = beamData;
+            updateBeamUI();
+            updateTotalProgress();
+        } catch (error) {
+            console.error("❌ Error fetching beam data:", error);
+        }
     }
-}
 
-
-
-
-
+    // 🎯 Update UI with Latest Beam Data
     function updateBeamUI() {
-        if (!window.beamData || !window.beamData.beams) {
-            console.error("❌ beamData is missing!");
+        if (!window.beamData || !window.beamData.length) {
+            console.warn("⚠ No beam data available to update UI!");
             return;
         }
 
         document.querySelectorAll(".beam").forEach(beamElement => {
             let beamName = beamElement.dataset.name?.toLowerCase().trim();
-            let beamDataEntry = window.beamData.beams.find(b =>
+            let beamDataEntry = window.beamData.find(b => 
                 b.Beam_Name.toLowerCase().trim() === beamName
             );
 
             if (beamDataEntry) {
                 beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
 
-                if (beamDataEntry.Progress === 100) {
+                if (parseFloat(beamDataEntry.Progress) === 100) {
                     beamElement.classList.add("installed");
-                } else if (beamDataEntry.Progress > 0) {
+                } else if (parseFloat(beamDataEntry.Progress) > 0) {
                     beamElement.classList.add("in-progress");
                 } else {
                     beamElement.classList.add("not-installed");
                 }
             } else {
-                console.warn(`⚠ No data found for beam: ${beamName}`);
+                console.warn(`⚠ No matching data found for beam: ${beamName}`);
             }
         });
     }
 
+    // 🔄 Auto-fetch updates every 5 seconds
     setInterval(fetchBeamStatus, 5000);
 });
