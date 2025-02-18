@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    async function fetchBeamData() {
+    async function fetchBeamData(retryCount = 3) {
         const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
         try {
@@ -122,6 +122,11 @@ document.addEventListener("DOMContentLoaded", function () {
             updateBeamUI();
         } catch (error) {
             console.error("❌ Error fetching beam data:", error);
+
+            if (retryCount > 0) {
+                console.log(`🔄 Retrying... (${retryCount} attempts left)`);
+                setTimeout(() => fetchBeamData(retryCount - 1), 3000);
+            }
         }
     }
 
@@ -153,5 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    setInterval(fetchBeamData, 5000);
+    fetchBeamData(); // First-time load
+    setInterval(fetchBeamData, 5000); // Refresh every 5 seconds
 });
