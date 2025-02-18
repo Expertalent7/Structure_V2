@@ -116,6 +116,7 @@ beams.forEach(beamElement => {
     });
 
  // 🔄 Fetch Beam Status
+
 async function fetchBeamStatus() {
     console.log("🔄 Fetching beam status...");
 
@@ -133,9 +134,10 @@ async function fetchBeamStatus() {
         console.error("❌ Error fetching beam data:", error);
     }
 }
+
 function updateBeamUI() {
     if (!window.beamData || !window.beamData.beams) {
-        console.error("❌ beamData is missing or incorrect!");
+        console.error("❌ beamData is missing!");
         return;
     }
 
@@ -148,16 +150,14 @@ function updateBeamUI() {
         if (beamDataEntry) {
             console.log(`🔄 Updating Beam: ${beamDataEntry.Beam_Name}, Progress: ${beamDataEntry.Progress}%`);
 
-            // ✅ Remove previous status classes
             beamElement.classList.remove("installed", "not-installed", "in-progress");
 
-            // ✅ Apply correct status
             if (beamDataEntry.Progress === 100) {
-                beamElement.classList.add("installed");  // ✅ Fully installed
+                beamElement.classList.add("installed");
             } else if (beamDataEntry.Progress > 0) {
-                beamElement.classList.add("in-progress"); // 🚧 In progress
+                beamElement.classList.add("in-progress");
             } else {
-                beamElement.classList.add("not-installed"); // ❌ Not installed
+                beamElement.classList.add("not-installed");
             }
         } else {
             console.warn(`⚠ No data found for beam: ${beamName}`);
@@ -165,7 +165,6 @@ function updateBeamUI() {
     });
 }
 
-}
 
 
     function updateTotalProgress() {
