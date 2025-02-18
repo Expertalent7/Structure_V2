@@ -6,62 +6,66 @@ document.addEventListener("DOMContentLoaded", function () {
     const beamDetailsPanel = document.getElementById("beamDetailsPanel");
     const progressText = document.getElementById("progressValue");
     const progressBar = document.getElementById("progressBar");
-    const tooltip = document.getElementById("tooltip"); 
+    const tooltip = document.getElementById("tooltip");
     const beams = document.querySelectorAll(".beam");
 
     // ✅ Ensure progress bar is gray at 0%
-    if (parseFloat(progressText.innerText) === 0) {
+    if (progressText && parseFloat(progressText.innerText) === 0) {
         progressBar.style.backgroundColor = "#ccc"; // Light gray
     }
 
     // ✅ Search Beams Efficiently & Highlight in BLUE
-    beamSearch.addEventListener("input", function () {
-        let input = this.value.toLowerCase().trim();
+    if (beamSearch) {
+        beamSearch.addEventListener("input", function () {
+            let input = this.value.toLowerCase().trim();
 
-        beams.forEach(beam => {
-            let beamName = beam.getAttribute("data-name").toLowerCase();
-            if (beamName.includes(input) && input !== "") {
-                beam.classList.add("highlight");
-                beam.style.border = "3px solid blue"; // Apply Blue border for search highlight
-            } else {
-                beam.classList.remove("highlight");
-                beam.style.border = ""; // Reset border when input is cleared
-            }
+            beams.forEach(beam => {
+                let beamName = beam.getAttribute("data-name").toLowerCase();
+                if (beamName.includes(input) && input !== "") {
+                    beam.classList.add("highlight");
+                    beam.style.border = "3px solid blue"; // Apply Blue border for search highlight
+                } else {
+                    beam.classList.remove("highlight");
+                    beam.style.border = ""; // Reset border when input is cleared
+                }
+            });
         });
-    });
-
-    window.clearSearch = function () {
-    let beamSearch = document.getElementById("beamSearch");
-    let beams = document.querySelectorAll(".beam");
-
-    if (!beamSearch || !beams) {
-        console.error("❌ Search input or beam elements not found!");
-        return;
     }
 
-    beamSearch.value = "";  // Reset search input
+    // ✅ Clear Search
+    window.clearSearch = function () {
+        if (!beamSearch || !beams) {
+            console.error("❌ Search input or beam elements not found!");
+            return;
+        }
 
-    beams.forEach(beam => {
-        beam.classList.remove("highlight");
-        beam.style.border = "";  // Reset border
-    });
+        beamSearch.value = ""; // Reset search input
 
-    console.log("🔄 Search cleared");
-};
+        beams.forEach(beam => {
+            beam.classList.remove("highlight");
+            beam.style.border = ""; // Reset border
+        });
 
+        console.log("🔄 Search cleared");
+    };
 
     // 📌 Close Details Panel
     window.closePanel = function () {
-        beamDetailsPanel.style.display = "none";
+        if (beamDetailsPanel) {
+            beamDetailsPanel.style.display = "none";
+        }
     };
 
     // ✅ Make QR Code Clickable
-    document.getElementById("beamQRCode").addEventListener("click", function () {
-        let qrCodeUrl = this.src;
-        if (qrCodeUrl) {
-            window.open(qrCodeUrl, "_blank");
-        }
-    });
+    const qrCodeElement = document.getElementById("beamQRCode");
+    if (qrCodeElement) {
+        qrCodeElement.addEventListener("click", function () {
+            let qrCodeUrl = this.src;
+            if (qrCodeUrl) {
+                window.open(qrCodeUrl, "_blank");
+            }
+        });
+    }
 
     // 🎯 Show Beam Details on Click (Fix Positioning)
     beams.forEach(beamElement => {
@@ -78,8 +82,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (beamDataEntry) {
                 let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
-                let beamWeight = beamDataEntry.Weight ? ${beamDataEntry.Weight} kg : "Unknown kg";
-                let beamProgress = (beamDataEntry.Progress * 100).toFixed(2) + "%";
+                let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
+                let beamProgress = `${(beamDataEntry.Progress * 100).toFixed(2)}%`;
                 let beamQRCode = beamDataEntry.QR_Code || "https://via.placeholder.com/150";
 
                 document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
@@ -97,14 +101,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 let posY = beamRect.top + window.scrollY - panelHeight - 10; // 10px margin above the beam
 
                 // ✅ Prevent Panel from Going Off-Screen
-                posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10)); 
-                posY = Math.max(10, posY); 
+                posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10));
+                posY = Math.max(10, posY);
 
-                beamDetailsPanel.style.left = ${posX}px;
-                beamDetailsPanel.style.top = ${posY}px;
+                beamDetailsPanel.style.left = `${posX}px`;
+                beamDetailsPanel.style.top = `${posY}px`;
                 beamDetailsPanel.style.display = "block";
             } else {
-                console.warn(⚠ No matching data found for ${beamName});
+                console.warn(`⚠ No matching data found for ${beamName}`);
             }
         });
     });
@@ -115,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let beamName = e.target.dataset.name;
             let beamStatus = e.target.classList.contains("installed") ? "Installed" : "Not Installed";
 
-            tooltip.innerText = ${beamName} - ${beamStatus};
+            tooltip.innerText = `${beamName} - ${beamStatus}`;
             tooltip.style.display = "block";
 
             let x = e.pageX + 15;
@@ -129,8 +133,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 y = e.pageY - tooltip.offsetHeight - 15;
             }
 
-            tooltip.style.left = ${x}px;
-            tooltip.style.top = ${y}px;
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
         });
 
         beam.addEventListener("mouseleave", () => {
@@ -144,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             const response = await fetch("https://script.google.com/macros/s/AKfycbwnu9BV4qSzWZ2Wfs5hMMsy7WtePg19FSCNO7ZKaAzuUkjxG8Wjx1YPCtAX4u5GgNXE/exec");
-            if (!response.ok) throw new Error(❌ HTTP error! Status: ${response.status});
+            if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
 
             const data = await response.json();
             console.log("✅ JSON Data Received:", data);
@@ -170,8 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             if (beamDataEntry) {
-                console.log(🔄 Updating Beam: ${beamDataEntry.Beam_Name}, Progress: ${beamDataEntry.Progress}%);
-
                 beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
 
                 if (beamDataEntry.Progress === 100) {
@@ -182,36 +184,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     beamElement.classList.add("not-installed");
                 }
             } else {
-                console.warn(⚠ No data found for beam: ${beamName});
+                console.warn(`⚠ No data found for beam: ${beamName}`);
             }
         });
     }
-
-    function updateTotalProgress() {
-    if (!window.beamData || !window.beamData.beams) return;
-
-    let totalWeight = 0, installedWeight = 0;
-    window.beamData.beams.forEach(beam => {
-        totalWeight += beam.Weight || 0;
-        if (beam.Progress > 0) installedWeight += beam.Weight || 0;
-    });
-
-    let overallProgress = totalWeight > 0 ? (installedWeight / totalWeight) * 100 : 0;
-    let progressBar = document.getElementById("progressBar");
-
-    // ✅ Update Progress Bar Width & Text
-    progressBar.style.width = ${overallProgress}%;
-    progressBar.innerText = ${overallProgress.toFixed(2)}%;
-
-    // ✅ Dynamically Change Background Color
-    if (overallProgress > 0) {
-        progressBar.style.backgroundColor = "#4caf50"; // Green when > 0%
-    } else {
-        progressBar.style.backgroundColor = "#bbb"; // Gray when 0%
-    }
-
-    document.getElementById("installationProgress").innerText = Installation Progress: ${overallProgress.toFixed(2)}%;
-}
 
     setInterval(fetchBeamStatus, 5000);
 });
