@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("✅ Page Loaded, Assigning Global Fetch Function");
 
-    // 🔄 Cache elements
+    // 🔄 Cache frequently accessed elements
     const beamSearch = document.getElementById("beamSearch");
     const beamDetailsPanel = document.getElementById("beamDetailsPanel");
     const progressText = document.getElementById("progressValue");
@@ -10,12 +10,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const beams = document.querySelectorAll(".beam");
     const closeButton = document.getElementById("closePanelBtn");
 
+    let beamDataLoaded = false; // 🟢 Track if data is loaded
+
     // ✅ Ensure progress bar is gray at 0%
     if (progressText && parseFloat(progressText.innerText) === 0) {
         progressBar.style.backgroundColor = "#ccc";
     }
 
-    // ✅ Search Beams Efficiently
+    // ✅ Search Beams
     if (beamSearch) {
         beamSearch.addEventListener("input", function () {
             let input = this.value.toLowerCase().trim();
@@ -66,8 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // ✅ Show Beam Details on Click
     beams.forEach(beamElement => {
         beamElement.addEventListener("click", function (event) {
-            if (!window.beamData || !window.beamData.beams) {
-                console.warn("⚠ No beam data available");
+            if (!beamDataLoaded || !window.beamData || !window.beamData.beams) {
+                console.warn("⚠ No beam data available yet...");
                 return;
             }
 
@@ -119,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("✅ Beam Data Loaded:", beamData);
 
             window.beamData = beamData;
+            beamDataLoaded = true; // 🟢 Mark data as loaded
             updateBeamUI();
         } catch (error) {
             console.error("❌ Error fetching beam data:", error);
@@ -131,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateBeamUI() {
-        if (!window.beamData || !window.beamData.beams) {
+        if (!beamDataLoaded || !window.beamData || !window.beamData.beams) {
             console.error("❌ beamData is missing!");
             return;
         }
@@ -158,6 +161,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    fetchBeamData(); // First-time load
+    fetchBeamData(); // Load data on page load
     setInterval(fetchBeamData, 5000); // Refresh every 5 seconds
 });
