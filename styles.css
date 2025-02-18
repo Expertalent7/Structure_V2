@@ -73,6 +73,24 @@ body {
     pointer-events: none; /* ✅ Prevents the tooltip from interfering with mouse events */
     z-index: 1000; /* ✅ Ensures the tooltip appears above everything */
 }
+/* ✅ Installed Beam - Green */
+.beam.installed {
+    background-color: rgba(0, 255, 0, 0.7) !important;
+    border: 2px solid green !important;
+}
+
+/* 🚧 In Progress - Yellow */
+.beam.in-progress {
+    background-color: rgba(255, 204, 0, 0.7) !important;
+    border: 2px solid orange !important;
+}
+
+/* ❌ Not Installed - Red */
+.beam.not-installed {
+    background-color: rgba(255, 0, 0, 0.7) !important;
+    border: 2px solid red !important;
+}
+
 /* 📌 Beam Details Panel */
 .details-panel {
     position: absolute;
