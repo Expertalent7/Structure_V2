@@ -121,11 +121,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
- async function fetchBeamStatus() {
+async function fetchBeamStatus() {
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbz7c-qT5namYRZ4JkZT16yKFAFohwfN-t04KTuKYiR75wL6KvrDmjIRPrgLAa9J5FE64g/exec", {
+        const corsProxy = "https://cors-anywhere.herokuapp.com/";  // Free proxy to handle CORS
+        const apiUrl = "https://script.google.com/macros/s/AKfycbz7c-qT5namYRZ4JkZT16yKFAFohwfN-t04KTuKYiR75wL6KvrDmjIRPrgLAa9J5FE64g/exec";
+
+        const response = await fetch(corsProxy + apiUrl, {
             method: "GET",
-            mode: "cors",
             headers: { "Content-Type": "application/json" }
         });
 
@@ -140,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("❌ Error fetching beam data:", error);
     }
 }
+
 
 
 
