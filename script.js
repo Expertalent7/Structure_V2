@@ -121,32 +121,25 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 🔄 Fetch Beam Status
-    async function fetchBeamStatus() {
-        console.log("🔄 Fetching beam status...");
+   async function fetchBeamStatus() {
+    try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbztLYa1yHnVz_mFDO95Rms9BHRAl7msSe0cRvsAd3ry5xG40WNcSoqvr8CxNYkmqWnCkw/exec", {
+            method: "GET",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" }
+        });
 
-        try {
-            const response = await fetch("https://script.google.com/macros/s/AKfycbztLYa1yHnVz_mFDO95Rms9BHRAl7msSe0cRvsAd3ry5xG40WNcSoqvr8CxNYkmqWnCkw/exec", {
-                method: "GET",
-                mode: "cors",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-            if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
-
-            const data = await response.json();
-            console.log("✅ JSON Data Received:", data);
-            window.beamData = data;
-
-            updateBeamUI();
-            updateTotalProgress();
-        } catch (error) {
-            console.error("❌ Error fetching beam data:", error);
-            progressBar.innerText = "❌ Failed to load data!";
-        }
+        const data = await response.json();
+        console.log("✅ JSON Data Received:", data);
+        window.beamData = data;
+        updateBeamUI();
+        updateTotalProgress();
+    } catch (error) {
+        console.error("❌ Error fetching beam data:", error);
     }
+}
 
     function updateBeamUI() {
         if (!window.beamData || !window.beamData.beams) {
