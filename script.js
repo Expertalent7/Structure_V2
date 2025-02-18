@@ -186,22 +186,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     let overallProgress = totalWeight > 0 ? (installedWeight / totalWeight) * 100 : 0;
+    let progressBar = document.getElementById("progressBar");
 
     // ✅ Update Progress Bar Width & Text
-    let progressBar = document.getElementById("progressBar");
     progressBar.style.width = `${overallProgress}%`;
     progressBar.innerText = `${overallProgress.toFixed(2)}%`;
 
-    // ✅ Change Color Based on Progress Value
+    // ✅ Dynamically Change Background Color
     if (overallProgress > 0) {
         progressBar.style.backgroundColor = "#4caf50"; // Green when > 0%
     } else {
-        progressBar.style.backgroundColor = "#ddd"; // Gray when 0%
+        progressBar.style.backgroundColor = "#bbb"; // Gray when 0%
     }
 
     document.getElementById("installationProgress").innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
 }
-
 
     setInterval(fetchBeamStatus, 5000);
 });
