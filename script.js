@@ -49,12 +49,26 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("🔄 Search cleared");
     };
 
-    // 📌 Close Details Panel
-    window.closePanel = function () {
-        if (beamDetailsPanel) {
-            beamDetailsPanel.style.display = "none";
-        }
-    };
+    // ✅ Function to Close the Beam Details Panel
+function closePanel() {
+    let beamDetailsPanel = document.getElementById("beamDetailsPanel");
+    if (beamDetailsPanel) {
+        beamDetailsPanel.style.display = "none";
+    } else {
+        console.error("❌ Error: Beam details panel not found!");
+    }
+}
+
+// ✅ Attach the Event Listener to the Close Button
+document.addEventListener("DOMContentLoaded", function () {
+    let closeButton = document.getElementById("closePanelBtn");
+    if (closeButton) {
+        closeButton.addEventListener("click", closePanel);
+    } else {
+        console.error("❌ Error: Close button not found!");
+    }
+});
+
 
     // ✅ Make QR Code Clickable
     const qrCodeElement = document.getElementById("beamQRCode");
