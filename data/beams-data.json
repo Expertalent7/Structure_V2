@@ -1,7 +1,9 @@
-{
-  "Beam_ID": "Beam M",
-  "Beam_Name": "Beam M",
-  "Progress": "4000.00%",
-  "Scanned_By": "mounirkhaled9@gmail.com",
-  "Timestamp": "2/18/2025 2:10:35 PM"
-}
+[
+  {
+    "Beam_ID": "Beam L",
+    "Beam_Name": "Beam L",
+    "Progress": "4,000.00%",
+    "Scanned_By": "mounirkhaled9@gmail.com",
+    "Timestamp": "2/18/2025 2:22:30 PM"
+  }
+]
