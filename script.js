@@ -4,27 +4,28 @@ document.addEventListener("DOMContentLoaded", function () {
     // 🔄 Cache frequently accessed elements
     const beamSearch = document.getElementById("beamSearch");
     const beamDetailsPanel = document.getElementById("beamDetailsPanel");
+    const progressText = document.getElementById("progressValue");
     const progressBar = document.getElementById("progressBar");
     const tooltip = document.getElementById("tooltip");
     const beams = document.querySelectorAll(".beam");
+
+    // ✅ Ensure progress bar is grey when at 0%
+    progressBar.style.backgroundColor = "#ccc";
+    progressBar.style.width = "0%";
 
     // ✅ Search Beams Efficiently & Highlight in BLUE
     beamSearch.addEventListener("input", function () {
         let input = this.value.toLowerCase().trim();
         beams.forEach(beam => {
             let beamName = beam.getAttribute("data-name").toLowerCase();
-            if (beamName.includes(input) && input !== "") {
-                beam.classList.add("highlighted-beam"); // Blue highlight
-            } else {
-                beam.classList.remove("highlighted-beam");
-            }
+            beam.classList.toggle("highlight", beamName.includes(input) && input !== "");
         });
     });
 
     // ❌ Clear Search
     window.clearSearch = function () {
         beamSearch.value = "";
-        beams.forEach(beam => beam.classList.remove("highlighted-beam"));
+        beams.forEach(beam => beam.classList.remove("highlight"));
     };
 
     // 📌 Close Details Panel
@@ -71,11 +72,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 let panelHeight = beamDetailsPanel.offsetHeight;
 
                 let posX = beamRect.left + window.scrollX + beamRect.width / 2 - panelWidth / 2;
-                let posY = beamRect.top + window.scrollY - panelHeight - 10; // 10px margin above the beam
+                let posY = beamRect.top + window.scrollY - panelHeight - 10; 
 
                 // ✅ Prevent Panel from Going Off-Screen
-                posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10));
-                posY = Math.max(10, posY);
+                posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10)); 
+                posY = Math.max(10, posY); 
 
                 beamDetailsPanel.style.left = `${posX}px`;
                 beamDetailsPanel.style.top = `${posY}px`;
@@ -83,6 +84,36 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 console.warn(`⚠ No matching data found for ${beamName}`);
             }
+        });
+    });
+
+    // 🎯 Tooltip for Beam Info on Hover
+    beams.forEach(beam => {
+        beam.addEventListener("mouseenter", (e) => {
+            let beamName = e.target.dataset.name;
+            let beamStatus = e.target.classList.contains("installed") ? "Installed" : "Not Installed";
+
+            tooltip.innerText = `${beamName} - ${beamStatus}`;
+            document.body.appendChild(tooltip);
+            tooltip.style.display = "block";
+
+            let x = e.pageX + 15;
+            let y = e.pageY + 15;
+
+            // ✅ Prevent tooltip from going off-screen
+            if (x + tooltip.offsetWidth > window.innerWidth) {
+                x = e.pageX - tooltip.offsetWidth - 15;
+            }
+            if (y + tooltip.offsetHeight > window.innerHeight) {
+                y = e.pageY - tooltip.offsetHeight - 15;
+            }
+
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
+        });
+
+        beam.addEventListener("mouseleave", () => {
+            tooltip.style.display = "none";
         });
     });
 
@@ -120,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (beamDataEntry) {
                 console.log(`🔄 Updating Beam: ${beamDataEntry.Beam_Name}, Progress: ${beamDataEntry.Progress}%`);
 
-                beamElement.classList.remove("installed", "not-installed", "in-progress", "highlighted-beam");
+                beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
 
                 if (beamDataEntry.Progress === 100) {
                     beamElement.classList.add("installed");
@@ -145,9 +176,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         let overallProgress = totalWeight > 0 ? (installedWeight / totalWeight) * 100 : 0;
+
         progressBar.style.width = `${overallProgress}%`;
         progressBar.innerText = `${overallProgress.toFixed(2)}%`;
         document.getElementById("installationProgress").innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
+
+        // ✅ Update progress bar color
+        progressBar.style.backgroundColor = overallProgress > 0 ? "green" : "#ccc";
     }
 
     setInterval(fetchBeamStatus, 5000);
