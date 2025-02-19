@@ -52,6 +52,21 @@ document.addEventListener("DOMContentLoaded", async function () {
             updateFrame(this.dataset.frame);
         });
     });
+async function fetchBeamData1() {
+    const jsonUrl = "https://drive.google.com/uc?export=download&id=YOUR_JSON_FILE_ID"; // Replace with actual JSON file ID
+
+    try {
+        let response = await fetch(jsonUrl);
+        let data = await response.json();
+        
+        console.log("📄 Beam Data Loaded:", data);
+
+        window.beamData = data; // Store data globally
+        updateBeamUI();
+    } catch (error) {
+        console.error("❌ Error fetching beam data:", error);
+    }
+}
 
     // ✅ Fetch Beam Data
     async function fetchBeamData() {
