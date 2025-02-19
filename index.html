@@ -15,7 +15,6 @@
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-
     <!-- ✅ External JavaScript -->
     <script defer src="script.js"></script>
 </head>
@@ -32,8 +31,6 @@
         <input type="text" id="beamSearch" placeholder="Search beam..." aria-label="Search beam">
         <button id="clearSearchBtn" aria-label="Clear search">❌ Clear</button>
     </div>
-
-
 
     <!-- 📌 Beam Structure -->
     <div class="wrapper">
@@ -59,18 +56,18 @@
         <div class="beam" style="top: 311px; left: 154px; width: 7px; height: 305px;" data-name="beam p"></div>
         <div class="beam" style="top: 311px; left: 295px; width: 7px; height: 305px;" data-name="beam q"></div>
         <div class="beam" style="top: 310px; left: 138px; width: 24px; height: 7px;" data-name="beam r"></div>
-	<div class="beam" style="top: 124px; left: 393px; width: 5px; height: 65px;" data-name="beam s"></div>
-	<div class="beam" style="top: 189px; left: 393px; width: 5px; height: 65px;" data-name="beam t"></div>
-	<div class="beam" style="top: 252px; left: 393px; width: 5px; height: 60px;" data-name="beam u"></div>
-	<div class="beam" style="top: 312px; left: 393px; width: 5px; height: 65px;" data-name="beam v"></div>
-	<div class="beam" style="top: 376px; left: 393px; width: 5px; height: 65px;" data-name="beam w"></div>
-	<div class="beam" style="top: 439px; left: 393px; width: 5px; height: 60px;" data-name="beam x"></div>
-	<div class="beam" style="top: 499px; left: 393px; width: 5px; height: 63px;" data-name="beam y"></div>
-	<div class="beam" style="top: 563px; left: 393px; width: 5px; height: 53px;" data-name="beam z"></div>
-    	</div>
+        <div class="beam" style="top: 124px; left: 393px; width: 5px; height: 65px;" data-name="beam s"></div>
+        <div class="beam" style="top: 189px; left: 393px; width: 5px; height: 65px;" data-name="beam t"></div>
+        <div class="beam" style="top: 252px; left: 393px; width: 5px; height: 60px;" data-name="beam u"></div>
+        <div class="beam" style="top: 312px; left: 393px; width: 5px; height: 65px;" data-name="beam v"></div>
+        <div class="beam" style="top: 376px; left: 393px; width: 5px; height: 65px;" data-name="beam w"></div>
+        <div class="beam" style="top: 439px; left: 393px; width: 5px; height: 60px;" data-name="beam x"></div>
+        <div class="beam" style="top: 499px; left: 393px; width: 5px; height: 63px;" data-name="beam y"></div>
+        <div class="beam" style="top: 563px; left: 393px; width: 5px; height: 53px;" data-name="beam z"></div>
+        </div>
     </div>
 
-<!-- 📊 Installation Progress -->
+    <!-- 📊 Installation Progress -->
     <h2 id="installationProgress">Installation Progress: <span id="progressValue">0%</span></h2>
     <div id="progressContainer">
         <div id="progressBar">0%</div>
@@ -92,8 +89,8 @@
         </div>
     </div>
 
-    <!-- 🏷️ Tooltip -->
-    <div id="tooltip" class="beam-tooltip"></div>
+    <!-- 🏷️ Tooltip (Fixed & Made Visible) -->
+    <div id="tooltip" class="beam-tooltip" style="display: none; position: absolute; background-color: rgba(0,0,0,0.8); color: white; padding: 5px; border-radius: 5px; font-size: 12px;"></div>
 
     <!-- 📌 Beam Details Panel -->
     <div id="beamDetailsPanel" class="details-panel">
@@ -106,7 +103,6 @@
         <img id="beamQRCode" src="" alt="QR Code">
         <button id="closePanelBtn">❌ Close</button>
     </div>
-
 
 </body>
 </html>
