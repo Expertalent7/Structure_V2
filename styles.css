@@ -114,19 +114,19 @@ body {
 
 /* ✅ Progress Bar */
 #progressContainer {
-    width: 50%; /* ✅ Keep it centered */
+    width: 50%; /* Centered */
     max-width: 300px;
-    margin: 0 auto;
+    margin: 10px auto;
     background-color: #ccc;
     border-radius: 5px;
     overflow: hidden;
-    position: relative; /* ✅ Needed for absolute positioning of text */
+    position: relative;
 }
 
 #progressBar {
     height: 20px;
-    width: 0%; /* ✅ Start at 0% */
-    background-color: #4CAF50; /* ✅ Green progress bar */
+    width: 0%; /* Start empty */
+    background-color: #4CAF50; /* ✅ Green progress */
     text-align: center;
     line-height: 20px;
     font-weight: bold;
@@ -135,17 +135,14 @@ body {
     position: relative;
 }
 
-/* ✅ Green percentage text */
-#progressValue {
+#progressText {
     position: absolute;
     width: 100%;
     text-align: center;
     font-weight: bold;
-    color: green; /* ✅ Green percentage text */
+    color: white; /* White text inside the bar */
     z-index: 2;
 }
-
-
 
 
 /* 🎭 Beam Legend */
