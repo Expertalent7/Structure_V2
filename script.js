@@ -46,43 +46,52 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    // ✅ Update Beam UI
-    function updateBeamUI() {
-        console.log("🔍 Checking beamData:", window.beamData);
+   // ✅ Update Beam UI
+function updateBeamUI() {
+    console.log("🔍 Checking beamData:", window.beamData);
 
-        if (Object.keys(window.beamData).length === 0) {
-            console.warn("⚠ No beam data available. Retrying in 3 seconds...");
-            setTimeout(updateBeamUI, 3000);
-            return;
-        }
-
-        console.log("✅ Beam data available, updating UI...");
-
-        document.querySelectorAll(".beam").forEach(beamElement => {
-            let beamName = beamElement.dataset.name?.toLowerCase().trim();
-            let beamDataEntry = Object.values(window.beamData).find(b =>
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
-
-            if (beamDataEntry) {
-                beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
-
-                let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
-
-                if (progressValue >= 100) {
-                    beamElement.classList.add("installed");
-                } else if (progressValue > 0) {
-                    beamElement.classList.add("in-progress");
-                } else {
-                    beamElement.classList.add("not-installed");
-                }
-            } else {
-                console.warn(`⚠ No data found for beam: ${beamName}`);
-            }
-        });
-
-        updateInstallationProgress();
+    if (Object.keys(window.beamData).length === 0) {
+        console.warn("⚠ No beam data available. Retrying in 3 seconds...");
+        setTimeout(updateBeamUI, 3000);
+        return;
     }
+
+    console.log("✅ Beam data available, updating UI...");
+
+    document.querySelectorAll(".beam").forEach(beamElement => {
+        let beamName = beamElement.dataset.name?.toLowerCase().trim();
+        let beamDataEntry = Object.values(window.beamData).find(b =>
+            b.Beam_Name.toLowerCase().trim() === beamName
+        );
+
+        if (beamDataEntry) {
+            beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
+
+            let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
+
+            if (progressValue >= 100) {
+                beamElement.classList.add("installed");
+            } else if (progressValue > 0) {
+                beamElement.classList.add("in-progress");
+            } else {
+                beamElement.classList.add("not-installed");
+            }
+
+            // ✅ Adjust position dynamically
+            let left = parseFloat(beamElement.style.left) || 0; // Default to 0 if NaN
+            let top = parseFloat(beamElement.style.top) || 0;
+
+            beamElement.style.left = `${left - 5}px`; // Move left
+            beamElement.style.top = `${top + 10}px`;  // Move down
+
+        } else {
+            console.warn(`⚠ No data found for beam: ${beamName}`);
+        }
+    });
+
+    updateInstallationProgress();
+}
+
 
   function updateInstallationProgress() {
     if (!window.beamData) {
