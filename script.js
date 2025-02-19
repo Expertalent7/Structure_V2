@@ -33,7 +33,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         let rawText = await response.text(); // Get raw response
         console.log("📄 Raw Response:", rawText); 
 
-        let data = JSON.parse(rawText); // Convert to JSON manually
+        // Check if response is empty
+        if (!rawText || rawText.trim() === "") {
+            throw new Error("⚠ JSON Response is empty!");
+        }
+
+        let data;
+        try {
+            data = JSON.parse(rawText); // Convert to JSON manually
+        } catch (parseError) {
+            console.error("❌ JSON Parsing Error:", parseError);
+            throw new Error("⚠ JSON could not be parsed!");
+        }
+
         console.log("✅ JSON Loaded Successfully:", data);
 
         if (!Array.isArray(data)) {
