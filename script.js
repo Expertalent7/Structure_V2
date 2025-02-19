@@ -1,13 +1,19 @@
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", function () {
     console.log("✅ Page Loaded, Assigning Global Fetch Function");
 
     // 🔄 Global variable to store beam data
     window.beamData = { beams: [] };
 
-    // ✅ Fetch data every 3 seconds to catch new updates immediately
-    await fetchBeamData();
-    setInterval(fetchBeamData, 3000);
+    // ✅ Define an async function inside
+    async function initializeApp() {
+        await fetchBeamData(); // Ensure fetch is awaited inside an async function
+        setInterval(fetchBeamData, 3000); // Fetch every 3 seconds to catch updates immediately
+    }
+
+    // ✅ Call the async function
+    initializeApp();
 });
+
 
 
     // 🔄 Cache frequently accessed elements
