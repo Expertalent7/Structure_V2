@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.log("✅ Page Loaded, Assigning Global Fetch Function");
 
     // 🔄 Global variable to store beam data
-    window.beamData = [];
+    window.beamData = { beams: [] };
 
     // 🔄 Cache frequently accessed elements
     const beamSearch = document.getElementById("beamSearch");
@@ -19,68 +19,70 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ✅ Fetch Beam Data from GitHub
-  async function fetchBeamData() {
-    const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
+    async function fetchBeamData() {
+        const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
-    try {
-        console.log("🔄 Fetching Beam Data...");
-        const response = await fetch(GITHUB_API_URL);
-        
-        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-        
-        let data = await response.json();
-        console.log("📄 Raw Data Fetched:", data);  // Debugging
-        
-        if (!Array.isArray(data)) {
-            throw new Error("⚠ Error: Data format incorrect! Expected an array.");
-        }
+        try {
+            console.log("🔄 Fetching Beam Data...");
+            const response = await fetch(GITHUB_API_URL);
+            
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+            
+            let data = await response.json();
+            console.log("📄 Raw Data Fetched:", data);  // Debugging
 
-        window.beamData = { beams: data }; // Ensure the structure is correct
-        console.log("✅ beamData Assigned:", window.beamData); // Debugging
-        
-        updateBeamUI(); // Call UI update after successful data load
-    } catch (error) {
-        console.error("❌ Error fetching beam data:", error);
-        console.warn("⚠ Retrying fetch in 5 seconds...");
-        setTimeout(fetchBeamData, 5000); // Retry fetch
-    }
-}
-
-
-function updateBeamUI() {
-    console.log("🔍 Checking beamData:", window.beamData);
-
-    if (!window.beamData || !window.beamData.beams || window.beamData.beams.length === 0) {
-        console.warn("⚠ No beam data available. Retrying in 3 seconds...");
-        setTimeout(updateBeamUI, 3000);
-        return;
-    }
-
-    console.log("✅ Beam data available, updating UI...");
-
-    document.querySelectorAll(".beam").forEach(beamElement => {
-        let beamName = beamElement.dataset.name?.toLowerCase().trim();
-        let beamDataEntry = window.beamData.beams.find(b =>
-            b.Beam_Name.toLowerCase().trim() === beamName
-        );
-
-        if (beamDataEntry) {
-            beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
-
-            let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
-
-            if (progressValue >= 100) {
-                beamElement.classList.add("installed");
-            } else if (progressValue > 0) {
-                beamElement.classList.add("in-progress");
-            } else {
-                beamElement.classList.add("not-installed");
+            // ✅ Ensure fetched data is an array
+            if (!Array.isArray(data)) {
+                throw new Error("⚠ Error: Data format incorrect! Expected an array.");
             }
-        } else {
-            console.warn(`⚠ No data found for beam: ${beamName}`);
+
+            window.beamData.beams = data; // ✅ Corrected data assignment
+            console.log("✅ beamData Assigned:", window.beamData); // Debugging
+            
+            updateBeamUI(); // Call UI update after successful data load
+        } catch (error) {
+            console.error("❌ Error fetching beam data:", error);
+            console.warn("⚠ Retrying fetch in 5 seconds...");
+            setTimeout(fetchBeamData, 5000); // Retry fetch
         }
-    });
-}
+    }
+
+    // ✅ Update Beam UI
+    function updateBeamUI() {
+        console.log("🔍 Checking beamData:", window.beamData);
+
+        if (!window.beamData.beams || window.beamData.beams.length === 0) {
+            console.warn("⚠ No beam data available. Retrying in 3 seconds...");
+            setTimeout(updateBeamUI, 3000);
+            return;
+        }
+
+        console.log("✅ Beam data available, updating UI...");
+
+        document.querySelectorAll(".beam").forEach(beamElement => {
+            let beamName = beamElement.dataset.name?.toLowerCase().trim();
+            let beamDataEntry = window.beamData.beams.find(b =>
+                b.Beam_Name.toLowerCase().trim() === beamName
+            );
+
+            if (beamDataEntry) {
+                beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
+
+                // ✅ Ensure "Progress" is parsed as a number correctly
+                let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
+
+                if (progressValue >= 100) {
+                    beamElement.classList.add("installed");
+                } else if (progressValue > 0) {
+                    beamElement.classList.add("in-progress");
+                } else {
+                    beamElement.classList.add("not-installed");
+                }
+            } else {
+                console.warn(`⚠ No data found for beam: ${beamName}`);
+            }
+        });
+    }
 
     // ✅ Search Beams
     if (beamSearch) {
@@ -143,7 +145,7 @@ function updateBeamUI() {
     // ✅ Show Beam Details on Click
     beams.forEach(beamElement => {
         beamElement.addEventListener("click", function (event) {
-            if (!window.beamData || !window.beamData.beams) {
+            if (!window.beamData.beams) {
                 console.warn("⚠ No beam data available");
                 return;
             }
