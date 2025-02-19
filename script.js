@@ -92,24 +92,31 @@ document.addEventListener("DOMContentLoaded", async function () {
             } else {
                 beamElement.classList.add("not-installed");
             }
-
-            // ✅ Ensure the installation progress is updated in UI
-            document.getElementById("progressValue").innerText = `${progressValue}%`;
-            document.getElementById("progressBar").style.width = `${progressValue}%`;
         } else {
             console.warn(`⚠ No data found for beam: ${beamName}`);
         }
     });
 
-    // ✅ Ensure the installation progress is correctly updated
+    // ✅ Ensure the installation progress is updated in UI
     updateInstallationProgress();
 }
+
 function updateInstallationProgress() {
+    if (!window.beamData || !window.beamData.beams) {
+        console.warn("⚠ No beam data available for progress update.");
+        return;
+    }
+
     let totalBeams = window.beamData.beams.length;
-    if (totalBeams === 0) return;
+    if (totalBeams === 0) {
+        console.warn("⚠ No beams found in data.");
+        return;
+    }
 
     let installedBeams = window.beamData.beams.filter(b => parseFloat(b.Progress) >= 100).length;
     let progressPercentage = ((installedBeams / totalBeams) * 100).toFixed(2);
+
+    console.log(`📊 Total Beams: ${totalBeams}, Installed Beams: ${installedBeams}, Progress: ${progressPercentage}%`);
 
     document.getElementById("progressValue").innerText = `${progressPercentage}%`;
     document.getElementById("progressBar").style.width = `${progressPercentage}%`;
