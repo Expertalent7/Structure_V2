@@ -5,23 +5,37 @@ async function loadDrawings() {
 
         const data = await response.json();
         const selectElement = document.getElementById("drawingSelect");
+        const imageContainer = document.getElementById("imageContainer");
 
-        // ✅ Clear previous entries
+        // ✅ Ensure `imageContainer` exists
+        if (!imageContainer) {
+            console.error("Error: 'imageContainer' element not found in the DOM.");
+            return;
+        }
+
+        // ✅ Clear previous dropdown options
         selectElement.innerHTML = '<option value="">Select a drawing...</option>';
 
-        // ✅ Populate dropdown correctly
+        // ✅ Populate dropdown with drawing options
         data.forEach(drawing => {
             let option = document.createElement("option");
-            option.value = drawing["Folder ID"]; 
+            option.value = drawing["Folder ID"];
             option.textContent = drawing["Drawing Name"];
             selectElement.appendChild(option);
         });
 
-        // ✅ Event Listener to Load Images When Selected
+        // ✅ Load images when a drawing is selected
         selectElement.addEventListener("change", function () {
             const selectedFolder = this.value;
             const selectedDrawing = data.find(d => d["Folder ID"] === selectedFolder);
-            displayImages(selectedDrawing["Images"]);
+
+            // ✅ Check if drawing exists and has images
+            if (!selectedDrawing || !selectedDrawing["Images"]) {
+                console.warn("No images found for the selected drawing.");
+                displayImages([]); // Call with empty array
+            } else {
+                displayImages(selectedDrawing["Images"]);
+            }
         });
 
     } catch (error) {
@@ -31,13 +45,22 @@ async function loadDrawings() {
 
 function displayImages(imageUrls) {
     const imageContainer = document.getElementById("imageContainer");
-    imageContainer.innerHTML = ""; // Clear previous images
 
-    if (imageUrls.length === 0) {
+    // ✅ Ensure `imageContainer` exists before modifying it
+    if (!imageContainer) {
+        console.error("Error: 'imageContainer' not found.");
+        return;
+    }
+
+    // ✅ Clear previous images
+    imageContainer.innerHTML = "";
+
+    if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
         imageContainer.innerHTML = "<p>No images found.</p>";
         return;
     }
 
+    // ✅ Append images
     imageUrls.forEach(url => {
         let img = document.createElement("img");
         img.src = url;
@@ -48,5 +71,5 @@ function displayImages(imageUrls) {
     });
 }
 
-// ✅ Ensure function runs when the page loads
+// ✅ Run `loadDrawings()` when the page loads
 document.addEventListener("DOMContentLoaded", loadDrawings);
