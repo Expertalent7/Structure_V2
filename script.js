@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async function () { 
     console.log("✅ Page Loaded, Assigning Global Fetch Function");
 
-    // 🔄 Global variable to store beam data as a dictionary
+    // 🔄 Global variable to store beam data
     window.beamData = {}; 
 
     const beamSearch = document.getElementById("beamSearch");
@@ -11,10 +11,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     const tooltip = document.getElementById("tooltip");
     const closeButton = document.getElementById("closePanelBtn");
     const clearSearchBtn = document.getElementById("clearSearchBtn");
-    const beamContainer = document.getElementById("beamContainer"); // ✅ Image Container
-    const structureImage = document.getElementById("structureImage"); // ✅ Structure Image
+    const beamContainer = document.querySelector(".container"); // ✅ Image Container
+    const structureImage = document.querySelector(".container img"); // ✅ Structure Image
 
-    // ✅ Ensure image is loaded before proceeding
+    // ✅ Ensure image is loaded before placing beams
     structureImage.onload = function() {
         console.log("✅ Structure image loaded");
         fetchBeamData();
@@ -64,33 +64,33 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         let containerRect = structureImage.getBoundingClientRect(); // ✅ Get image position
 
-        // ✅ Clear any existing beams before updating
-        document.querySelectorAll(".beam").forEach(beam => beam.remove());
+        document.querySelectorAll(".beam").forEach(beamElement => {
+            let beamName = beamElement.dataset.name?.toLowerCase().trim();
+            let beamDataEntry = Object.values(window.beamData).find(b =>
+                b.Beam_Name.toLowerCase().trim() === beamName
+            );
 
-        Object.values(window.beamData).forEach(beamDataEntry => {
-            let beamElement = document.createElement("div");
-            beamElement.classList.add("beam");
-            beamElement.dataset.name = beamDataEntry.Beam_Name.toLowerCase().trim();
+            if (beamDataEntry) {
+                beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
 
-            let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
+                let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
 
-            if (progressValue >= 100) {
-                beamElement.classList.add("installed");
-            } else if (progressValue > 0) {
-                beamElement.classList.add("in-progress");
+                if (progressValue >= 100) {
+                    beamElement.classList.add("installed");
+                } else if (progressValue > 0) {
+                    beamElement.classList.add("in-progress");
+                } else {
+                    beamElement.classList.add("not-installed");
+                }
+
+                // ✅ Adjust beam position relative to container
+                beamElement.style.position = "absolute";
+                beamElement.style.left = `${beamDataEntry.x}px`; // Align with image
+                beamElement.style.top = `${beamDataEntry.y}px`;   // Align with image
+                beamElement.style.transform = "translate(-50%, -50%)"; // ✅ Center beam
             } else {
-                beamElement.classList.add("not-installed");
+                console.warn(`⚠ No data found for beam: ${beamName}`);
             }
-
-            let left = parseFloat(beamDataEntry.x) || 0;
-            let top = parseFloat(beamDataEntry.y) || 0;
-
-            beamElement.style.position = "absolute";
-            beamElement.style.left = `${left}px`; // Align with image
-            beamElement.style.top = `${top}px`;   // Align with image
-            beamElement.style.transform = "translate(-50%, -50%)"; // ✅ Center beam
-
-            beamContainer.appendChild(beamElement);
         });
 
         updateInstallationProgress();
@@ -120,6 +120,57 @@ document.addEventListener("DOMContentLoaded", async function () {
         progressText.style.color = progressPercentage > 0 ? "#ffffff" : "#000";
         progressBar.style.backgroundColor = progressPercentage > 0 ? "#4CAF50" : "#ccc";
     }
+
+    // ✅ Close Panel Function
+    if (closeButton) {
+        closeButton.addEventListener("click", function () {
+            beamDetailsPanel.style.display = "none";
+        });
+    }
+
+    // ✅ Search Function with Event Delegation
+    if (beamSearch) {
+        beamSearch.addEventListener("input", function () {
+            let input = this.value.toLowerCase().trim();
+            document.querySelectorAll(".beam").forEach(beam => {
+                let beamName = beam.dataset.name.toLowerCase();
+                if (beamName.includes(input) && input !== "") {
+                    beam.classList.add("highlight");
+                    beam.style.border = "3px solid blue";
+                } else {
+                    beam.classList.remove("highlight");
+                    beam.style.border = "";
+                }
+            });
+        });
+    }
+
+    // ✅ Clear Search
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener("click", function () {
+            beamSearch.value = "";
+            document.querySelectorAll(".beam").forEach(beam => {
+                beam.classList.remove("highlight");
+                beam.style.border = "";
+            });
+            console.log("🔄 Search cleared");
+        });
+    }
+
+    // ✅ Tooltip for Beam Info on Hover (Event Delegation)
+    beamContainer.addEventListener("mouseover", function (event) {
+        if (event.target.classList.contains("beam")) {
+            let beamName = event.target.dataset.name;
+            tooltip.innerText = `Beam: ${beamName}`;
+            tooltip.style.display = "block";
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+        }
+    });
+
+    beamContainer.addEventListener("mouseleave", function () {
+        tooltip.style.display = "none";
+    });
 
     // ✅ Fetch data initially and then every 5 seconds
     setInterval(fetchBeamData, 5000);
