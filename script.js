@@ -1,30 +1,50 @@
 document.addEventListener("DOMContentLoaded", async function () { 
     console.log("✅ Page Loaded, Assigning Global Fetch Function");
 
-    // 🔄 Global variable to store beam data & current frame
+    // 🔄 Global variable to store beam data & selected drawing
     window.beamData = {}; 
+    let currentDrawing = "STC01-DTSK-SS10-L933P01-0002"; // Default drawing
     let currentFrame = "A"; // Default frame
 
-    // ✅ Corrected List of Images per Frame
+    // ✅ List of structure images per drawing and frame
     const frameImages = {
-        "A": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-a.jpg",
-        "B": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-b.jpg",
-        "2": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-2.jpg",
-        "3": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-3.jpg",
-        "4": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-4.jpg"
+        "STC01-DTSK-SS10-L933P01-0002": {
+            "A": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0002-A.jpg",
+            "B": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0002-B.jpg",
+            "2": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0002-2.jpg",
+            "3": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0002-3.jpg",
+            "4": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0002-4.jpg"
+        },
+        "STC01-DTSK-SS10-L933P01-0003": {
+            "A": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0003-A.jpg",
+            "B": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0003-B.jpg",
+            "2": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0003-2.jpg",
+            "3": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0003-3.jpg",
+            "4": "https://your-cdn-or-github-path/STC01-DTSK-SS10-L933P01-0003-4.jpg"
+        }
     };
 
     // ✅ DOM Elements
     const structureImage = document.getElementById("structureImage");
     const frameButtons = document.querySelectorAll(".frame-btn");
-    const beamContainer = document.getElementById("beamContainer");
+    const drawingSelector = document.getElementById("drawingSelector");
 
-    // ✅ Load the default frame
+    // ✅ Load the default drawing & frame
+    function updateDrawing(newDrawing) {
+        currentDrawing = newDrawing;
+        updateFrame(currentFrame);
+    }
+
     function updateFrame(newFrame) {
         currentFrame = newFrame;
-        structureImage.src = frameImages[currentFrame];
+        structureImage.src = frameImages[currentDrawing][currentFrame];
         fetchBeamData();
     }
+
+    // ✅ Drawing Selection Event
+    drawingSelector.addEventListener("change", function () {
+        updateDrawing(this.value);
+    });
 
     // ✅ Frame Button Click Event
     frameButtons.forEach(button => {
@@ -49,38 +69,21 @@ document.addEventListener("DOMContentLoaded", async function () {
                 throw new Error("⚠ Error: Data format incorrect! Expected an array.");
             }
 
-            // Convert Array to Dictionary (Only keep beams of current frame)
+            // Convert Array to Dictionary (Only keep beams of current drawing & frame)
             window.beamData = {};
             data.forEach(beam => {
-                if (beam.Frame === currentFrame) { // ✅ Filter by selected frame
+                if (beam.Drawing === currentDrawing && beam.Frame === currentFrame) { // ✅ Filter by selected drawing & frame
                     window.beamData[beam.Beam_ID] = beam; 
                 }
             });
 
             console.log("✅ beamData Assigned:", window.beamData);
-            updateBeamUI();
             updateInstallationProgress();
         } catch (error) {
             console.error("❌ Error fetching beam data:", error);
-            console.warn("⚠ Retrying fetch in 5 seconds...");
-            setTimeout(fetchBeamData, 5000);
         }
     }
 
-    function updateInstallationProgress() {
-        let totalBeams = Object.keys(window.beamData).length;
-        let installedBeams = Object.values(window.beamData).filter(b => parseFloat(b.Progress) >= 100).length;
-
-        // ✅ Fix: Prevent NaN% by ensuring totalBeams > 0
-        let progressPercentage = totalBeams > 0 ? ((installedBeams / totalBeams) * 100).toFixed(2) : "0%";
-
-        console.log(`📊 Updating Progress: ${progressPercentage}`);
-
-        document.getElementById("progressBar").style.width = progressPercentage;
-        document.getElementById("progressText").innerText = progressPercentage;
-        document.getElementById("progressValue").innerText = `Installation Progress: ${progressPercentage}`; 
-    }
-
-    // ✅ Load the first frame
-    updateFrame("A");
+    // ✅ Load the first drawing and frame
+    updateDrawing(currentDrawing);
 });
