@@ -114,32 +114,58 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    // ✅ Beam Click Event (Show Details)
-    beams.forEach(beamElement => {
-        beamElement.addEventListener("click", function (event) {
-            let beamName = this.dataset.name.trim().toLowerCase();
-            let beamDataEntry = Object.values(window.beamData).find(b =>
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
+    // ✅ Show Beam Details on Click (with Correct Positioning)
+beams.forEach(beamElement => {
+    beamElement.addEventListener("click", function (event) {
+        if (!window.beamData || !window.beamData[beamElement.dataset.name]) {
+            console.warn("⚠ No beam data available");
+            return;
+        }
 
-            if (beamDataEntry) {
-                let beamStatus = beamDataEntry.Progress === "100%" ? "Installed" : "Not Installed";
-                let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
-                let beamProgress = beamDataEntry.Progress || "0%";
-                let beamQRCode = `https://quickchart.io/qr?text=${encodeURIComponent(beamDataEntry.Beam_Name)}`;
+        let beamName = beamElement.dataset.name.trim().toLowerCase();
+        let beamDataEntry = Object.values(window.beamData).find(b =>
+            b.Beam_Name.toLowerCase().trim() === beamName
+        );
 
-                document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
-                document.getElementById("beamStatus").innerText = beamStatus;
-                document.getElementById("beamWeight").innerText = beamWeight;
-                document.getElementById("beamProgress").innerText = beamProgress;
-                document.getElementById("beamQRCode").src = beamQRCode;
+        if (beamDataEntry) {
+            let beamStatus = beamDataEntry.Progress === "100%" ? "Installed" : "Not Installed";
+            let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
+            let beamProgress = beamDataEntry.Progress || "0%";
+            let beamQRCode = `https://quickchart.io/qr?text=${encodeURIComponent(beamDataEntry.Beam_Name)}`;
 
-                beamDetailsPanel.style.display = "block";
-            } else {
-                console.warn(`⚠ No matching data found for ${beamName}`);
+            document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
+            document.getElementById("beamStatus").innerText = beamStatus;
+            document.getElementById("beamWeight").innerText = beamWeight;
+            document.getElementById("beamProgress").innerText = beamProgress;
+            document.getElementById("beamQRCode").src = beamQRCode;
+
+            // ✅ Get Beam Position
+            let beamRect = beamElement.getBoundingClientRect();
+            let panelWidth = beamDetailsPanel.offsetWidth;
+            let panelHeight = beamDetailsPanel.offsetHeight;
+
+            // ✅ Calculate Position
+            let posX = beamRect.left + window.scrollX + beamRect.width + 15; // Shift right
+            let posY = beamRect.top + window.scrollY;
+
+            // ✅ Prevent the panel from going off-screen
+            if (posX + panelWidth > window.innerWidth) {
+                posX = beamRect.left + window.scrollX - panelWidth - 15; // Shift left
             }
-        });
+            if (posY + panelHeight > window.innerHeight) {
+                posY = beamRect.top + window.scrollY - panelHeight - 15; // Shift up
+            }
+
+            // ✅ Apply Positioning
+            beamDetailsPanel.style.left = `${posX}px`;
+            beamDetailsPanel.style.top = `${posY}px`;
+            beamDetailsPanel.style.display = "block";
+        } else {
+            console.warn(`⚠ No matching data found for ${beamName}`);
+        }
     });
+});
+
 
     // ✅ Close Panel Function
     function closePanel() {
