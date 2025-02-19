@@ -178,6 +178,23 @@ beams.forEach(beamElement => {
     });
 });
 
+    // ✅ Tooltip for Beam Info on Hover
+beams.forEach(beam => {
+    beam.addEventListener("mouseenter", function (event) {
+        let beamName = this.dataset.name;
+        tooltip.innerText = `Beam: ${beamName}`;
+        tooltip.style.display = "block";
+
+        // ✅ Position tooltip near mouse pointer
+        tooltip.style.left = `${event.pageX + 10}px`;
+        tooltip.style.top = `${event.pageY + 10}px`;
+    });
+
+    beam.addEventListener("mouseleave", function () {
+        tooltip.style.display = "none";
+    });
+});
+
 
     // ✅ Close Panel Function
     function closePanel() {
