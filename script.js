@@ -1,44 +1,52 @@
 async function loadDrawings() {
     try {
-        console.log("🔄 Fetching drawings data...");
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
-
-        if (!response.ok) {
-            throw new Error(`HTTP Error! Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error("Failed to load data!");
 
         const data = await response.json();
-        console.log("✅ Drawings Data Loaded:", data);
-
         const selectElement = document.getElementById("drawingSelect");
 
-        if (!selectElement) {
-            throw new Error("❌ 'drawingSelect' element not found in the DOM!");
-        }
-
-        // ✅ Clear previous options
+        // ✅ Clear previous entries
         selectElement.innerHTML = '<option value="">Select a drawing...</option>';
 
         // ✅ Populate dropdown correctly
-        if (Array.isArray(data) && data.length > 0) {
-            data.forEach(drawing => {
-                if (drawing["Folder ID"] && drawing["Drawing Name"]) {
-                    let option = document.createElement("option");
-                    option.value = drawing["Folder ID"]; // Ensure correct key
-                    option.textContent = drawing["Drawing Name"]; // Ensure correct key
-                    selectElement.appendChild(option);
-                } else {
-                    console.warn("⚠️ Skipping invalid entry:", drawing);
-                }
-            });
-        } else {
-            console.warn("⚠️ No drawings found in JSON file.");
-        }
+        data.forEach(drawing => {
+            let option = document.createElement("option");
+            option.value = drawing["Folder ID"]; 
+            option.textContent = drawing["Drawing Name"];
+            selectElement.appendChild(option);
+        });
+
+        // ✅ Event Listener to Load Images When Selected
+        selectElement.addEventListener("change", function () {
+            const selectedFolder = this.value;
+            const selectedDrawing = data.find(d => d["Folder ID"] === selectedFolder);
+            displayImages(selectedDrawing["Images"]);
+        });
 
     } catch (error) {
-        console.error("❌ Error loading drawings:", error);
+        console.error("Error loading drawings:", error);
     }
 }
 
-// ✅ Run function when page loads
+function displayImages(imageUrls) {
+    const imageContainer = document.getElementById("imageContainer");
+    imageContainer.innerHTML = ""; // Clear previous images
+
+    if (imageUrls.length === 0) {
+        imageContainer.innerHTML = "<p>No images found.</p>";
+        return;
+    }
+
+    imageUrls.forEach(url => {
+        let img = document.createElement("img");
+        img.src = url;
+        img.alt = "Drawing Image";
+        img.style.width = "200px";
+        img.style.margin = "10px";
+        imageContainer.appendChild(img);
+    });
+}
+
+// ✅ Ensure function runs when the page loads
 document.addEventListener("DOMContentLoaded", loadDrawings);
