@@ -114,22 +114,23 @@ body {
 
 /* ✅ Progress Bar */
 #progressContainer {
-    width: 50%;
-    max-width: 400px;
-    height: 20px;
-    background-color: #ddd;
-    border-radius: 10px;
-    margin: 10px auto;
+    width: 100%;
+    background-color: #ccc;
+    border-radius: 5px;
     overflow: hidden;
 }
+
 #progressBar {
-    height: 100%;
-    color: white;
+    height: 20px;
+    width: 0%;  /* Default to 0% */
+    background-color: #4CAF50;  /* Green */
     text-align: center;
+    line-height: 20px;
+    color: white;
     font-weight: bold;
-    transition: width 0.5s ease-in-out, background-color 0.3s ease-in-out;
-    background-color: green;
+    border-radius: 5px;
 }
+
 
 /* 🎭 Beam Legend */
 #beam-legend {
