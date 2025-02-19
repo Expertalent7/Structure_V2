@@ -44,32 +44,24 @@ async function loadDrawings() {
 }
 
 function displayImages(imageUrls) {
-    const imageContainer = document.getElementById("imageContainer");
+    const imageContainer = document.getElementById("beamContainer"); // Ensure the correct container ID
+    imageContainer.innerHTML = ""; // Clear previous images
 
-    // ✅ Ensure `imageContainer` exists before modifying it
-    if (!imageContainer) {
-        console.error("Error: 'imageContainer' not found.");
-        return;
-    }
-
-    // ✅ Clear previous images
-    imageContainer.innerHTML = "";
-
-    if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
+    if (!imageUrls || imageUrls.length === 0) {
         imageContainer.innerHTML = "<p>No images found.</p>";
         return;
     }
 
-    // ✅ Append images
     imageUrls.forEach(url => {
         let img = document.createElement("img");
         img.src = url;
         img.alt = "Drawing Image";
-        img.style.width = "200px";
+        img.style.width = "200px"; // Adjust size as needed
         img.style.margin = "10px";
         imageContainer.appendChild(img);
     });
 }
+
 
 // ✅ Run `loadDrawings()` when the page loads
 document.addEventListener("DOMContentLoaded", loadDrawings);
