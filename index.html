@@ -5,35 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beam Selection Tool</title>
 
-    <!-- ✅ External Stylesheet -->
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-    <!-- ✅ External JavaScript -->
     <script defer src="script.js"></script>
 </head>
 <body>
 
-    <!-- 🌙 Dark Mode Toggle -->
-    <button id="darkModeToggle" class="toggle-btn" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
+    <button id="darkModeToggle" class="toggle-btn">🌙 Dark Mode</button>
 
     <h1>Beam Selection Tool</h1>
 
-    <!-- 📌 Drawing Selection Dropdown -->
-    <select id="drawingSelect" onchange="handleDrawingChange()">
+    <select id="drawingSelect">
         <option value="">Select a drawing...</option>
     </select>
 
-    <!-- 📌 Image Container with Beams -->
-    <div id="beamContainer" style="position: relative; display: inline-block;">
-        <img id="structureImage" src="" alt="Structure Plan">
-    </div>
+    <div id="beamContainer" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
 
-    <!-- 📌 Image List (Fixed) -->
-    <div id="imageContainer"></div>
-
-    <!-- 📊 Installation Progress -->
-    <h2 id="installationProgress">Installation Progress: <span id="progressValue">0%</span></h2>
+    <h2>Installation Progress: <span id="progressValue">0%</span></h2>
     <div id="progressContainer">
         <div id="progressBar"><span id="progressText">0%</span></div>
     </div>
