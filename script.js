@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async function () { 
     console.log("✅ Page Loaded, Assigning Global Fetch Function");
 
-    // 🔄 Global variable to store beam data as a dictionary (not an array)
+    // 🔄 Global variable to store beam data as a dictionary
     window.beamData = {}; 
 
     const beamSearch = document.getElementById("beamSearch");
@@ -14,13 +14,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     const beamContainer = document.getElementById("beamContainer"); // ✅ Image Container
     const structureImage = document.getElementById("structureImage"); // ✅ Structure Image
 
-    // ✅ Ensure image is not duplicated dynamically
-    if (!structureImage) {
-        console.error("❌ Error: Structure image not found!");
-        return;
-    }
+    // ✅ Ensure image is loaded before proceeding
+    structureImage.onload = function() {
+        console.log("✅ Structure image loaded");
+        fetchBeamData();
+    };
 
-    // ✅ Fetch and Update Beam Data
     async function fetchBeamData() {
         const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
@@ -43,7 +42,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             });
 
             console.log("✅ beamData Assigned:", window.beamData);
-
             updateBeamUI();
             updateInstallationProgress();
         } catch (error) {
@@ -53,7 +51,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    // ✅ Update Beam UI
     function updateBeamUI() {
         console.log("🔍 Checking beamData:", window.beamData);
 
@@ -67,37 +64,33 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         let containerRect = structureImage.getBoundingClientRect(); // ✅ Get image position
 
-        document.querySelectorAll(".beam").forEach(beamElement => {
-            let beamName = beamElement.dataset.name?.toLowerCase().trim();
-            let beamDataEntry = Object.values(window.beamData).find(b =>
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
+        // ✅ Clear any existing beams before updating
+        document.querySelectorAll(".beam").forEach(beam => beam.remove());
 
-            if (beamDataEntry) {
-                beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
+        Object.values(window.beamData).forEach(beamDataEntry => {
+            let beamElement = document.createElement("div");
+            beamElement.classList.add("beam");
+            beamElement.dataset.name = beamDataEntry.Beam_Name.toLowerCase().trim();
 
-                let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
+            let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
 
-                if (progressValue >= 100) {
-                    beamElement.classList.add("installed");
-                } else if (progressValue > 0) {
-                    beamElement.classList.add("in-progress");
-                } else {
-                    beamElement.classList.add("not-installed");
-                }
-
-                // ✅ Get beam's correct position relative to the image container
-                let left = parseFloat(beamDataEntry.x) || 0;
-                let top = parseFloat(beamDataEntry.y) || 0;
-
-                // ✅ Adjust beam position relative to container
-                beamElement.style.position = "absolute";
-                beamElement.style.left = `${left}px`; // Align with image
-                beamElement.style.top = `${top}px`;   // Align with image
-                beamElement.style.transform = "translate(-50%, -50%)"; // ✅ Center beam
+            if (progressValue >= 100) {
+                beamElement.classList.add("installed");
+            } else if (progressValue > 0) {
+                beamElement.classList.add("in-progress");
             } else {
-                console.warn(`⚠ No data found for beam: ${beamName}`);
+                beamElement.classList.add("not-installed");
             }
+
+            let left = parseFloat(beamDataEntry.x) || 0;
+            let top = parseFloat(beamDataEntry.y) || 0;
+
+            beamElement.style.position = "absolute";
+            beamElement.style.left = `${left}px`; // Align with image
+            beamElement.style.top = `${top}px`;   // Align with image
+            beamElement.style.transform = "translate(-50%, -50%)"; // ✅ Center beam
+
+            beamContainer.appendChild(beamElement);
         });
 
         updateInstallationProgress();
@@ -120,68 +113,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         console.log(`📊 Updating Progress: ${progressPercentage}%`);
 
-        // ✅ Update Progress Bar
         progressBar.style.width = `${progressPercentage}%`;
         progressText.innerText = `${progressPercentage}%`;
         progressValue.innerText = `Installation Progress: ${progressPercentage}%`; 
 
-        // ✅ Change text color for better visibility
         progressText.style.color = progressPercentage > 0 ? "#ffffff" : "#000";
         progressBar.style.backgroundColor = progressPercentage > 0 ? "#4CAF50" : "#ccc";
     }
 
-    // ✅ Close Panel Function
-    if (closeButton) {
-        closeButton.addEventListener("click", function () {
-            beamDetailsPanel.style.display = "none";
-        });
-    }
-
-    // ✅ Search Function with Event Delegation
-    if (beamSearch) {
-        beamSearch.addEventListener("input", function () {
-            let input = this.value.toLowerCase().trim();
-            document.querySelectorAll(".beam").forEach(beam => {
-                let beamName = beam.dataset.name.toLowerCase();
-                if (beamName.includes(input) && input !== "") {
-                    beam.classList.add("highlight");
-                    beam.style.border = "3px solid blue";
-                } else {
-                    beam.classList.remove("highlight");
-                    beam.style.border = "";
-                }
-            });
-        });
-    }
-
-    // ✅ Clear Search
-    if (clearSearchBtn) {
-        clearSearchBtn.addEventListener("click", function () {
-            beamSearch.value = "";
-            document.querySelectorAll(".beam").forEach(beam => {
-                beam.classList.remove("highlight");
-                beam.style.border = "";
-            });
-            console.log("🔄 Search cleared");
-        });
-    }
-
-    // ✅ Tooltip for Beam Info on Hover (Event Delegation)
-    beamContainer.addEventListener("mouseover", function (event) {
-        if (event.target.classList.contains("beam")) {
-            let beamName = event.target.dataset.name;
-            tooltip.innerText = `Beam: ${beamName}`;
-            tooltip.style.display = "block";
-            tooltip.style.left = `${event.pageX + 10}px`;
-            tooltip.style.top = `${event.pageY + 10}px`;
-        }
-    });
-
-    beamContainer.addEventListener("mouseleave", function () {
-        tooltip.style.display = "none";
-    });
-
     // ✅ Fetch data initially and then every 5 seconds
-    await fetchBeamData();
     setInterval(fetchBeamData, 5000);
 });
