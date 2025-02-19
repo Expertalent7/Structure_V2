@@ -85,34 +85,46 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     function updateInstallationProgress() {
-        if (!window.beamData) {
-            console.warn("⚠ No beam data available for progress update.");
-            return;
-        }
-
-        let totalBeams = Object.keys(window.beamData).length;
-        if (totalBeams === 0) {
-            console.warn("⚠ No beams found in data.");
-            return;
-        }
-
-        let installedBeams = Object.values(window.beamData).filter(b => parseFloat(b.Progress) >= 100).length;
-        let progressPercentage = ((installedBeams / totalBeams) * 100).toFixed(2);
-
-        console.log(`📊 Updating Progress: ${progressPercentage}%`);
-
-        progressBar.style.width = `${progressPercentage}%`;
-        progressText.innerText = `${progressPercentage}%`;
-        progressValue.innerText = `${progressPercentage}%`;
-
-        if (progressPercentage > 0) {
-            progressText.style.color = "#ffffff";
-            progressBar.style.backgroundColor = "#4CAF50";
-        } else {
-            progressText.style.color = "#000";
-            progressBar.style.backgroundColor = "#ccc";
-        }
+    if (!window.beamData) {
+        console.warn("⚠ No beam data available for progress update.");
+        return;
     }
+
+    let totalBeams = Object.keys(window.beamData).length;
+    if (totalBeams === 0) {
+        console.warn("⚠ No beams found in data.");
+        return;
+    }
+
+    let installedBeams = Object.values(window.beamData).filter(b => parseFloat(b.Progress) >= 100).length;
+    let progressPercentage = ((installedBeams / totalBeams) * 100).toFixed(2);
+
+    console.log(`📊 Updating Progress: ${progressPercentage}%`);
+
+    let progressBar = document.getElementById("progressBar");
+    let progressText = document.getElementById("progressText");
+
+    // ✅ Set Progress Bar Width
+    progressBar.style.width = `${progressPercentage}%`;
+
+    // ✅ Ensure progress text is centered inside the bar
+    progressText.innerText = `${progressPercentage}%`;
+    progressText.style.position = "absolute";
+    progressText.style.left = "50%";
+    progressText.style.top = "50%";
+    progressText.style.transform = "translate(-50%, -50%)";
+    progressText.style.fontWeight = "bold";
+
+    // ✅ Change text color for visibility
+    if (progressPercentage > 0) {
+        progressText.style.color = "#ffffff"; // White text for contrast
+        progressBar.style.backgroundColor = "#4CAF50"; // ✅ Green progress bar
+    } else {
+        progressText.style.color = "#000"; // Black for 0%
+        progressBar.style.backgroundColor = "#ccc"; // Gray when empty
+    }
+}
+
 
     // ✅ Show Beam Details on Click (with Correct Positioning)
 beams.forEach(beamElement => {
