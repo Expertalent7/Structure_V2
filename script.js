@@ -1,26 +1,44 @@
 async function loadDrawings() {
     try {
+        console.log("🔄 Fetching drawings data...");
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
-        if (!response.ok) throw new Error("Failed to load data!");
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error! Status: ${response.status}`);
+        }
 
         const data = await response.json();
+        console.log("✅ Drawings Data Loaded:", data);
+
         const selectElement = document.getElementById("drawingSelect");
 
-        // ✅ Clear previous entries
+        if (!selectElement) {
+            throw new Error("❌ 'drawingSelect' element not found in the DOM!");
+        }
+
+        // ✅ Clear previous options
         selectElement.innerHTML = '<option value="">Select a drawing...</option>';
 
         // ✅ Populate dropdown correctly
-        data.forEach(drawing => {
-            let option = document.createElement("option");
-            option.value = drawing["Folder ID"]; // Using correct key name
-            option.textContent = drawing["Drawing Name"]; // Using correct key name
-            selectElement.appendChild(option);
-        });
+        if (Array.isArray(data) && data.length > 0) {
+            data.forEach(drawing => {
+                if (drawing["Folder ID"] && drawing["Drawing Name"]) {
+                    let option = document.createElement("option");
+                    option.value = drawing["Folder ID"]; // Ensure correct key
+                    option.textContent = drawing["Drawing Name"]; // Ensure correct key
+                    selectElement.appendChild(option);
+                } else {
+                    console.warn("⚠️ Skipping invalid entry:", drawing);
+                }
+            });
+        } else {
+            console.warn("⚠️ No drawings found in JSON file.");
+        }
 
     } catch (error) {
-        console.error("Error loading drawings:", error);
+        console.error("❌ Error loading drawings:", error);
     }
 }
 
-// ✅ Ensure function runs when the page loads
+// ✅ Run function when page loads
 document.addEventListener("DOMContentLoaded", loadDrawings);
