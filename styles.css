@@ -105,12 +105,14 @@ body {
     width: 220px;
     text-align: left;
 }
-.details-panel img {
-    max-width: 100%;
-    height: auto;
+.container img {
+    width: auto; /* Prevents automatic stretching */
+    max-width: 100%; /* Keeps it within the container */
+    height: auto; /* Ensures proportional scaling */
     display: block;
-    margin: 10px auto;
+    margin: 0 auto; /* Centers the image */
 }
+
 
 /* ✅ Progress Bar */
 #progressContainer {
