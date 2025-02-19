@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const drawingSelect = document.getElementById("drawingSelect");
     const framesContainer = document.getElementById("framesContainer");
 
-    const jsonUrl = "https://drive.google.com/uc?export=download&id=YOUR_JSON_FILE_ID"; // Replace with actual JSON file ID
+    const jsonUrl = "https://drive.google.com/uc?export=download&id=1wTeXYRrablsmlfx6rAje2dIcrl2G9hta"; // Replace with actual JSON file ID
 
     try {
         let response = await fetch(jsonUrl);
