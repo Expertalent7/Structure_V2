@@ -17,12 +17,24 @@ jobs:
 
       - name: Fetch updated JSON from Google Drive
         run: |
-          curl -L "https://drive.google.com/uc?export=download&id=17yfZbRtY38mglRRLWmPjDGfphbWr870R" -o data/drawings_data.json
+          curl -L "https://drive.google.com/uc?export=download&id=17yfZbRtY38mglRRLWmPjDGfphbWr870R" --output data/drawings_data.json
+
+      - name: Verify JSON file exists
+        run: |
+          if [[ ! -f data/drawings_data.json ]]; then
+            echo "❌ Error: JSON file not found!"
+            exit 1
+          fi
+          echo "✅ JSON file successfully downloaded."
 
       - name: Commit and push if changed
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add data/drawings_data.json
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update drawings JSON"
+          if git diff --staged --quiet; then
+            echo "🟢 No changes detected, skipping commit."
+            exit 0
+          fi
+          git commit -m "Auto-update drawings JSON"
           git push
