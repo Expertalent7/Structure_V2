@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-   // ✅ Show Beam Details on Click
+   // ✅ Show Beam Details on Click (with Correct Positioning)
 beams.forEach(beamElement => {
     beamElement.addEventListener("click", function (event) {
         if (!window.beamData || !window.beamData.beams) {
@@ -173,8 +173,6 @@ beams.forEach(beamElement => {
             let beamStatus = beamDataEntry.Progress === "100%" ? "Installed" : "Not Installed";
             let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
             let beamProgress = beamDataEntry.Progress || "0%";
-
-            // ✅ UPDATED QR CODE GENERATION
             let beamQRCode = `https://quickchart.io/qr?text=${encodeURIComponent(beamDataEntry.Beam_Name)}`;
 
             document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
@@ -182,14 +180,27 @@ beams.forEach(beamElement => {
             document.getElementById("beamWeight").innerText = beamWeight;
             document.getElementById("beamProgress").innerText = beamProgress;
             document.getElementById("beamQRCode").src = beamQRCode;
-            
+
+            // ✅ CORRECT POSITIONING OF THE PANEL
+            let beamRect = event.target.getBoundingClientRect();
+            let panelWidth = beamDetailsPanel.offsetWidth;
+            let panelHeight = beamDetailsPanel.offsetHeight;
+
+            let posX = beamRect.left + window.scrollX + beamRect.width + 10; // Shift right
+            let posY = beamRect.top + window.scrollY - (panelHeight / 2);
+
+            // Prevent the panel from going off-screen
+            posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10));
+            posY = Math.max(10, Math.min(posY, window.innerHeight - panelHeight - 10));
+
+            beamDetailsPanel.style.left = `${posX}px`;
+            beamDetailsPanel.style.top = `${posY}px`;
             beamDetailsPanel.style.display = "block";
         } else {
             console.warn(`⚠ No matching data found for ${beamName}`);
         }
     });
 });
-
 
     // ✅ Tooltip on Hover
     beams.forEach(beam => {
