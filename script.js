@@ -102,7 +102,7 @@ function updateInstallationProgress() {
     let installedBeams = window.beamData.beams.filter(b => parseFloat(b.Progress) >= 100).length;
     let progressPercentage = ((installedBeams / totalBeams) * 100).toFixed(2);
 
-    console.log(`📊 Total Beams: ${totalBeams}, Installed Beams: ${installedBeams}, Progress: ${progressPercentage}%`);
+    console.log(`📊 Updating Progress: ${progressPercentage}%`);
 
     // ✅ Update Progress Bar Width
     let progressBar = document.getElementById("progressBar");
@@ -115,9 +115,16 @@ function updateInstallationProgress() {
     // ✅ Update Black Percentage Text (outside the bar)
     let progressValue = document.getElementById("progressValue");
     progressValue.innerText = `${progressPercentage}%`;
+
+    // ✅ Ensure Text is Green when Installed
+    if (progressPercentage > 0) {
+        progressText.style.color = "#ffffff"; // White text for contrast
+        progressBar.style.backgroundColor = "#4CAF50"; // ✅ Green progress bar
+    } else {
+        progressText.style.color = "#000"; // Black for 0%
+        progressBar.style.backgroundColor = "#ccc"; // Gray when empty
+    }
 }
-
-
 
     // ✅ Search Beams
     if (beamSearch) {
