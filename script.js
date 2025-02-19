@@ -183,6 +183,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ✅ Fetch data initially and then every 5 seconds
-    await fetchBeamData();
-    setInterval(fetchBeamData, 5000);
+    //await fetchBeamData();
+    //setInterval(fetchBeamData, 5000);
 });
