@@ -34,8 +34,8 @@ body {
 /* 🎯 Beam Styling */
 .beam {
     position: absolute;
-    transform: translate(-50%, -50%); /* Ensures correct alignment */
-    transition: none; /* Prevents unwanted animations */
+    background-color: transparent;
+    transition: all 0.2s ease-in-out;
 }
 
 
