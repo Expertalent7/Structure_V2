@@ -77,17 +77,19 @@ function updateBeamUI() {
                 beamElement.classList.add("not-installed");
             }
 
-            // ✅ Adjust position dynamically
-            let left = parseFloat(beamElement.style.left) || 0; // Default to 0 if NaN
-            let top = parseFloat(beamElement.style.top) || 0;
-
-            beamElement.style.left = `${left - 5}px`; // Move left
-            beamElement.style.top = `${top + 10}px`;  // Move down
-
+            // ✅ Set position **only once**
+            if (!beamElement.dataset.fixedPosition) {
+                beamElement.style.left = `${beamDataEntry.x}px`; // Fix X position
+                beamElement.style.top = `${beamDataEntry.y}px`;  // Fix Y position
+                beamElement.dataset.fixedPosition = "true"; // Prevents further movement
+            }
         } else {
             console.warn(`⚠ No data found for beam: ${beamName}`);
         }
     });
+
+    updateInstallationProgress();
+}
 
     updateInstallationProgress();
 }
