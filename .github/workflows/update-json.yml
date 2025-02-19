@@ -7,6 +7,10 @@ on:
     branches:
       - main
 
+on:
+  workflow_dispatch:  # Allows manual execution
+
+
 jobs:
   update-json:
     runs-on: ubuntu-latest
