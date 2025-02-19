@@ -13,6 +13,34 @@ document.addEventListener("DOMContentLoaded", async function () {
     const beams = document.querySelectorAll(".beam");
     const closeButton = document.getElementById("closePanelBtn");
 
+    // ✅ Fetch Beam Data
+    window.fetchBeamData = async function () {
+        const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
+
+        try {
+            console.log("🔄 Fetching Beam Data...");
+            const response = await fetch(GITHUB_API_URL);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+            
+            let data = await response.json();
+            console.log("📄 Raw Data Fetched:", data);
+
+            if (!Array.isArray(data)) {
+                throw new Error("⚠ Error: Data format incorrect! Expected an array.");
+            }
+
+            window.beamData = { beams: data }; 
+            console.log("✅ beamData Assigned:", window.beamData);
+
+            updateBeamUI();
+            updateInstallationProgress();
+        } catch (error) {
+            console.error("❌ Error fetching beam data:", error);
+            console.warn("⚠ Retrying fetch in 5 seconds...");
+            setTimeout(fetchBeamData, 5000);
+        }
+    };
+
     // ✅ Ensure progress bar is gray at 0%
     if (progressText && parseFloat(progressText.innerText) === 0) {
         progressBar.style.backgroundColor = "#ccc";
