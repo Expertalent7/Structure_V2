@@ -48,46 +48,31 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ✅ Update Beam UI
-   function updateBeamUI() {
-    console.log("🔍 Checking beamData:", window.beamData);
+  async function fetchBeamData() {
+    const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
-    if (!window.beamData.beams || window.beamData.beams.length === 0) {
-        console.warn("⚠ No beam data available. Retrying in 3 seconds...");
-        setTimeout(updateBeamUI, 3000);
-        return;
-    }
+    try {
+        console.log("🔄 Fetching Beam Data...");
+        const response = await fetch(GITHUB_API_URL);
+        
+        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+        
+        let data = await response.json();
+        console.log("📄 Raw Data Fetched:", data);  // Debugging
 
-    console.log("✅ Beam data available, updating UI...");
-
-    // Store all JSON beam names for fast lookup
-    let jsonBeams = window.beamData.beams.map(b => b.Beam_Name.trim().toLowerCase());
-    let missingBeams = []; // Track missing beams
-
-    document.querySelectorAll(".beam").forEach(beamElement => {
-        let beamName = beamElement.dataset.name?.trim().toLowerCase();
-
-        if (jsonBeams.includes(beamName)) {
-            let beamDataEntry = window.beamData.beams.find(b => b.Beam_Name.trim().toLowerCase() === beamName);
-
-            beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
-
-            let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
-
-            if (progressValue >= 100) {
-                beamElement.classList.add("installed");
-            } else if (progressValue > 0) {
-                beamElement.classList.add("in-progress");
-            } else {
-                beamElement.classList.add("not-installed");
-            }
-        } else {
-            missingBeams.push(beamName);
+        // ✅ Ensure data is assigned correctly
+        if (!Array.isArray(data)) {
+            throw new Error("⚠ Error: Data format incorrect! Expected an array.");
         }
-    });
 
-    // Only log missing beams once
-    if (missingBeams.length > 0) {
-        console.warn(`⚠ Beams missing from JSON:`, [...new Set(missingBeams)]);
+        window.beamData = { beams: data }; // ✅ Corrected data assignment
+        console.log("✅ beamData Assigned:", window.beamData); // Debugging
+        
+        updateBeamUI(); // Call UI update after successful data load
+    } catch (error) {
+        console.error("❌ Error fetching beam data:", error);
+        console.warn("⚠ Retrying fetch in 5 seconds...");
+        setTimeout(fetchBeamData, 5000); // Retry fetch
     }
 }
 
