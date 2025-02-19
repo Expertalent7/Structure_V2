@@ -14,45 +14,42 @@ document.addEventListener("DOMContentLoaded", async function () {
     const closeButton = document.getElementById("closePanelBtn");
 
     // ✅ **Fetch Beam Data** (Key Function Restored)
-    window.fetchBeamData = async function () {
-        const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
+   window.fetchBeamData = async function () {
+    const GITHUB_API_URL = `https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json?nocache=${new Date().getTime()}`; // ⏳ Prevent caching
 
-        try {
-            console.log("🔄 Fetching Beam Data...");
-            const response = await fetch(GITHUB_API_URL);
-            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-            
-            let data = await response.json();
-            console.log("📄 Raw Data Fetched:", data);
+    try {
+        console.log("🔄 Fetching Beam Data...");
+        const response = await fetch(GITHUB_API_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+        
+        let data = await response.json();
+        console.log("📄 Raw Data Fetched:", data);
 
-            if (!Array.isArray(data)) {
-                throw new Error("⚠ Error: Data format incorrect! Expected an array.");
-            }
-
-            // ✅ Sort by Timestamp (latest first)
-            data.sort((a, b) => new Date(b.Timestamp) - new Date(a.Timestamp));
-
-            // ✅ Keep only the latest scanned value per beam
-            let latestBeamData = new Map();
-            data.forEach(beam => {
-                let beamName = beam.Beam_Name.toLowerCase().trim();
-                if (!latestBeamData.has(beamName)) {
-                    latestBeamData.set(beamName, beam);
-                }
-            });
-
-            // ✅ Convert Map back to array
-            window.beamData = { beams: Array.from(latestBeamData.values()) };
-            console.log("✅ beamData Assigned:", window.beamData);
-
-            updateBeamUI();
-            updateInstallationProgress();
-        } catch (error) {
-            console.error("❌ Error fetching beam data:", error);
-            console.warn("⚠ Retrying fetch in 5 seconds...");
-            setTimeout(fetchBeamData, 5000);
+        if (!Array.isArray(data)) {
+            throw new Error("⚠ Error: Data format incorrect! Expected an array.");
         }
-    };
+
+        // ✅ Keep only the latest scan for each beam
+        let latestBeamData = {};
+        data.forEach(entry => {
+            let beamName = entry.Beam_Name.toLowerCase().trim();
+            if (!latestBeamData[beamName] || new Date(entry.Timestamp) > new Date(latestBeamData[beamName].Timestamp)) {
+                latestBeamData[beamName] = entry;
+            }
+        });
+
+        window.beamData = { beams: Object.values(latestBeamData) };
+        console.log("✅ Processed beamData Assigned:", window.beamData);
+
+        updateBeamUI();
+        updateInstallationProgress();
+    } catch (error) {
+        console.error("❌ Error fetching beam data:", error);
+        console.warn("⚠ Retrying fetch in 3 seconds...");
+        setTimeout(fetchBeamData, 3000);
+    }
+};
+
 
     // ✅ Update Beam UI
     function updateBeamUI() {
