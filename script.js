@@ -19,42 +19,44 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ✅ Fetch Beam Data from GitHub
-   async function fetchBeamData() {
+  async function fetchBeamData() {
     const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
     try {
+        console.log("🔄 Fetching Beam Data...");
         const response = await fetch(GITHUB_API_URL);
+        
         if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-
+        
         let data = await response.json();
-
-        // 🛠️ Debugging to check the actual data received
-        console.log("🔍 Raw Beam Data Received:", data);
-
-        // 🛠️ Ensure data is correctly structured before assigning
+        console.log("📄 Raw Data Fetched:", data);  // Debugging
+        
         if (!Array.isArray(data)) {
-            throw new Error("⚠ beamData is not an array!");
+            throw new Error("⚠ Error: Data format incorrect! Expected an array.");
         }
 
-        window.beamData = { beams: data }; // Fixing structure
-        console.log("✅ Beam Data Loaded into Global Variable:", window.beamData);
-
-        updateBeamUI(); // Call UI update only after successful data load
+        window.beamData = { beams: data }; // Ensure the structure is correct
+        console.log("✅ beamData Assigned:", window.beamData); // Debugging
+        
+        updateBeamUI(); // Call UI update after successful data load
     } catch (error) {
         console.error("❌ Error fetching beam data:", error);
-        console.warn("⚠ Retrying in 5 seconds...");
-        setTimeout(fetchBeamData, 5000); // Retry after 5 seconds if failed
+        console.warn("⚠ Retrying fetch in 5 seconds...");
+        setTimeout(fetchBeamData, 5000); // Retry fetch
     }
 }
 
 
-    // ✅ Update Beam UI
-    function updateBeamUI() {
+function updateBeamUI() {
+    console.log("🔍 Checking beamData:", window.beamData);
+
     if (!window.beamData || !window.beamData.beams || window.beamData.beams.length === 0) {
         console.warn("⚠ No beam data available. Retrying in 3 seconds...");
         setTimeout(updateBeamUI, 3000);
         return;
     }
+
+    console.log("✅ Beam data available, updating UI...");
 
     document.querySelectorAll(".beam").forEach(beamElement => {
         let beamName = beamElement.dataset.name?.toLowerCase().trim();
@@ -65,7 +67,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (beamDataEntry) {
             beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
 
-            // 🛠️ Ensure "Progress" is treated as a number
             let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
 
             if (progressValue >= 100) {
