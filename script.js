@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", async function () {
     console.log("✅ Page Loaded, Assigning Global Fetch Function");
 
+    // 🔄 Global variable to store beam data
+    window.beamData = [];
+
     // 🔄 Cache frequently accessed elements
     const beamSearch = document.getElementById("beamSearch");
     const beamDetailsPanel = document.getElementById("beamDetailsPanel");
@@ -18,25 +21,27 @@ document.addEventListener("DOMContentLoaded", async function () {
     // ✅ Fetch Beam Data from GitHub
     async function fetchBeamData() {
         const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
-        
+
         try {
             const response = await fetch(GITHUB_API_URL);
             if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
 
-            const beamData = await response.json();
-            console.log("✅ Beam Data Loaded:", beamData);
+            window.beamData = await response.json();
+            console.log("✅ Beam Data Loaded:", window.beamData);
 
-            window.beamData = beamData;
-            updateBeamUI(); // Update UI after data is loaded
+            updateBeamUI(); // Call UI update only after successful data load
         } catch (error) {
             console.error("❌ Error fetching beam data:", error);
+            console.warn("⚠ Retrying in 5 seconds...");
+            setTimeout(fetchBeamData, 5000); // Retry after 5 seconds if failed
         }
     }
 
     // ✅ Update Beam UI
     function updateBeamUI() {
-        if (!window.beamData || !window.beamData.beams) {
-            console.warn("⚠ beamData is still missing, delaying update...");
+        if (!window.beamData || !window.beamData.beams || window.beamData.beams.length === 0) {
+            console.warn("⚠ No beam data available. Retrying in 3 seconds...");
+            setTimeout(updateBeamUI, 3000);
             return;
         }
 
