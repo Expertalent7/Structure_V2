@@ -118,49 +118,56 @@
     "Scanned_By": "expertalent7@gmail.com",
     "Timestamp": "2/16/2025 11:51:29 PM"
   },
-    {
-        "Beam_ID": "beam r",
-        "Beam_Name": "beam r",
-        "Progress": "0"
-    },
-    {
-        "Beam_ID": "beam s",
-        "Beam_Name": "beam s",
-        "Progress": "20"
-    },
-    {
-        "Beam_ID": "beam t",
-        "Beam_Name": "beam t",
-        "Progress": "50"
-    },
-    {
-        "Beam_ID": "beam u",
-        "Beam_Name": "beam u",
-        "Progress": "100"
-    },
-    {
-        "Beam_ID": "beam v",
-        "Beam_Name": "beam v",
-        "Progress": "20"
-    },
-    {
-        "Beam_ID": "beam w",
-        "Beam_Name": "beam w",
-        "Progress": "50"
-    },
-    {
-        "Beam_ID": "beam x",
-        "Beam_Name": "beam x",
-        "Progress": "100"
-    },
-    {
-        "Beam_ID": "beam y",
-        "Beam_Name": "beam y",
-        "Progress": "50"
-    },
-    {
-        "Beam_ID": "beam z",
-        "Beam_Name": "beam z",
-        "Progress": "100"
-    }
+  {
+    "Beam_ID": "beam r",
+    "Beam_Name": "beam r",
+    "Progress": "0"
+  },
+  {
+    "Beam_ID": "beam s",
+    "Beam_Name": "beam s",
+    "Progress": "20"
+  },
+  {
+    "Beam_ID": "beam t",
+    "Beam_Name": "beam t",
+    "Progress": "50"
+  },
+  {
+    "Beam_ID": "beam u",
+    "Beam_Name": "beam u",
+    "Progress": "100"
+  },
+  {
+    "Beam_ID": "beam v",
+    "Beam_Name": "beam v",
+    "Progress": "20"
+  },
+  {
+    "Beam_ID": "beam w",
+    "Beam_Name": "beam w",
+    "Progress": "50"
+  },
+  {
+    "Beam_ID": "beam x",
+    "Beam_Name": "beam x",
+    "Progress": "100"
+  },
+  {
+    "Beam_ID": "beam y",
+    "Beam_Name": "beam y",
+    "Progress": "50"
+  },
+  {
+    "Beam_ID": "beam z",
+    "Beam_Name": "beam z",
+    "Progress": "100"
+  },
+  {
+    "Beam_ID": "beam j",
+    "Beam_Name": "beam j",
+    "Progress": "60",
+    "Scanned_By": "mounirkhaled9@gmail.com",
+    "Timestamp": "2/18/2025 8:57:27 PM"
+  }
 ]
