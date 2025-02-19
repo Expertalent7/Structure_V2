@@ -5,13 +5,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.beamData = {}; 
     let currentFrame = "A"; // Default frame
 
-    // ✅ List of structure images per frame
+    // ✅ Corrected List of Images per Frame
     const frameImages = {
-        "A": "https://your-cdn-or-github-path/frame-axis-a.jpg",
-        "B": "https://your-cdn-or-github-path/frame-axis-b.jpg",
-        "2": "https://your-cdn-or-github-path/frame-axis-2.jpg",
-        "3": "https://your-cdn-or-github-path/frame-axis-3.jpg",
-        "4": "https://your-cdn-or-github-path/frame-axis-4.jpg"
+        "A": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-a.jpg",
+        "B": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-b.jpg",
+        "2": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-2.jpg",
+        "3": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-3.jpg",
+        "4": "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/images/frame-axis-4.jpg"
     };
 
     // ✅ DOM Elements
@@ -67,53 +67,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    function updateBeamUI() {
-        console.log("🔍 Checking beamData:", window.beamData);
-
-        if (Object.keys(window.beamData).length === 0) {
-            console.warn("⚠ No beam data available. Retrying in 3 seconds...");
-            setTimeout(updateBeamUI, 3000);
-            return;
-        }
-
-        console.log("✅ Beam data available, updating UI...");
-
-        document.querySelectorAll(".beam").forEach(beamElement => {
-            let beamName = beamElement.dataset.name?.toLowerCase().trim();
-            let beamDataEntry = Object.values(window.beamData).find(b =>
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
-
-            if (beamDataEntry) {
-                beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
-
-                let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
-
-                if (progressValue >= 100) {
-                    beamElement.classList.add("installed");
-                } else if (progressValue > 0) {
-                    beamElement.classList.add("in-progress");
-                } else {
-                    beamElement.classList.add("not-installed");
-                }
-
-                // ✅ Adjust beam position relative to container
-                beamElement.style.position = "absolute";
-                beamElement.style.left = `${beamDataEntry.x}px`; // Align with image
-                beamElement.style.top = `${beamDataEntry.y}px`;   // Align with image
-                beamElement.style.transform = "translate(-50%, -50%)"; // ✅ Center beam
-            } else {
-                console.warn(`⚠ No data found for beam: ${beamName}`);
-            }
-        });
-
-        updateInstallationProgress();
-    }
-
     function updateInstallationProgress() {
         let totalBeams = Object.keys(window.beamData).length;
         let installedBeams = Object.values(window.beamData).filter(b => parseFloat(b.Progress) >= 100).length;
-        let progressPercentage = ((installedBeams / totalBeams) * 100).toFixed(2);
+
+        // ✅ Fix: Prevent NaN% by ensuring totalBeams > 0
+        let progressPercentage = totalBeams > 0 ? ((installedBeams / totalBeams) * 100).toFixed(2) : 0;
 
         console.log(`📊 Updating Progress: ${progressPercentage}%`);
 
