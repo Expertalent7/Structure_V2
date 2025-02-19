@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ✅ Fetch Beam Data from GitHub
-async function fetchBeamData() {
+    async function fetchBeamData() {
     const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
     try {
@@ -30,7 +30,10 @@ async function fetchBeamData() {
             throw new Error(`❌ HTTP Error! Status: ${response.status}`);
         }
 
-        let data = await response.json();
+        let rawText = await response.text(); // Get raw response
+        console.log("📄 Raw Response:", rawText); 
+
+        let data = JSON.parse(rawText); // Convert to JSON manually
         console.log("✅ JSON Loaded Successfully:", data);
 
         if (!Array.isArray(data)) {
@@ -39,7 +42,7 @@ async function fetchBeamData() {
 
         window.beamData = { beams: data };
         console.log("✅ beamData Assigned:", window.beamData);
-        updateBeamUI(); 
+        updateBeamUI();
 
     } catch (error) {
         console.error("❌ Error fetching JSON:", error);
@@ -47,6 +50,7 @@ async function fetchBeamData() {
         setTimeout(fetchBeamData, 10000);
     }
 }
+
 
 
     // ✅ Update Beam UI
