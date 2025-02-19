@@ -58,6 +58,9 @@ function updateBeamUI() {
 
     console.log("✅ Beam data available, updating UI...");
 
+    let container = document.getElementById("beamContainer"); // ✅ Get the image container
+    let containerRect = container.getBoundingClientRect(); // ✅ Get its position
+
     document.querySelectorAll(".beam").forEach(beamElement => {
         let beamName = beamElement.dataset.name?.toLowerCase().trim();
         let beamDataEntry = Object.values(window.beamData).find(b =>
@@ -77,14 +80,14 @@ function updateBeamUI() {
                 beamElement.classList.add("not-installed");
             }
 
-            // ✅ Fix position using predefined coordinates from `beamDataEntry`
-            let left = parseFloat(beamDataEntry.x) || 0; // Default to 0 if missing
-            let top = parseFloat(beamDataEntry.y) || 0; // Default to 0 if missing
+            // ✅ Get beam's correct position relative to the image container
+            let left = parseFloat(beamDataEntry.x) || 0;
+            let top = parseFloat(beamDataEntry.y) || 0;
 
-            // ✅ Apply the fixed position
-            beamElement.style.position = "absolute"; // Ensure absolute positioning
-            beamElement.style.left = `${left}px`; // Set X position
-            beamElement.style.top = `${top}px`;  // Set Y position
+            // ✅ Adjust beam position relative to container
+            beamElement.style.position = "absolute";
+            beamElement.style.left = `${left + containerRect.left}px`; // Adjust X
+            beamElement.style.top = `${top + containerRect.top}px`;   // Adjust Y
         } else {
             console.warn(`⚠ No data found for beam: ${beamName}`);
         }
