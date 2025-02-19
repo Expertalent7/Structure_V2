@@ -19,13 +19,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ✅ Global Fetch Function
-    window.fetchBeamData = async function () {
+    async function fetchBeamData() {
         const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
-        const PROXY_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(GITHUB_API_URL);
-
+        
         try {
             console.log("🔄 Fetching Beam Data...");
-            const response = await fetch(PROXY_URL);
+            const response = await fetch(GITHUB_API_URL);
 
             if (!response.ok) {
                 throw new Error(`❌ HTTP Error! Status: ${response.status}`);
@@ -61,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             console.warn("⚠ Retrying fetch in 5 seconds...");
             setTimeout(fetchBeamData, 5000); // Retry fetch
         }
-    };
+    }
 
     // ✅ Update Beam UI
     function updateBeamUI() {
@@ -185,6 +184,21 @@ document.addEventListener("DOMContentLoaded", async function () {
             } else {
                 console.warn(`⚠ No matching data found for ${beamName}`);
             }
+        });
+    });
+
+    // ✅ Tooltip on Hover
+    beams.forEach(beam => {
+        beam.addEventListener("mouseenter", function (event) {
+            let beamName = this.dataset.name;
+            tooltip.innerText = `Beam: ${beamName}`;
+            tooltip.style.display = "block";
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+        });
+
+        beam.addEventListener("mouseleave", function () {
+            tooltip.style.display = "none";
         });
     });
 
