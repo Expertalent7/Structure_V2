@@ -19,33 +19,35 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ✅ Fetch Beam Data from GitHub
-    async function fetchBeamData() {
-        const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
+async function fetchBeamData() {
+    const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
-        try {
-            console.log("🔄 Fetching Beam Data...");
-            const response = await fetch(GITHUB_API_URL);
-            
-            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-            
-            let data = await response.json();
-            console.log("📄 Raw Data Fetched:", data);  // Debugging
+    try {
+        console.log("🔄 Fetching Beam Data...");
+        const response = await fetch(GITHUB_API_URL);
 
-            // ✅ Ensure fetched data is an array
-            if (!Array.isArray(data)) {
-                throw new Error("⚠ Error: Data format incorrect! Expected an array.");
-            }
-
-            window.beamData.beams = data; // ✅ Corrected data assignment
-            console.log("✅ beamData Assigned:", window.beamData); // Debugging
-            
-            updateBeamUI(); // Call UI update after successful data load
-        } catch (error) {
-            console.error("❌ Error fetching beam data:", error);
-            console.warn("⚠ Retrying fetch in 5 seconds...");
-            setTimeout(fetchBeamData, 5000); // Retry fetch
+        if (!response.ok) {
+            throw new Error(`❌ HTTP Error! Status: ${response.status}`);
         }
+
+        let data = await response.json();
+        console.log("✅ JSON Loaded Successfully:", data);
+
+        if (!Array.isArray(data)) {
+            throw new Error("⚠ JSON format incorrect! Expected an array.");
+        }
+
+        window.beamData = { beams: data };
+        console.log("✅ beamData Assigned:", window.beamData);
+        updateBeamUI(); 
+
+    } catch (error) {
+        console.error("❌ Error fetching JSON:", error);
+        console.warn("⚠ Retrying fetch in 10 seconds...");
+        setTimeout(fetchBeamData, 10000);
     }
+}
+
 
     // ✅ Update Beam UI
   async function fetchBeamData() {
