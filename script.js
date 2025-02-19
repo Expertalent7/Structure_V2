@@ -4,6 +4,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     // 🔄 Global variable to store beam data
     window.beamData = { beams: [] };
 
+    // ✅ Fetch data every 3 seconds to catch new updates immediately
+    await fetchBeamData();
+    setInterval(fetchBeamData, 3000);
+});
+
+
     // 🔄 Cache frequently accessed elements
     const beamSearch = document.getElementById("beamSearch");
     const beamDetailsPanel = document.getElementById("beamDetailsPanel");
