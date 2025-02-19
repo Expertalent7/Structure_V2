@@ -156,36 +156,55 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    // ✅ Show Beam Details on Click
-    beams.forEach(beamElement => {
-        beamElement.addEventListener("click", function (event) {
-            if (!window.beamData || !window.beamData.beams) {
-                console.warn("⚠ No beam data available");
-                return;
+   // ✅ Show Beam Details on Click
+beams.forEach(beamElement => {
+    beamElement.addEventListener("click", function (event) {
+        if (!window.beamData || !window.beamData.beams) {
+            console.warn("⚠ No beam data available");
+            return;
+        }
+
+        let beamName = this.dataset.name.trim().toLowerCase();
+        let beamDataEntry = window.beamData.beams.find(b => 
+            b.Beam_Name.toLowerCase().trim() === beamName
+        );
+
+        if (beamDataEntry) {
+            let beamStatus = beamDataEntry.Progress === "100%" ? "Installed" : "Not Installed";
+            let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
+            let beamProgress = beamDataEntry.Progress || "0%";
+            let beamQRCode = beamDataEntry.QR_Code || "https://via.placeholder.com/150";
+
+            document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
+            document.getElementById("beamStatus").innerText = beamStatus;
+            document.getElementById("beamWeight").innerText = beamWeight;
+            document.getElementById("beamProgress").innerText = beamProgress;
+            document.getElementById("beamQRCode").src = beamQRCode;
+
+            // ✅ Fix Positioning (Show Near Clicked Beam)
+            let beamRect = this.getBoundingClientRect();
+            let panelWidth = beamDetailsPanel.offsetWidth;
+            let panelHeight = beamDetailsPanel.offsetHeight;
+
+            let posX = beamRect.left + window.scrollX + beamRect.width + 10;  // Shift Right
+            let posY = beamRect.top + window.scrollY;
+
+            // ✅ Prevent panel from going off-screen
+            if (posX + panelWidth > window.innerWidth) {
+                posX = beamRect.left + window.scrollX - panelWidth - 10; // Shift Left if needed
+            }
+            if (posY + panelHeight > window.innerHeight) {
+                posY = window.innerHeight - panelHeight - 10; // Adjust if needed
             }
 
-            let beamName = this.dataset.name.trim().toLowerCase();
-            let beamDataEntry = window.beamData.beams.find(b => 
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
-
-            if (beamDataEntry) {
-                let beamStatus = beamDataEntry.Progress === "100%" ? "Installed" : "Not Installed";
-                let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
-                let beamProgress = beamDataEntry.Progress || "0%";
-                let beamQRCode = beamDataEntry.QR_Code || "https://via.placeholder.com/150";
-
-                document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
-                document.getElementById("beamStatus").innerText = beamStatus;
-                document.getElementById("beamWeight").innerText = beamWeight;
-                document.getElementById("beamProgress").innerText = beamProgress;
-                document.getElementById("beamQRCode").src = beamQRCode;
-                beamDetailsPanel.style.display = "block";
-            } else {
-                console.warn(`⚠ No matching data found for ${beamName}`);
-            }
-        });
+            beamDetailsPanel.style.left = `${posX}px`;
+            beamDetailsPanel.style.top = `${posY}px`;
+            beamDetailsPanel.style.display = "block";
+        } else {
+            console.warn(`⚠ No matching data found for ${beamName}`);
+        }
     });
+});
 
     // ✅ Tooltip on Hover
     beams.forEach(beam => {
