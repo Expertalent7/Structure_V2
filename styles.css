@@ -36,8 +36,10 @@ body {
     position: absolute;
     background-color: transparent;
     transition: all 0.2s ease-in-out;
+    transform: translate(-50%, -50%); /* ✅ Ensures beams are centered */
+    cursor: pointer;
+    z-index: 10;
 }
-
 
 /* ✅ Installed Beam - Green */
 .beam.installed {
@@ -65,13 +67,13 @@ body {
 
 /* ✨ Hover Effect */
 .beam:hover {
-    transform: scale(1.2);
+    transform: scale(1.2) translate(-50%, -50%);
     filter: brightness(1.2);
 }
 
 /* ✅ Selected Beam */
 .beam.selected {
-    transform: scale(1.05);
+    transform: scale(1.05) translate(-50%, -50%);
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
 
@@ -88,6 +90,7 @@ body {
     pointer-events: none;
     z-index: 1000;
     white-space: nowrap;
+    transform: translate(-50%, -100%);
 }
 
 /* 🔍 Ensure Tooltip Displays Correctly */
@@ -175,8 +178,8 @@ body {
     border: 3px solid yellow;
 }
 
-/* 📱 Responsive Design */
-@media screen and (max-width: 600px) {
+/* ✅ Responsive Fix for Tooltip and Panel */
+@media screen and (max-width: 768px) {
     .container {
         width: 90%;
     }
@@ -189,4 +192,19 @@ body {
     .details-panel {
         width: 180px;
     }
+}
+
+/* 🏗️ Fix Beam Positioning */
+#beamContainer {
+    position: relative;
+    display: inline-block;
+}
+
+/* ✅ Ensure Image is Fixed */
+#structureImage {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 1;
 }
