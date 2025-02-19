@@ -33,11 +33,11 @@ body {
 
 /* 🎯 Beam Styling */
 .beam {
-    position: absolute; /* Aligns beams to image */
-    background-color: transparent;
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
+    position: absolute;
+    transform: translate(-50%, -50%); /* Ensures correct alignment */
+    transition: none; /* Prevents unwanted animations */
 }
+
 
 /* ✅ Installed Beam - Green */
 .beam.installed {
