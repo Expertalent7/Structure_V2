@@ -118,15 +118,13 @@ function updateInstallationProgress() {
 
     console.log(`📊 Total Beams: ${totalBeams}, Installed Beams: ${installedBeams}, Progress: ${progressPercentage}%`);
 
-    // ✅ Update Progress Text
-    document.getElementById("progressValue").innerText = `${progressPercentage}%`;
-
     // ✅ Update Progress Bar Width
     let progressBar = document.getElementById("progressBar");
     progressBar.style.width = `${progressPercentage}%`;
-    progressBar.innerText = `${progressPercentage}%`;
 
-    console.log(`✅ Updated Installation Progress: ${progressPercentage}%`);
+    // ✅ Update Green Percentage Text
+    let progressValue = document.getElementById("progressValue");
+    progressValue.innerText = `${progressPercentage}%`;
 }
 
 
