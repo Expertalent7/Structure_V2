@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         updateInstallationProgress();
     }
 
-    function updateInstallationProgress() {
+  function updateInstallationProgress() {
     if (!window.beamData) {
         console.warn("⚠ No beam data available for progress update.");
         return;
@@ -102,28 +102,28 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.log(`📊 Updating Progress: ${progressPercentage}%`);
 
     let progressBar = document.getElementById("progressBar");
-    let progressText = document.getElementById("progressText");
+    let progressText = document.getElementById("progressText"); // ✅ Inside Bar
+    let progressValue = document.getElementById("progressValue"); // ✅ Outside Bar (main text)
 
-    // ✅ Set Progress Bar Width
+    // ✅ Update Progress Bar
     progressBar.style.width = `${progressPercentage}%`;
+    progressText.innerText = `${progressPercentage}%`; // ✅ Ensure inside text updates
 
-    // ✅ Ensure progress text is centered inside the bar
-    progressText.innerText = `${progressPercentage}%`;
-    progressText.style.position = "absolute";
-    progressText.style.left = "50%";
-    progressText.style.top = "50%";
-    progressText.style.transform = "translate(-50%, -50%)";
-    progressText.style.fontWeight = "bold";
+    // ✅ Update the main "Installation Progress" text
+    if (progressValue) {
+        progressValue.innerText = `Installation Progress: ${progressPercentage}%`; // ✅ Fixing the main progress text
+    }
 
-    // ✅ Change text color for visibility
+    // ✅ Change text color for better visibility
     if (progressPercentage > 0) {
-        progressText.style.color = "#ffffff"; // White text for contrast
-        progressBar.style.backgroundColor = "#4CAF50"; // ✅ Green progress bar
+        progressText.style.color = "#ffffff"; // White for contrast
+        progressBar.style.backgroundColor = "#4CAF50"; // Green progress bar
     } else {
         progressText.style.color = "#000"; // Black for 0%
         progressBar.style.backgroundColor = "#ccc"; // Gray when empty
     }
 }
+
 
 
     // ✅ Show Beam Details on Click (with Correct Positioning)
