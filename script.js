@@ -72,13 +72,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         let installedBeams = Object.values(window.beamData).filter(b => parseFloat(b.Progress) >= 100).length;
 
         // ✅ Fix: Prevent NaN% by ensuring totalBeams > 0
-        let progressPercentage = totalBeams > 0 ? ((installedBeams / totalBeams) * 100).toFixed(2) : 0;
+        let progressPercentage = totalBeams > 0 ? ((installedBeams / totalBeams) * 100).toFixed(2) : "0%";
 
-        console.log(`📊 Updating Progress: ${progressPercentage}%`);
+        console.log(`📊 Updating Progress: ${progressPercentage}`);
 
-        document.getElementById("progressBar").style.width = `${progressPercentage}%`;
-        document.getElementById("progressText").innerText = `${progressPercentage}%`;
-        document.getElementById("progressValue").innerText = `Installation Progress: ${progressPercentage}%`; 
+        document.getElementById("progressBar").style.width = progressPercentage;
+        document.getElementById("progressText").innerText = progressPercentage;
+        document.getElementById("progressValue").innerText = `Installation Progress: ${progressPercentage}`; 
     }
 
     // ✅ Load the first frame
