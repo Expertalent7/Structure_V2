@@ -2,11 +2,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     const drawingSelect = document.getElementById("drawingSelect");
     const framesContainer = document.getElementById("framesContainer");
 
-    const DRAWINGS_JSON_URL = "/data/drawings_data.json";
-
+    // ✅ Correct JSON URL
+    const DRAWINGS_JSON_URL = "/data/drawings_data.json";  
 
     try {
-        let response = await fetch(jsonUrl);
+        let response = await fetch(DRAWINGS_JSON_URL);  // ✅ Use the correct variable
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
         let data = await response.json();
 
         console.log("📄 Drawings Data Loaded:", data);
