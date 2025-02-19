@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ✅ Fetch Beam Data from GitHub
-    async function fetchBeamData() {
+async function fetchBeamData() {
     const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
     try {
@@ -30,10 +30,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             throw new Error(`❌ HTTP Error! Status: ${response.status}`);
         }
 
-        let rawText = await response.text(); // Get raw response
+        let rawText = await response.text();
         console.log("📄 Raw Response:", rawText); 
 
-        // Check if response is empty
         if (!rawText || rawText.trim() === "") {
             throw new Error("⚠ JSON Response is empty!");
         }
@@ -62,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         setTimeout(fetchBeamData, 10000);
     }
 }
+
 
 
 
