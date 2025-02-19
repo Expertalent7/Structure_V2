@@ -11,9 +11,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     const tooltip = document.getElementById("tooltip");
     const beams = document.querySelectorAll(".beam");
     const closeButton = document.getElementById("closePanelBtn");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
 
     // ✅ Fetch and Update Beam Data
-    window.fetchBeamData = async function () {
+    async function fetchBeamData() {
         const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
 
         try {
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             console.warn("⚠ Retrying fetch in 5 seconds...");
             setTimeout(fetchBeamData, 5000);
         }
-    };
+    }
 
     // ✅ Update Beam UI
     function updateBeamUI() {
@@ -80,7 +81,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
 
-        // ✅ Ensure the installation progress is updated in UI
         updateInstallationProgress();
     }
 
@@ -101,25 +101,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         console.log(`📊 Updating Progress: ${progressPercentage}%`);
 
-        // ✅ Update Progress Bar Width
-        let progressBar = document.getElementById("progressBar");
         progressBar.style.width = `${progressPercentage}%`;
-
-        // ✅ Update Green Percentage Text (inside the bar)
-        let progressText = document.getElementById("progressText");
         progressText.innerText = `${progressPercentage}%`;
-
-        // ✅ Update Black Percentage Text (outside the bar)
-        let progressValue = document.getElementById("progressValue");
         progressValue.innerText = `${progressPercentage}%`;
 
-        // ✅ Ensure Text is Green when Installed
         if (progressPercentage > 0) {
-            progressText.style.color = "#ffffff"; // White text for contrast
-            progressBar.style.backgroundColor = "#4CAF50"; // ✅ Green progress bar
+            progressText.style.color = "#ffffff";
+            progressBar.style.backgroundColor = "#4CAF50";
         } else {
-            progressText.style.color = "#000"; // Black for 0%
-            progressBar.style.backgroundColor = "#ccc"; // Gray when empty
+            progressText.style.color = "#000";
+            progressBar.style.backgroundColor = "#ccc";
         }
     }
 
@@ -143,26 +134,53 @@ document.addEventListener("DOMContentLoaded", async function () {
                 document.getElementById("beamProgress").innerText = beamProgress;
                 document.getElementById("beamQRCode").src = beamQRCode;
 
-                // ✅ Correct Panel Positioning
-                let beamRect = event.target.getBoundingClientRect();
-                let panelWidth = beamDetailsPanel.offsetWidth;
-                let panelHeight = beamDetailsPanel.offsetHeight;
-
-                let posX = beamRect.left + window.scrollX + beamRect.width + 10; // Shift right
-                let posY = beamRect.top + window.scrollY - (panelHeight / 2);
-
-                // Prevent the panel from going off-screen
-                posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10));
-                posY = Math.max(10, Math.min(posY, window.innerHeight - panelHeight - 10));
-
-                beamDetailsPanel.style.left = `${posX}px`;
-                beamDetailsPanel.style.top = `${posY}px`;
                 beamDetailsPanel.style.display = "block";
             } else {
                 console.warn(`⚠ No matching data found for ${beamName}`);
             }
         });
     });
+
+    // ✅ Close Panel Function
+    function closePanel() {
+        beamDetailsPanel.style.display = "none";
+    }
+
+    // ✅ Attach Close Button Event Listener
+    if (closeButton) {
+        closeButton.addEventListener("click", closePanel);
+    } else {
+        console.error("❌ Close button not found!");
+    }
+
+    // ✅ Search Function
+    if (beamSearch) {
+        beamSearch.addEventListener("input", function () {
+            let input = this.value.toLowerCase().trim();
+            beams.forEach(beam => {
+                let beamName = beam.getAttribute("data-name").toLowerCase();
+                if (beamName.includes(input) && input !== "") {
+                    beam.classList.add("highlight");
+                    beam.style.border = "3px solid blue";
+                } else {
+                    beam.classList.remove("highlight");
+                    beam.style.border = "";
+                }
+            });
+        });
+    }
+
+    // ✅ Clear Search
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener("click", function () {
+            beamSearch.value = "";
+            beams.forEach(beam => {
+                beam.classList.remove("highlight");
+                beam.style.border = "";
+            });
+            console.log("🔄 Search cleared");
+        });
+    }
 
     // ✅ Fetch data initially and then every 5 seconds
     await fetchBeamData();
