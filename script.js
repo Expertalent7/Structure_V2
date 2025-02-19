@@ -58,7 +58,7 @@ async function fetchBeamData() {
     } catch (error) {
         console.error("❌ Error fetching JSON:", error);
         console.warn("⚠ Retrying fetch in 10 seconds...");
-        setTimeout(fetchBeamData, 10000);
+        //setTimeout(fetchBeamData, 10000);
     }
 }
 
@@ -90,7 +90,7 @@ async function fetchBeamData() {
     } catch (error) {
         console.error("❌ Error fetching beam data:", error);
         console.warn("⚠ Retrying fetch in 5 seconds...");
-        setTimeout(fetchBeamData, 5000); // Retry fetch
+        //setTimeout(fetchBeamData, 5000); // Retry fetch
     }
 }
 
@@ -201,5 +201,5 @@ async function fetchBeamData() {
 
     // ✅ Fetch data initially and then every 5 seconds
     await fetchBeamData();
-    setInterval(fetchBeamData, 5000);
+    //setInterval(fetchBeamData, 5000);
 });
