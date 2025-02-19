@@ -19,48 +19,34 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ✅ Global Fetch Function
-    async function fetchBeamData() {
-        const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
+   async function fetchBeamData() {
+    const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
+
+    try {
+        console.log("🔄 Fetching Beam Data...");
+        const response = await fetch(GITHUB_API_URL);
         
-        try {
-            console.log("🔄 Fetching Beam Data...");
-            const response = await fetch(GITHUB_API_URL);
+        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+        
+        let data = await response.json();
+        console.log("📄 Raw Data Fetched:", data);
 
-            if (!response.ok) {
-                throw new Error(`❌ HTTP Error! Status: ${response.status}`);
-            }
-
-            let rawText = await response.text();
-            console.log("📄 Raw JSON Response:", rawText);
-
-            if (!rawText || rawText.trim() === "") {
-                throw new Error("⚠ JSON Response is empty!");
-            }
-
-            let data;
-            try {
-                data = JSON.parse(rawText);
-            } catch (parseError) {
-                console.error("❌ JSON Parsing Error:", parseError);
-                throw new Error("⚠ JSON could not be parsed!");
-            }
-
-            console.log("✅ JSON Loaded Successfully:", data);
-
-            if (!Array.isArray(data)) {
-                throw new Error("⚠ JSON format incorrect! Expected an array.");
-            }
-
-            window.beamData = { beams: data }; // ✅ Store fetched data
-            console.log("✅ beamData Assigned:", window.beamData);
-            updateBeamUI(); // ✅ Update UI with new data
-
-        } catch (error) {
-            console.error("❌ Error fetching JSON:", error);
-            console.warn("⚠ Retrying fetch in 5 seconds...");
-            setTimeout(fetchBeamData, 5000); // Retry fetch
+        if (!Array.isArray(data)) {
+            throw new Error("⚠ Error: Data format incorrect! Expected an array.");
         }
+
+        window.beamData = { beams: data }; // ✅ Assign fetched data
+        console.log("✅ beamData Assigned:", window.beamData);
+
+        updateBeamUI(); // ✅ Call UI update after successful data load
+        updateInstallationProgress(); // ✅ Make sure this function runs after fetching data
+    } catch (error) {
+        console.error("❌ Error fetching beam data:", error);
+        console.warn("⚠ Retrying fetch in 5 seconds...");
+        setTimeout(fetchBeamData, 5000); // Retry fetch
     }
+}
+
 
     // ✅ Update Beam UI
     function updateBeamUI() {
