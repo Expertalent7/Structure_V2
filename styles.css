@@ -15,27 +15,25 @@ body {
     align-items: center;
     justify-content: center;
 }
-.container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: auto;
-    max-width: 600px;
-    padding: 10px;
-}
 
-/* 🎯 Beam Styling */
 .container {
     position: relative;
     width: 494px; /* Match image width */
     height: 682px; /* Match image height */
+    margin: auto;
+    padding: 10px;
 }
 
-/* ✅ Beams should be absolutely positioned inside the container */
+/* ✅ Image should not resize unexpectedly */
+.container img {
+    width: 100%; /* Matches parent container */
+    height: auto; /* Ensures proportional scaling */
+    display: block;
+}
+
+/* 🎯 Beam Styling */
 .beam {
-    position: absolute;
+    position: absolute; /* Aligns beams to image */
     background-color: transparent;
     transition: all 0.3s ease-in-out;
     cursor: pointer;
@@ -92,6 +90,11 @@ body {
     white-space: nowrap;
 }
 
+/* 🔍 Ensure Tooltip Displays Correctly */
+.beam:hover + .beam-tooltip {
+    display: block;
+}
+
 /* 📌 Beam Details Panel */
 .details-panel {
     position: absolute;
@@ -105,18 +108,10 @@ body {
     width: 220px;
     text-align: left;
 }
-.container img {
-    width: auto; /* Prevents automatic stretching */
-    max-width: 100%; /* Keeps it within the container */
-    height: auto; /* Ensures proportional scaling */
-    display: block;
-    margin: 0 auto; /* Centers the image */
-}
-
 
 /* ✅ Progress Bar */
 #progressContainer {
-    width: 50%; /* Centered */
+    width: 50%;
     max-width: 300px;
     margin: 10px auto;
     background-color: #ccc;
@@ -127,7 +122,7 @@ body {
 
 #progressBar {
     height: 20px;
-    width: 0%; /* Start empty */
+    width: 0%; /* Starts empty */
     background-color: #4CAF50; /* ✅ Green progress */
     text-align: center;
     line-height: 20px;
@@ -137,6 +132,7 @@ body {
     position: relative;
 }
 
+/* ✅ Progress Bar Text */
 #progressText {
     position: absolute;
     width: 100%;
@@ -146,7 +142,6 @@ body {
     z-index: 2;
 }
 
-
 /* 🎭 Beam Legend */
 #beam-legend {
     display: flex;
@@ -154,11 +149,13 @@ body {
     align-items: center;
     margin-top: 15px;
 }
+
 .legend-item {
     display: flex;
     align-items: center;
     margin: 5px;
 }
+
 .legend-color {
     width: 20px;
     height: 20px;
@@ -183,10 +180,12 @@ body {
     .container {
         width: 90%;
     }
+
     .beam-tooltip {
         font-size: 10px;
         padding: 4px 8px;
     }
+
     .details-panel {
         width: 180px;
     }
