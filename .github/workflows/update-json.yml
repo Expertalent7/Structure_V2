@@ -2,7 +2,7 @@ name: Update Drawings JSON
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight UTC
+    - cron: '0 * * * *' # Runs hourly
   push:
     branches:
       - main
@@ -10,19 +10,21 @@ on:
 jobs:
   update-json:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
+
+      - name: Ensure data directory exists
+        run: mkdir -p data
+
       - name: Fetch updated JSON from Google Drive
         run: |
-          curl -L "https://drive.google.com/uc?export=download&id=17yfZbRtY38mglRRLWmPjDGfphbWr870R" -o drawings_data.json
+          curl -L "https://drive.google.com/uc?export=download&id=17yfZbRtY38mglRRLWmPjDGfphbWr870R" -o data/drawings_data.json
 
       - name: Commit and push if changed
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add drawings_data.json
+          git add data/drawings_data.json
           git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update drawings JSON"
           git push
