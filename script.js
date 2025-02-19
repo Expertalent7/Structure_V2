@@ -59,16 +59,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     console.log("✅ Beam data available, updating UI...");
 
-    let missingBeams = []; // To store beams not found
+    // Store all JSON beam names for fast lookup
+    let jsonBeams = window.beamData.beams.map(b => b.Beam_Name.trim().toLowerCase());
+    let missingBeams = []; // Track missing beams
 
     document.querySelectorAll(".beam").forEach(beamElement => {
         let beamName = beamElement.dataset.name?.trim().toLowerCase();
 
-        let beamDataEntry = window.beamData.beams.find(b =>
-            b.Beam_Name.trim().toLowerCase() === beamName
-        );
+        if (jsonBeams.includes(beamName)) {
+            let beamDataEntry = window.beamData.beams.find(b => b.Beam_Name.trim().toLowerCase() === beamName);
 
-        if (beamDataEntry) {
             beamElement.classList.remove("installed", "not-installed", "in-progress", "highlight");
 
             let progressValue = parseFloat(beamDataEntry.Progress.replace(",", "").replace("%", ""));
@@ -81,14 +81,16 @@ document.addEventListener("DOMContentLoaded", async function () {
                 beamElement.classList.add("not-installed");
             }
         } else {
-            missingBeams.push(beamName); // Collect missing beam names
+            missingBeams.push(beamName);
         }
     });
 
+    // Only log missing beams once
     if (missingBeams.length > 0) {
-        console.warn(`⚠ Beams not found in JSON:`, missingBeams);
+        console.warn(`⚠ Beams missing from JSON:`, [...new Set(missingBeams)]);
     }
 }
+
 
 
     // ✅ Search Beams
