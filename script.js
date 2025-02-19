@@ -5,37 +5,26 @@ async function loadDrawings() {
 
         const data = await response.json();
         const selectElement = document.getElementById("drawingSelect");
-        const imageContainer = document.getElementById("imageContainer");
 
-        // ✅ Ensure `imageContainer` exists
-        if (!imageContainer) {
-            console.error("Error: 'imageContainer' element not found in the DOM.");
+        if (!selectElement) {
+            console.error("Error: Select element not found!");
             return;
         }
 
-        // ✅ Clear previous dropdown options
+        // ✅ Clear previous entries
         selectElement.innerHTML = '<option value="">Select a drawing...</option>';
 
-        // ✅ Populate dropdown with drawing options
+        // ✅ Populate dropdown correctly
         data.forEach(drawing => {
             let option = document.createElement("option");
-            option.value = drawing["Folder ID"];
+            option.value = drawing["Folder ID"]; 
             option.textContent = drawing["Drawing Name"];
             selectElement.appendChild(option);
         });
 
-        // ✅ Load images when a drawing is selected
+        // ✅ Attach event listener to handle drawing selection
         selectElement.addEventListener("change", function () {
-            const selectedFolder = this.value;
-            const selectedDrawing = data.find(d => d["Folder ID"] === selectedFolder);
-
-            // ✅ Check if drawing exists and has images
-            if (!selectedDrawing || !selectedDrawing["Images"]) {
-                console.warn("No images found for the selected drawing.");
-                displayImages([]); // Call with empty array
-            } else {
-                displayImages(selectedDrawing["Images"]);
-            }
+            handleDrawingChange(this.value, data);
         });
 
     } catch (error) {
@@ -43,8 +32,25 @@ async function loadDrawings() {
     }
 }
 
+// ✅ Function to handle drawing selection and display images
+function handleDrawingChange(selectedFolder, data) {
+    const selectedDrawing = data.find(d => d["Folder ID"] === selectedFolder);
+    if (!selectedDrawing) {
+        console.warn("No drawing found for the selected folder.");
+        return;
+    }
+
+    displayImages(selectedDrawing["Images"]);
+}
+
 function displayImages(imageUrls) {
-    const imageContainer = document.getElementById("beamContainer"); // Ensure the correct container ID
+    const imageContainer = document.getElementById("beamContainer");
+    
+    if (!imageContainer) {
+        console.error("Error: Image container not found!");
+        return;
+    }
+
     imageContainer.innerHTML = ""; // Clear previous images
 
     if (!imageUrls || imageUrls.length === 0) {
@@ -56,12 +62,11 @@ function displayImages(imageUrls) {
         let img = document.createElement("img");
         img.src = url;
         img.alt = "Drawing Image";
-        img.style.width = "200px"; // Adjust size as needed
-        img.style.margin = "10px";
+        img.style.width = "150px";
+        img.style.margin = "5px";
         imageContainer.appendChild(img);
     });
 }
 
-
-// ✅ Run `loadDrawings()` when the page loads
+// ✅ Ensure function runs when the page loads
 document.addEventListener("DOMContentLoaded", loadDrawings);
