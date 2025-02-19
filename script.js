@@ -91,8 +91,6 @@ function updateBeamUI() {
     updateInstallationProgress();
 }
 
-    updateInstallationProgress();
-}
 
 
   function updateInstallationProgress() {
