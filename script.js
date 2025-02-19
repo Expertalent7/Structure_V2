@@ -46,34 +46,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         progressBar.style.backgroundColor = "#ccc";
     }
 
-    // ✅ Global Fetch Function
-   async function fetchBeamData() {
-    const GITHUB_API_URL = "https://raw.githubusercontent.com/expertalent7/Structure_V2/main/data/beams-data.json";
-
-    try {
-        console.log("🔄 Fetching Beam Data...");
-        const response = await fetch(GITHUB_API_URL);
-        
-        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-        
-        let data = await response.json();
-        console.log("📄 Raw Data Fetched:", data);
-
-        if (!Array.isArray(data)) {
-            throw new Error("⚠ Error: Data format incorrect! Expected an array.");
-        }
-
-        window.beamData = { beams: data }; // ✅ Assign fetched data
-        console.log("✅ beamData Assigned:", window.beamData);
-
-        updateBeamUI(); // ✅ Update UI
-        updateInstallationProgress(); // ✅ Ensure progress updates
-    } catch (error) {
-        console.error("❌ Error fetching beam data:", error);
-        console.warn("⚠ Retrying fetch in 5 seconds...");
-        setTimeout(fetchBeamData, 5000); // Retry fetch
-    }
-}
+   
 
     // ✅ Update Beam UI
     function updateBeamUI() {
