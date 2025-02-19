@@ -77,12 +77,14 @@ function updateBeamUI() {
                 beamElement.classList.add("not-installed");
             }
 
-            // ✅ Set position **only once**
-            if (!beamElement.dataset.fixedPosition) {
-                beamElement.style.left = `${beamDataEntry.x}px`; // Fix X position
-                beamElement.style.top = `${beamDataEntry.y}px`;  // Fix Y position
-                beamElement.dataset.fixedPosition = "true"; // Prevents further movement
-            }
+            // ✅ Fix position using predefined coordinates from `beamDataEntry`
+            let left = parseFloat(beamDataEntry.x) || 0; // Default to 0 if missing
+            let top = parseFloat(beamDataEntry.y) || 0; // Default to 0 if missing
+
+            // ✅ Apply the fixed position
+            beamElement.style.position = "absolute"; // Ensure absolute positioning
+            beamElement.style.left = `${left}px`; // Set X position
+            beamElement.style.top = `${top}px`;  // Set Y position
         } else {
             console.warn(`⚠ No data found for beam: ${beamName}`);
         }
@@ -90,7 +92,6 @@ function updateBeamUI() {
 
     updateInstallationProgress();
 }
-
 
 
   function updateInstallationProgress() {
