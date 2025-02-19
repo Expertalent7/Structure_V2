@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const progressText = document.getElementById("progressValue");
     const progressBar = document.getElementById("progressBar");
     const tooltip = document.getElementById("tooltip");
-    const beams = document.querySelectorAll(".beam");
     const closeButton = document.getElementById("closePanelBtn");
     const clearSearchBtn = document.getElementById("clearSearchBtn");
     const beamContainer = document.getElementById("beamContainer"); // ✅ Image Container
@@ -131,21 +130,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         progressBar.style.backgroundColor = progressPercentage > 0 ? "#4CAF50" : "#ccc";
     }
 
-    // ✅ Attach Close Button Event Listener
+    // ✅ Close Panel Function
     if (closeButton) {
         closeButton.addEventListener("click", function () {
             beamDetailsPanel.style.display = "none";
         });
-    } else {
-        console.error("❌ Close button not found!");
     }
 
-    // ✅ Search Function
+    // ✅ Search Function with Event Delegation
     if (beamSearch) {
         beamSearch.addEventListener("input", function () {
             let input = this.value.toLowerCase().trim();
-            beams.forEach(beam => {
-                let beamName = beam.getAttribute("data-name").toLowerCase();
+            document.querySelectorAll(".beam").forEach(beam => {
+                let beamName = beam.dataset.name.toLowerCase();
                 if (beamName.includes(input) && input !== "") {
                     beam.classList.add("highlight");
                     beam.style.border = "3px solid blue";
@@ -161,7 +158,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (clearSearchBtn) {
         clearSearchBtn.addEventListener("click", function () {
             beamSearch.value = "";
-            beams.forEach(beam => {
+            document.querySelectorAll(".beam").forEach(beam => {
                 beam.classList.remove("highlight");
                 beam.style.border = "";
             });
@@ -169,21 +166,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    // ✅ Tooltip for Beam Info on Hover
-    beams.forEach(beam => {
-        beam.addEventListener("mouseenter", function (event) {
-            let beamName = this.dataset.name;
+    // ✅ Tooltip for Beam Info on Hover (Event Delegation)
+    beamContainer.addEventListener("mouseover", function (event) {
+        if (event.target.classList.contains("beam")) {
+            let beamName = event.target.dataset.name;
             tooltip.innerText = `Beam: ${beamName}`;
             tooltip.style.display = "block";
-
-            // ✅ Position tooltip near mouse pointer
             tooltip.style.left = `${event.pageX + 10}px`;
             tooltip.style.top = `${event.pageY + 10}px`;
-        });
+        }
+    });
 
-        beam.addEventListener("mouseleave", function () {
-            tooltip.style.display = "none";
-        });
+    beamContainer.addEventListener("mouseleave", function () {
+        tooltip.style.display = "none";
     });
 
     // ✅ Fetch data initially and then every 5 seconds
