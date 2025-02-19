@@ -173,38 +173,23 @@ beams.forEach(beamElement => {
             let beamStatus = beamDataEntry.Progress === "100%" ? "Installed" : "Not Installed";
             let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
             let beamProgress = beamDataEntry.Progress || "0%";
-            let beamQRCode = beamDataEntry.QR_Code || "https://via.placeholder.com/150";
+
+            // ✅ UPDATED QR CODE GENERATION
+            let beamQRCode = `https://quickchart.io/qr?text=${encodeURIComponent(beamDataEntry.Beam_Name)}`;
 
             document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
             document.getElementById("beamStatus").innerText = beamStatus;
             document.getElementById("beamWeight").innerText = beamWeight;
             document.getElementById("beamProgress").innerText = beamProgress;
             document.getElementById("beamQRCode").src = beamQRCode;
-
-            // ✅ Fix Positioning (Show Near Clicked Beam)
-            let beamRect = this.getBoundingClientRect();
-            let panelWidth = beamDetailsPanel.offsetWidth;
-            let panelHeight = beamDetailsPanel.offsetHeight;
-
-            let posX = beamRect.left + window.scrollX + beamRect.width + 10;  // Shift Right
-            let posY = beamRect.top + window.scrollY;
-
-            // ✅ Prevent panel from going off-screen
-            if (posX + panelWidth > window.innerWidth) {
-                posX = beamRect.left + window.scrollX - panelWidth - 10; // Shift Left if needed
-            }
-            if (posY + panelHeight > window.innerHeight) {
-                posY = window.innerHeight - panelHeight - 10; // Adjust if needed
-            }
-
-            beamDetailsPanel.style.left = `${posX}px`;
-            beamDetailsPanel.style.top = `${posY}px`;
+            
             beamDetailsPanel.style.display = "block";
         } else {
             console.warn(`⚠ No matching data found for ${beamName}`);
         }
     });
 });
+
 
     // ✅ Tooltip on Hover
     beams.forEach(beam => {
