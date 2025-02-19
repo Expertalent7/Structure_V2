@@ -122,7 +122,11 @@ function updateInstallationProgress() {
     let progressBar = document.getElementById("progressBar");
     progressBar.style.width = `${progressPercentage}%`;
 
-    // ✅ Update Green Percentage Text
+    // ✅ Update Green Percentage Text (inside the bar)
+    let progressText = document.getElementById("progressText");
+    progressText.innerText = `${progressPercentage}%`;
+
+    // ✅ Update Black Percentage Text (outside the bar)
     let progressValue = document.getElementById("progressValue");
     progressValue.innerText = `${progressPercentage}%`;
 }
