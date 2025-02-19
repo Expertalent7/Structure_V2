@@ -19,15 +19,18 @@
 
     <h1>Beam Selection Tool</h1>
 
-   <select id="drawingSelect">
-    <option value="">Select a drawing...</option>
+    <!-- 📌 Drawing Selection Dropdown -->
+    <select id="drawingSelect" onchange="handleDrawingChange()">
+        <option value="">Select a drawing...</option>
     </select>
-
 
     <!-- 📌 Image Container with Beams -->
     <div id="beamContainer" style="position: relative; display: inline-block;">
         <img id="structureImage" src="" alt="Structure Plan">
     </div>
+
+    <!-- 📌 Image List (Fixed) -->
+    <div id="imageContainer"></div>
 
     <!-- 📊 Installation Progress -->
     <h2 id="installationProgress">Installation Progress: <span id="progressValue">0%</span></h2>
