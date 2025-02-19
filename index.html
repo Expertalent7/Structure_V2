@@ -12,7 +12,6 @@
 
     <!-- ✅ External Stylesheet -->
     <link rel="stylesheet" href="styles.css">
-
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
     <!-- ✅ External JavaScript -->
@@ -25,44 +24,18 @@
 
     <h1>Beam Selection Tool</h1>
 
-    <!-- 🔍 Search Bar -->
-    <div class="search-container">
-        <label for="beamSearch" class="visually-hidden">Search Beam</label>
-        <input type="text" id="beamSearch" placeholder="Search beam..." aria-label="Search beam">
-        <button id="clearSearchBtn" aria-label="Clear search">❌ Clear</button>
+    <!-- 📌 Navigation Buttons for Frame Selection -->
+    <div id="frameSelection">
+        <button class="frame-btn" data-frame="A">Frame Axis A</button>
+        <button class="frame-btn" data-frame="B">Frame Axis B</button>
+        <button class="frame-btn" data-frame="2">Frame Axis 2</button>
+        <button class="frame-btn" data-frame="3">Frame Axis 3</button>
+        <button class="frame-btn" data-frame="4">Frame Axis 4</button>
     </div>
 
-    <!-- 📌 Beam Structure Container -->
+    <!-- 📌 Image Container with Beams -->
     <div id="beamContainer" style="position: relative; display: inline-block;">
-        <img src="structure.jpg" alt="Structure Plan" id="structureImage">
-        
-        <!-- Beams (Positioned Using JS) -->
-        <div class="beam" data-name="beam a"></div>
-        <div class="beam" data-name="beam b"></div>
-        <div class="beam" data-name="beam c"></div>
-        <div class="beam" data-name="beam d"></div>
-        <div class="beam" data-name="beam e"></div>
-        <div class="beam" data-name="beam f"></div>
-        <div class="beam" data-name="beam g"></div>
-        <div class="beam" data-name="beam h"></div>
-        <div class="beam" data-name="beam i"></div>
-        <div class="beam" data-name="beam j"></div>
-        <div class="beam" data-name="beam k"></div>
-        <div class="beam" data-name="beam l"></div>
-        <div class="beam" data-name="beam m"></div>
-        <div class="beam" data-name="beam n"></div>
-        <div class="beam" data-name="beam o"></div>
-        <div class="beam" data-name="beam p"></div>
-        <div class="beam" data-name="beam q"></div>
-        <div class="beam" data-name="beam r"></div>
-        <div class="beam" data-name="beam s"></div>
-        <div class="beam" data-name="beam t"></div>
-        <div class="beam" data-name="beam u"></div>
-        <div class="beam" data-name="beam v"></div>
-        <div class="beam" data-name="beam w"></div>
-        <div class="beam" data-name="beam x"></div>
-        <div class="beam" data-name="beam y"></div>
-        <div class="beam" data-name="beam z"></div>
+        <img id="structureImage" src="" alt="Structure Plan">
     </div>
 
     <!-- 📊 Installation Progress -->
@@ -71,35 +44,6 @@
         <div id="progressBar"><span id="progressText">0%</span></div>
     </div>
     <p id="statusMessage">Loading beam status...</p>
-
-    <!-- 📋 Beam Status Legend -->
-    <div id="beam-legend">
-        <h3>Beam Status Legend</h3>
-        <div class="legend-item">
-            <span class="legend-color installed"></span> Installed
-        </div>
-        <div class="legend-item">
-            <span class="legend-color not-installed"></span> Not Installed
-        </div>
-        <div class="legend-item">
-            <span class="legend-color search-highlight"></span> Search Highlight
-        </div>
-    </div>
-
-    <!-- 🏷️ Tooltip (Fixed & Made Visible) -->
-    <div id="tooltip" class="beam-tooltip" style="display: none; position: absolute; background-color: rgba(0,0,0,0.8); color: white; padding: 5px; border-radius: 5px; font-size: 12px;"></div>
-
-    <!-- 📌 Beam Details Panel -->
-    <div id="beamDetailsPanel" class="details-panel">
-        <h3>Beam Details</h3>
-        <p><strong>Name:</strong> <span id="beamName"></span></p>
-        <p><strong>Status:</strong> <span id="beamStatus"></span></p>
-        <p><strong>Weight:</strong> <span id="beamWeight"></span></p>
-        <p><strong>Progress:</strong> <span id="beamProgress"></span></p>
-        <p><strong>QR Code:</strong></p>
-        <img id="beamQRCode" src="" alt="QR Code">
-        <button id="closePanelBtn">❌ Close</button>
-    </div>
 
 </body>
 </html>
