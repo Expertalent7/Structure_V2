@@ -17,7 +17,7 @@ jobs:
       
       - name: Fetch updated JSON from Google Drive
         run: |
-          curl -L "https://drive.google.com/uc?export=download&id=1gNt0UbSZYiiE0TrqoyA5eYo_vl54ankL" -o drawings_data.json
+          curl -L "https://drive.google.com/uc?export=download&id=17yfZbRtY38mglRRLWmPjDGfphbWr870R" -o drawings_data.json
 
       - name: Commit and push if changed
         run: |
