@@ -38,15 +38,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         window.beamData = { beams: data }; // ✅ Assign fetched data
         console.log("✅ beamData Assigned:", window.beamData);
 
-        updateBeamUI(); // ✅ Call UI update after successful data load
-        updateInstallationProgress(); // ✅ Make sure this function runs after fetching data
+        updateBeamUI(); // ✅ Update UI
+        updateInstallationProgress(); // ✅ Ensure progress updates
     } catch (error) {
         console.error("❌ Error fetching beam data:", error);
         console.warn("⚠ Retrying fetch in 5 seconds...");
         setTimeout(fetchBeamData, 5000); // Retry fetch
     }
 }
-
 
     // ✅ Update Beam UI
     function updateBeamUI() {
