@@ -15,7 +15,9 @@ async function loadDrawings() {
 
         data.forEach(drawing => {
             let option = document.createElement("option");
-            option.value = drawing["Folder ID"];
+
+            // ✅ Only use "Drawing Name" as the value, NOT Folder ID
+            option.value = drawing["Drawing Name"];
             option.textContent = drawing["Drawing Name"];
             selectElement.appendChild(option);
         });
@@ -29,6 +31,7 @@ async function loadDrawings() {
         console.error("❌ Error loading drawings:", error);
     }
 }
+
 
 async function loadBeamStatus() {
     try {
