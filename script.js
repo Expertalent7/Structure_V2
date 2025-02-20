@@ -1,6 +1,6 @@
 async function loadDrawings() {
     try {
-        // Fetch Drawings JSON
+        // ✅ Fetch Drawings JSON
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
         if (!response.ok) throw new Error("Failed to load drawings data!");
 
@@ -23,7 +23,7 @@ async function loadDrawings() {
             selectElement.appendChild(option);
         });
 
-        // ✅ Attach event listener (Ensure it's added only once)
+        // ✅ Attach event listener (Ensures only one instance)
         selectElement.removeEventListener("change", handleDrawingChange);
         selectElement.addEventListener("change", function () {
             handleDrawingChange(this.value, data);
@@ -40,7 +40,7 @@ async function loadDrawings() {
 // ✅ Function to fetch and process beam status
 async function loadBeamStatus() {
     try {
-        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json"); // Adjust to match actual filename
+        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json"); // Adjust filename if needed
         if (!response.ok) throw new Error("Failed to load beam status data!");
 
         const data = await response.json();
@@ -103,14 +103,24 @@ function updateProgress(data) {
         return;
     }
 
-    let installedBeams = data.filter(beam => beam.Progress === "100").length;
+    // ✅ Ensure progress bar elements exist before updating
+    let progressBar = document.getElementById("progress-bar");
+    let progressText = document.getElementById("progress-text");
+
+    if (!progressBar || !progressText) {
+        console.error("❌ Error: Progress bar or progress text not found in the HTML!");
+        return;
+    }
+
+    // ✅ Convert `Progress` to a number if it's a string
+    let installedBeams = data.filter(beam => parseInt(beam.Progress) === 100).length;
     let totalBeams = data.length;
     let progress = (installedBeams / totalBeams) * 100;
 
     console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress}%`);
 
-    document.getElementById("progress-bar").style.width = progress + "%";
-    document.getElementById("progress-text").innerText = progress.toFixed(1) + "%";
+    progressBar.style.width = progress + "%";
+    progressText.innerText = progress.toFixed(1) + "%";
 }
 
 // ✅ Ensure function runs when the page loads
