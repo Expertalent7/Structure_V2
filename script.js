@@ -158,13 +158,21 @@ async function loadBeamOverlays(selectedImageURL) {
         
         overlayContainer.innerHTML = ""; // ✅ Clear previous overlays
 
-        // ✅ Filter beams by Image_ID
-        const filteredBeams = beamsData.filter(beam => beam.Image_ID === selectedImageURL);
+        // ✅ Extract Image Filename Instead of Full URL
+        let imageFileName = selectedImageURL.split("/").pop(); // Get only the unique part
 
-        console.log(`✅ Found ${filteredBeams.length} beams linked to this image.`); // Debug log
+        console.log(`🧐 Extracted Image Filename: ${imageFileName}`);
+
+        // ✅ Filter beams by Image_ID (Compare against extracted filename)
+        const filteredBeams = beamsData.filter(beam => {
+            console.log(`🔎 Checking Beam ${beam.Beam_ID} - Image_ID: ${beam.Image_ID}`);
+            return beam.Image_ID.includes(imageFileName);
+        });
+
+        console.log(`✅ Found ${filteredBeams.length} beams linked to this image.`);
 
         filteredBeams.forEach(beam => {
-            console.log(`🟢 Beam found: ${beam.Beam_ID} | X: ${beam.Coordinates.x}, Y: ${beam.Coordinates.y}`);
+            console.log(`🟢 Beam Found: ${beam.Beam_ID} | X: ${beam.Coordinates.x}, Y: ${beam.Coordinates.y}`);
 
             if (!beam.Coordinates || !beam.Coordinates.x || !beam.Coordinates.y) {
                 console.warn(`⚠ Skipping beam ${beam.Beam_ID} due to missing coordinates`);
@@ -197,4 +205,3 @@ async function loadBeamOverlays(selectedImageURL) {
         console.error("❌ Error loading beam overlays:", error);
     }
 }
-
