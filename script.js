@@ -1,37 +1,50 @@
-async function loadDrawings() {
-    try {
-        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
-        if (!response.ok) throw new Error("Failed to load drawings data!");
+sync function loadDrawings() {
+            try {
+                // ✅ Fetch data from JSON
+                const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
+                if (!response.ok) throw new Error("Failed to load drawings data!");
 
-        const data = await response.json();
-        const selectElement = document.getElementById("drawingSelect");
+                const data = await response.json();
+                const selectElement = document.getElementById("drawingSelect");
 
-        if (!selectElement) {
-            console.error("❌ Error: Select element not found!");
-            return;
+                if (!selectElement) {
+                    console.error("❌ Error: Select element not found!");
+                    return;
+                }
+
+                // ✅ Clear previous entries and add default option
+                selectElement.innerHTML = '<option value="">Select a drawing...</option>';
+
+                data.forEach(drawing => {
+                    let option = document.createElement("option");
+                    option.value = drawing["Images"][0]; // Set the first image as default value
+                    option.textContent = drawing["Drawing Name"];
+                    selectElement.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error("❌ Error loading drawings:", error);
+            }
         }
 
-        selectElement.innerHTML = '<option value="">Select a drawing...</option>';
+        function updateSelectedImage() {
+            const dropdown = document.getElementById("drawingSelect");
+            const selectedImage = document.getElementById("selectedImage");
+            const imageContainer = document.getElementById("selectedImageContainer");
+            const imageLink = document.getElementById("imageLink");
 
-        data.forEach(drawing => {
-            let option = document.createElement("option");
+            if (dropdown.value) {
+                selectedImage.src = dropdown.value;
+                imageLink.href = dropdown.value;
+                selectedImage.style.display = "block"; // Show image
+                imageContainer.style.display = "block";  // Show the image container
+            } else {
+                imageContainer.style.display = "none";  // Hide if no selection
+                selectedImage.style.display = "none";   // Hide the image
+            }
+        }
 
-            // ✅ Only use "Drawing Name" as the value, NOT Folder ID
-            option.value = drawing["Drawing Name"];
-            option.textContent = drawing["Drawing Name"];
-            selectElement.appendChild(option);
-        });
-
-        selectElement.removeEventListener("change", handleDrawingChange);
-        selectElement.addEventListener("change", function () {
-            handleDrawingChange(this.value, data);
-        });
-
-    } catch (error) {
-        console.error("❌ Error loading drawings:", error);
-    }
-}
-
+        document.addEventListener("DOMContentLoaded", loadDrawings);
 
 async function loadBeamStatus() {
     try {
