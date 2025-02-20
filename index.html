@@ -21,16 +21,13 @@
         <!-- ✅ Dropdown for beam selection -->
         <select id="drawingSelect" onchange="updateSelectedImage()">
             <option value="">Select a drawing...</option>
-            <option value="path/to/image1.jpg">Drawing 1</option>
-            <option value="path/to/image2.jpg">Drawing 2</option>
-            <option value="path/to/image3.jpg">Drawing 3</option>
-            <!-- Add more as needed -->
+            <!-- Dynamically populated options will be loaded from script.js -->
         </select>
 
         <!-- ✅ Image container with a clickable link -->
         <div id="selectedImageContainer" style="display: none; text-align: center; margin-top: 20px;">
             <a id="imageLink" href="" target="_blank">
-                <img id="selectedImage" src="" alt="Selected Drawing" style="width: 100%; max-width: 600px; cursor: pointer;">
+                <img id="selectedImage" src="" alt="Selected Drawing" style="width: 100%; max-width: 600px; cursor: pointer; display: none;">
             </a>
         </div>
 
@@ -46,22 +43,5 @@
 
         <p id="statusMessage">Loading beam status...</p>
     </div>
-
-    <script>
-        function updateSelectedImage() {
-            const dropdown = document.getElementById("drawingSelect");
-            const selectedImage = document.getElementById("selectedImage");
-            const imageContainer = document.getElementById("selectedImageContainer");
-            const imageLink = document.getElementById("imageLink");
-
-            if (dropdown.value) {
-                selectedImage.src = dropdown.value;  // Set new image
-                imageLink.href = dropdown.value;  // Make it clickable
-                imageContainer.style.display = "block";  // Show the image
-            } else {
-                imageContainer.style.display = "none";  // Hide if no selection
-            }
-        }
-    </script>
 </body>
 </html>
