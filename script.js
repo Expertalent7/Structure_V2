@@ -112,16 +112,18 @@ function updateProgress(data) {
         return;
     }
 
-    // ✅ Convert `Progress` to a number if it's a string
+    // ✅ Calculate progress
     let installedBeams = data.filter(beam => parseInt(beam.Progress) === 100).length;
     let totalBeams = data.length;
     let progress = (installedBeams / totalBeams) * 100;
 
     console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress}%`);
 
+    // ✅ Update the progress bar without creating extra elements
     progressBar.style.width = progress + "%";
     progressText.innerText = progress.toFixed(1) + "%";
 }
+
 
 // ✅ Ensure function runs when the page loads
 document.addEventListener("DOMContentLoaded", loadDrawings);
