@@ -76,6 +76,13 @@ function displayImages(imageUrls, drawingName) {
 
     imageUrls.forEach((url, index) => {
         let img = document.createElement("img");
+
+        // ✅ If URL contains Google Drive folder ID, prevent image loading
+        if (url.length === 33 || url.includes("drive.google.com/drive/folders/")) {
+            console.warn("⚠ Skipping folder ID in image list:", url);
+            return; // Skip folder IDs
+        }
+
         img.src = url;
         img.alt = `${drawingName} - Image ${index + 1}`;
         img.style.width = "150px";
@@ -93,20 +100,31 @@ function displayImages(imageUrls, drawingName) {
     });
 }
 
+
 function selectImage(imageUrl, drawingName) {
     const selectedImageContainer = document.getElementById("selectedImageContainer");
     const selectedImage = document.getElementById("selectedImage");
+    const imageLink = document.getElementById("imageLink");
 
-    if (!selectedImageContainer || !selectedImage) {
-        console.error("❌ Error: Selected image container not found!");
+    if (!selectedImageContainer || !selectedImage || !imageLink) {
+        console.error("❌ Error: Selected image container or link not found!");
         return;
     }
 
-    selectedImage.src = imageUrl;
-    selectedImageContainer.style.display = "block";
+    // ✅ If the URL is a Google Drive FOLDER ID, prevent opening it as an image
+    if (imageUrl.includes("drive.google.com") || imageUrl.length === 33) {
+        console.error("❌ Error: Cannot open Google Drive folder directly as an image.");
+        alert("Selected item is a Google Drive folder, not an image!");
+        return;
+    }
 
-    loadBeamOverlays(drawingName);
+    // ✅ Set the correct image path
+    selectedImage.src = imageUrl;
+    imageLink.href = imageUrl;
+    imageLink.target = "_blank";
+    selectedImageContainer.style.display = "block";
 }
+
 
 async function loadBeamOverlays(drawingName) {
     try {
