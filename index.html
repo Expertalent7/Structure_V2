@@ -18,6 +18,7 @@
             border-radius: 5px;
             overflow: hidden;
             margin-top: 10px;
+            position: relative;
         }
 
         #progress-bar {
@@ -29,6 +30,16 @@
             line-height: 20px;
             font-weight: bold;
             transition: width 0.3s ease-in-out;
+        }
+
+        /* ✅ Fix alignment of progress text */
+        #progress-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: 0;
+            font-weight: bold;
+            color: white;
         }
 
         #beamContainer {
@@ -53,9 +64,11 @@
 
     <h2>Installation Progress: <span id="progressValue">0%</span></h2>
 
-    <!-- ✅ Fixed Progress Bar (Only One Instance) -->
+    <!-- ✅ Fixed Progress Bar (Ensures JavaScript Works) -->
     <div class="progress-container">
-        <div id="progress-bar">0%</div>
+        <div id="progress-bar">
+            <span id="progress-text">0%</span>
+        </div>
     </div>
 
     <p id="statusMessage">Loading beam status...</p>
