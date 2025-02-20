@@ -124,41 +124,62 @@ function selectImage(imageUrl, drawingName) {
 // ✅ Function to load and display beam overlays
 async function loadBeamOverlays(drawingName) {
     try {
-        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json"); // Adjust filename if needed
-        if (!response.ok) throw new Error("Failed to load beam data!");
+        console.log(`🔍 Loading beam data for: ${drawingName}`);
+
+        // ✅ Fetch the JSON file
+        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json");
+        if (!response.ok) throw new Error(`Failed to load beam data! HTTP Status: ${response.status}`);
 
         const beams = await response.json();
-        const overlayContainer = document.getElementById("overlayContainer");
+        if (!Array.isArray(beams)) throw new Error("Invalid JSON format: Expected an array.");
 
+        // ✅ Check if overlayContainer exists
+        const overlayContainer = document.getElementById("overlayContainer");
         if (!overlayContainer) {
-            console.error("❌ Error: Beam overlay container not found!");
-            return;
+            console.error("❌ Error: Beam overlay container not found! Creating a fallback container.");
+            // ✅ Create a fallback container if missing
+            const newContainer = document.createElement("div");
+            newContainer.id = "overlayContainer";
+            document.body.appendChild(newContainer);
         }
 
         // ✅ Clear previous overlays
         overlayContainer.innerHTML = "";
 
         beams.forEach(beam => {
-            // ✅ Validate Coordinates
+            // ✅ Validate beam data before processing
             if (!beam.Coordinates || beam.Coordinates.x === undefined || beam.Coordinates.y === undefined) {
-                console.error(`❌ Missing coordinates for beam:`, beam);
+                console.error(`❌ Skipping beam due to missing coordinates:`, beam);
                 return;
             }
 
+            // ✅ Ensure numerical values for coordinates
+            const x = parseFloat(beam.Coordinates.x);
+            const y = parseFloat(beam.Coordinates.y);
+            const width = parseFloat(beam.Coordinates.width) || 10; // Default width
+            const height = parseFloat(beam.Coordinates.height) || 10; // Default height
+
+            if (isNaN(x) || isNaN(y)) {
+                console.error(`❌ Invalid numerical coordinates for beam:`, beam);
+                return;
+            }
+
+            // ✅ Create overlay element
             let beamDiv = document.createElement("div");
             beamDiv.classList.add("beam-overlay");
 
-            // ✅ Set beam position (Assuming coordinates exist)
+            // ✅ Position the overlay
             beamDiv.style.position = "absolute";
-            beamDiv.style.left = beam.Coordinates.x + "px";
-            beamDiv.style.top = beam.Coordinates.y + "px";
-            beamDiv.style.width = beam.Coordinates.width + "px";
-            beamDiv.style.height = beam.Coordinates.height + "px";
+            beamDiv.style.left = `${x}px`;
+            beamDiv.style.top = `${y}px`;
+            beamDiv.style.width = `${width}px`;
+            beamDiv.style.height = `${height}px`;
 
             // ✅ Apply color based on progress
-            if (beam.Progress === "100") {
+            let progress = parseInt(beam.Progress) || 0;
+            if (progress >= 100) {
                 beamDiv.style.backgroundColor = "green"; // Installed
-            } else if (beam.Progress >= "50") {
+            } else if (progress >= 50) {
                 beamDiv.style.backgroundColor = "yellow"; // In progress
             } else {
                 beamDiv.style.backgroundColor = "red"; // Not installed
@@ -168,11 +189,11 @@ async function loadBeamOverlays(drawingName) {
         });
 
         console.log("✅ Beam overlays loaded successfully.");
-
     } catch (error) {
         console.error("❌ Error loading beam overlays:", error);
     }
 }
+
 
 // ✅ Function to update installation progress
 function updateProgress(data) {
