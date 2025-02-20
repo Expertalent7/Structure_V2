@@ -36,7 +36,7 @@ body {
     position: absolute;
     background-color: transparent;
     transition: all 0.2s ease-in-out;
-    transform: translate(-50%, -50%); /* ✅ Ensures beams are centered */
+    transform: translate(-50%, -50%);
     cursor: pointer;
     z-index: 10;
 }
@@ -112,10 +112,10 @@ body {
     text-align: left;
 }
 
-/* ✅ Progress Bar */
-#progressContainer {
-    width: 50%;
-    max-width: 300px;
+/* ✅ Fixed Progress Bar Styling */
+.progress-container {
+    width: 100%;
+    max-width: 400px;
     margin: 10px auto;
     background-color: #ccc;
     border-radius: 5px;
@@ -123,7 +123,7 @@ body {
     position: relative;
 }
 
-#progressBar {
+#progress-bar {
     height: 20px;
     width: 0%; /* Starts empty */
     background-color: #4CAF50; /* ✅ Green progress */
@@ -135,13 +135,13 @@ body {
     position: relative;
 }
 
-/* ✅ Progress Bar Text */
-#progressText {
+/* ✅ Fix Progress Bar Text Alignment */
+#progress-text {
     position: absolute;
     width: 100%;
     text-align: center;
     font-weight: bold;
-    color: white; /* White text inside the bar */
+    color: white;
     z-index: 2;
 }
 
