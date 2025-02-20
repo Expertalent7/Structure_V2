@@ -52,6 +52,12 @@ jobs:
 
     - name: Commit and push if changed
       run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        
         git add data/drawings_data.json
         git commit -m "Updated JSON - $(date +'%Y-%m-%d %H:%M:%S')" || exit 0
+
+        # ✅ Ensure the local branch is up-to-date before pushing
+        git pull --rebase origin main
         git push origin main
