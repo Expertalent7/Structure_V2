@@ -1,13 +1,13 @@
 [
   {
-    "Beam_ID": "beam b",
-    "Beam_Name": "Beam B",
-    "Progress": "100",
+    "Beam_ID": "beam c",
+    "Beam_Name": "Beam C",
+    "Progress": "40",
     "Scanned_By": "mounirkhaled9@gmail.com",
-    "Timestamp": "2/20/2025 12:04:34 PM",
+    "Timestamp": "2/20/2025 12:05:17 PM",
     "Coordinates": {
-      "x": "125",
-      "y": "153",
+      "x": "124",
+      "y": "296",
       "width": "7",
       "height": "186"
     }
