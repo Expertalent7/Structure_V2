@@ -1,3 +1,4 @@
+// ✅ Function to load available drawings into the dropdown
 async function loadDrawings() {
     try {
         // ✅ Fetch Drawings JSON
@@ -18,12 +19,12 @@ async function loadDrawings() {
         // ✅ Populate dropdown correctly
         data.forEach(drawing => {
             let option = document.createElement("option");
-            option.value = drawing["Folder ID"];
+            option.value = drawing["Folder ID"]; // Ensure it matches your data structure
             option.textContent = drawing["Drawing Name"];
             selectElement.appendChild(option);
         });
 
-        // ✅ Attach event listener (Ensures only one instance)
+        // ✅ Attach event listener to handle selection changes
         selectElement.removeEventListener("change", handleDrawingChange);
         selectElement.addEventListener("change", function () {
             handleDrawingChange(this.value, data);
@@ -62,9 +63,7 @@ function handleDrawingChange(selectedFolder, data) {
     }
 
     displayImages(selectedDrawing["Images"], selectedDrawing["Drawing Name"]);
-
-    // ✅ Force progress update after drawing selection
-    loadBeamStatus();
+    loadBeamStatus(); // ✅ Force progress update after drawing selection
 }
 
 // ✅ Function to display images for a selected drawing
@@ -85,7 +84,7 @@ function displayImages(imageUrls, drawingName) {
 
     imageUrls.forEach((url, index) => {
         let img = document.createElement("img");
-        img.src = url;
+        img.src = `https://expertalent7.github.io/Structure_V2/data/images/${url}`; // ✅ Ensures correct path
         img.alt = `${drawingName} - Image ${index + 1}`;
         img.style.width = "150px";
         img.style.margin = "5px";
@@ -94,9 +93,9 @@ function displayImages(imageUrls, drawingName) {
         img.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.1)";
         img.classList.add("selectable-image");
 
-        // ✅ Add click event to select an image
+        // ✅ Click event to select an image
         img.addEventListener("click", function () {
-            selectImage(url, drawingName);
+            selectImage(img.src, drawingName);
         });
 
         imageContainer.appendChild(img);
@@ -113,12 +112,10 @@ function selectImage(imageUrl, drawingName) {
         return;
     }
 
-    // ✅ Show the selected image
-    selectedImage.src = imageUrl;
+    selectedImage.src = imageUrl; // ✅ Update image source
     selectedImageContainer.style.display = "block";
 
-    // ✅ Load beam overlays for the selected image
-    loadBeamOverlays(drawingName);
+    loadBeamOverlays(drawingName); // ✅ Load beam overlays
 }
 
 // ✅ Function to load and display beam overlays
@@ -133,57 +130,44 @@ async function loadBeamOverlays(drawingName) {
         const beams = await response.json();
         if (!Array.isArray(beams)) throw new Error("Invalid JSON format: Expected an array.");
 
-        // ✅ Check if overlayContainer exists
-        const overlayContainer = document.getElementById("overlayContainer");
+        // ✅ Ensure overlayContainer exists
+        let overlayContainer = document.getElementById("overlayContainer");
         if (!overlayContainer) {
-            console.error("❌ Error: Beam overlay container not found! Creating a fallback container.");
-            // ✅ Create a fallback container if missing
-            const newContainer = document.createElement("div");
-            newContainer.id = "overlayContainer";
-            document.body.appendChild(newContainer);
+            overlayContainer = document.createElement("div");
+            overlayContainer.id = "overlayContainer";
+            document.body.appendChild(overlayContainer);
         }
 
         // ✅ Clear previous overlays
         overlayContainer.innerHTML = "";
 
         beams.forEach(beam => {
-            // ✅ Validate beam data before processing
             if (!beam.Coordinates || beam.Coordinates.x === undefined || beam.Coordinates.y === undefined) {
                 console.error(`❌ Skipping beam due to missing coordinates:`, beam);
                 return;
             }
 
-            // ✅ Ensure numerical values for coordinates
             const x = parseFloat(beam.Coordinates.x);
             const y = parseFloat(beam.Coordinates.y);
-            const width = parseFloat(beam.Coordinates.width) || 10; // Default width
-            const height = parseFloat(beam.Coordinates.height) || 10; // Default height
+            const width = parseFloat(beam.Coordinates.width) || 10;
+            const height = parseFloat(beam.Coordinates.height) || 10;
 
             if (isNaN(x) || isNaN(y)) {
                 console.error(`❌ Invalid numerical coordinates for beam:`, beam);
                 return;
             }
 
-            // ✅ Create overlay element
             let beamDiv = document.createElement("div");
             beamDiv.classList.add("beam-overlay");
 
-            // ✅ Position the overlay
             beamDiv.style.position = "absolute";
             beamDiv.style.left = `${x}px`;
             beamDiv.style.top = `${y}px`;
             beamDiv.style.width = `${width}px`;
             beamDiv.style.height = `${height}px`;
 
-            // ✅ Apply color based on progress
             let progress = parseInt(beam.Progress) || 0;
-            if (progress >= 100) {
-                beamDiv.style.backgroundColor = "green"; // Installed
-            } else if (progress >= 50) {
-                beamDiv.style.backgroundColor = "yellow"; // In progress
-            } else {
-                beamDiv.style.backgroundColor = "red"; // Not installed
-            }
+            beamDiv.style.backgroundColor = progress >= 100 ? "green" : progress >= 50 ? "yellow" : "red";
 
             overlayContainer.appendChild(beamDiv);
         });
@@ -193,7 +177,6 @@ async function loadBeamOverlays(drawingName) {
         console.error("❌ Error loading beam overlays:", error);
     }
 }
-
 
 // ✅ Function to update installation progress
 function updateProgress(data) {
@@ -210,20 +193,17 @@ function updateProgress(data) {
         return;
     }
 
-    // ✅ Convert `Progress` to a number if it's a string
     let installedBeams = data.filter(beam => parseInt(beam.Progress) === 100).length;
     let totalBeams = data.length;
     let progress = totalBeams > 0 ? (installedBeams / totalBeams) * 100 : 0;
 
     console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress.toFixed(1)}%`);
 
-    // ✅ Update Progress Bar Smoothly
     requestAnimationFrame(() => {
         progressBar.style.width = progress.toFixed(1) + "%";
         progressText.innerText = progress.toFixed(1) + "%";
     });
 
-    // ✅ Debugging
     setTimeout(() => {
         console.log("🔍 Debug: Progress Bar Width After Update:", progressBar.style.width);
     }, 500);
