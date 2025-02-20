@@ -44,9 +44,10 @@ body {
     position: relative;
 }
 
+/* ✅ Fix Progress Bar Not Expanding */
 #progress-bar {
     height: 20px;
-    min-width: 2%; /* ✅ Ensures bar is visible even at small values */
+    width: 0%; /* ✅ Starts at 0 but updates */
     background-color: green;
     text-align: center;
     color: white;
@@ -54,11 +55,10 @@ body {
     font-weight: bold;
     transition: width 0.5s ease-in-out;
     position: relative;
+    display: block; /* ✅ Ensures width change applies */
 }
 
-
-
-/* ✅ Fix alignment of progress text */
+/* ✅ Ensure progress bar text aligns properly */
 #progress-text {
     position: absolute;
     width: 100%;
@@ -66,6 +66,8 @@ body {
     font-weight: bold;
     color: white;
     z-index: 2;
+    left: 0;
+    top: 0;
 }
 
 /* ✅ Beam Container */
@@ -74,4 +76,11 @@ body {
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 15px;
+}
+
+/* ✅ Prevent CSS From Blocking Width Updates */
+#progress-bar:after {
+    content: "";
+    display: block;
+    height: 100%;
 }
