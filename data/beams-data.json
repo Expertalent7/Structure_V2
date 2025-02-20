@@ -11,5 +11,18 @@
       "width": "5",
       "height": "63"
     }
+  },
+  {
+    "Beam_ID": "beam z",
+    "Beam_Name": "Beam Z",
+    "Progress": "40",
+    "Scanned_By": "expertalent7@gmail.com",
+    "Timestamp": "2/15/2025 12:31:44 PM",
+    "Coordinates": {
+      "x": "563",
+      "y": "393",
+      "width": "5",
+      "height": "53"
+    }
   }
 ]
