@@ -29,9 +29,6 @@ async function loadDrawings() {
             handleDrawingChange(this.value, data);
         });
 
-        // ✅ Fetch beam status and update progress bar
-        loadBeamStatus();
-
     } catch (error) {
         console.error("❌ Error loading drawings:", error);
     }
@@ -69,7 +66,6 @@ function handleDrawingChange(selectedFolder, data) {
     // ✅ Force progress update after drawing selection
     loadBeamStatus();
 }
-
 
 // ✅ Function to display images for a selected drawing
 function displayImages(imageUrls, drawingName) {
@@ -122,7 +118,7 @@ function updateProgress(data) {
 
     console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress.toFixed(1)}%`);
 
-    // ✅ Force JavaScript to apply the new width
+    // ✅ Force JavaScript to apply the new width smoothly
     requestAnimationFrame(() => {
         progressBar.style.width = progress.toFixed(1) + "%";
         progressText.innerText = progress.toFixed(1) + "%";
@@ -133,7 +129,6 @@ function updateProgress(data) {
         console.log("🔍 Debug: Progress Bar Width After Update:", progressBar.style.width);
     }, 500);
 }
-
 
 // ✅ Ensure function runs when the page loads
 document.addEventListener("DOMContentLoaded", loadDrawings);
