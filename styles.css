@@ -86,3 +86,19 @@ body {
     display: block;
     height: 100%;
 }
+/* ✅ Make images selectable */
+.selectable-image {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.selectable-image:hover {
+    transform: scale(1.05);
+}
+
+/* ✅ Style beam overlays */
+.beam-overlay {
+    position: absolute;
+    opacity: 0.7;
+    border: 1px solid black;
+}
