@@ -125,6 +125,7 @@ function displayImages(imageUrls, drawingName) {
 
         img.src = url;
         img.alt = `${drawingName} - Image ${index + 1}`;
+        img.crossOrigin = "anonymous"; // ✅ Fix cross-origin warnings
         img.style.width = "150px";
         img.style.margin = "5px";
         img.style.border = "1px solid #ccc";
@@ -132,7 +133,6 @@ function displayImages(imageUrls, drawingName) {
         img.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.1)";
         img.classList.add("selectable-image");
 
-        // ✅ Add Click Event to Select the Image
         img.addEventListener("click", function () {
             selectImage(url, drawingName);
         });
