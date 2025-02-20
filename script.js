@@ -18,7 +18,7 @@ async function loadDrawings() {
         // ✅ Populate dropdown correctly
         data.forEach(drawing => {
             let option = document.createElement("option");
-            option.value = drawing["Folder ID"]; 
+            option.value = drawing["Folder ID"];
             option.textContent = drawing["Drawing Name"];
             selectElement.appendChild(option);
         });
@@ -96,14 +96,15 @@ function displayImages(imageUrls, drawingName) {
 
         // ✅ Add click event to select an image
         img.addEventListener("click", function () {
-            selectImage(url);
+            selectImage(url, drawingName);
         });
 
         imageContainer.appendChild(img);
     });
 }
 
-function selectImage(imageUrl) {
+// ✅ Function to select an image and load overlays
+function selectImage(imageUrl, drawingName) {
     const selectedImageContainer = document.getElementById("selectedImageContainer");
     const selectedImage = document.getElementById("selectedImage");
 
@@ -116,11 +117,12 @@ function selectImage(imageUrl) {
     selectedImage.src = imageUrl;
     selectedImageContainer.style.display = "block";
 
-    // ✅ Load beam overlays
-    loadBeamOverlays();
+    // ✅ Load beam overlays for the selected image
+    loadBeamOverlays(drawingName);
 }
 
-async function loadBeamOverlays() {
+// ✅ Function to load and display beam overlays
+async function loadBeamOverlays(drawingName) {
     try {
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json"); // Adjust filename if needed
         if (!response.ok) throw new Error("Failed to load beam data!");
@@ -137,10 +139,17 @@ async function loadBeamOverlays() {
         overlayContainer.innerHTML = "";
 
         beams.forEach(beam => {
+            // ✅ Validate Coordinates
+            if (!beam.Coordinates || beam.Coordinates.x === undefined || beam.Coordinates.y === undefined) {
+                console.error(`❌ Missing coordinates for beam:`, beam);
+                return;
+            }
+
             let beamDiv = document.createElement("div");
             beamDiv.classList.add("beam-overlay");
 
             // ✅ Set beam position (Assuming coordinates exist)
+            beamDiv.style.position = "absolute";
             beamDiv.style.left = beam.Coordinates.x + "px";
             beamDiv.style.top = beam.Coordinates.y + "px";
             beamDiv.style.width = beam.Coordinates.width + "px";
@@ -158,11 +167,12 @@ async function loadBeamOverlays() {
             overlayContainer.appendChild(beamDiv);
         });
 
+        console.log("✅ Beam overlays loaded successfully.");
+
     } catch (error) {
         console.error("❌ Error loading beam overlays:", error);
     }
 }
-
 
 // ✅ Function to update installation progress
 function updateProgress(data) {
@@ -186,13 +196,13 @@ function updateProgress(data) {
 
     console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress.toFixed(1)}%`);
 
-    // ✅ Force JavaScript to apply the new width smoothly
+    // ✅ Update Progress Bar Smoothly
     requestAnimationFrame(() => {
         progressBar.style.width = progress.toFixed(1) + "%";
         progressText.innerText = progress.toFixed(1) + "%";
     });
 
-    // ✅ Debugging to check if width is really being set
+    // ✅ Debugging
     setTimeout(() => {
         console.log("🔍 Debug: Progress Bar Width After Update:", progressBar.style.width);
     }, 500);
