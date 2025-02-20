@@ -16,126 +16,47 @@ body {
     justify-content: center;
 }
 
-.container {
-    position: relative;
-    width: 494px; /* Match image width */
-    height: 682px; /* Match image height */
-    margin: auto;
-    padding: 10px;
-}
-
-/* ✅ Image should not resize unexpectedly */
-.container img {
-    width: 100%; /* Matches parent container */
-    height: auto; /* Ensures proportional scaling */
-    display: block;
-}
-
-/* 🎯 Beam Styling */
-.beam {
+/* ✅ Dark Mode Button */
+#darkModeToggle {
     position: absolute;
-    background-color: transparent;
-    transition: all 0.2s ease-in-out;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-    z-index: 10;
-}
-
-/* ✅ Installed Beam - Green */
-.beam.installed {
-    background-color: rgba(0, 255, 0, 0.6);
-    border: 2px solid green;
-}
-
-/* 🚧 In Progress - Yellow */
-.beam.in-progress {
-    background-color: rgba(255, 204, 0, 0.7);
-    border: 2px solid orange;
-}
-
-/* ❌ Not Installed - Red */
-.beam.not-installed {
-    background-color: rgba(255, 0, 0, 0.6);
-    border: 2px solid red;
-}
-
-/* 🔍 Search Highlight - Blue */
-.beam.highlight {
-    border: 3px solid blue !important;
-    background-color: rgba(0, 0, 255, 0.3) !important;
-}
-
-/* ✨ Hover Effect */
-.beam:hover {
-    transform: scale(1.2) translate(-50%, -50%);
-    filter: brightness(1.2);
-}
-
-/* ✅ Selected Beam */
-.beam.selected {
-    transform: scale(1.05) translate(-50%, -50%);
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
-}
-
-/* 🎭 Beam Tooltip */
-.beam-tooltip {
-    position: absolute;
-    background: black;
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    border: none;
+    background: #333;
     color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    display: none;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    pointer-events: none;
-    z-index: 1000;
-    white-space: nowrap;
-    transform: translate(-50%, -100%);
+    cursor: pointer;
+    border-radius: 5px;
 }
 
-/* 🔍 Ensure Tooltip Displays Correctly */
-.beam:hover + .beam-tooltip {
-    display: block;
+#darkModeToggle:hover {
+    background: #555;
 }
 
-/* 📌 Beam Details Panel */
-.details-panel {
-    position: absolute;
-    background: white;
-    border: 1px solid #666;
-    padding: 12px;
-    border-radius: 6px;
-    display: none;
-    z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    width: 220px;
-    text-align: left;
-}
-
-/* ✅ Fixed Progress Bar Styling */
+/* ✅ Progress Bar Styling */
 .progress-container {
-    width: 100%;
+    width: 50%;
     max-width: 400px;
-    margin: 10px auto;
     background-color: #ccc;
     border-radius: 5px;
     overflow: hidden;
+    margin: 10px auto;
     position: relative;
 }
 
 #progress-bar {
+    width: 0%;
     height: 20px;
-    width: 0%; /* Starts empty */
-    background-color: #4CAF50; /* ✅ Green progress */
+    background: green;
     text-align: center;
+    color: white;
     line-height: 20px;
     font-weight: bold;
-    border-radius: 5px;
-    transition: width 0.5s ease-in-out;
+    transition: width 0.3s ease-in-out;
     position: relative;
 }
 
-/* ✅ Fix Progress Bar Text Alignment */
+/* ✅ Fix alignment of progress text */
 #progress-text {
     position: absolute;
     width: 100%;
@@ -145,66 +66,10 @@ body {
     z-index: 2;
 }
 
-/* 🎭 Beam Legend */
-#beam-legend {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 15px;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    margin: 5px;
-}
-
-.legend-color {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    display: inline-block;
-    border-radius: 5px;
-}
-
-/* 🏗️ Legend Colors */
-.installed {
-    background-color: rgba(0, 255, 0, 0.7);
-}
-.not-installed {
-    background-color: rgba(255, 0, 0, 0.5);
-}
-.search-highlight {
-    border: 3px solid yellow;
-}
-
-/* ✅ Responsive Fix for Tooltip and Panel */
-@media screen and (max-width: 768px) {
-    .container {
-        width: 90%;
-    }
-
-    .beam-tooltip {
-        font-size: 10px;
-        padding: 4px 8px;
-    }
-
-    .details-panel {
-        width: 180px;
-    }
-}
-
-/* 🏗️ Fix Beam Positioning */
+/* ✅ Beam Container */
 #beamContainer {
-    position: relative;
-    display: inline-block;
-}
-
-/* ✅ Ensure Image is Fixed */
-#structureImage {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    position: relative;
-    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
 }
