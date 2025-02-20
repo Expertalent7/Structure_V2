@@ -16,26 +16,26 @@
     <div class="wrapper">
         <h1>Beam Selection Tool</h1>
 
-        <!-- ✅ Dropdown menu for selecting a drawing -->
+        <!-- ✅ Dropdown for beam selection -->
         <select id="drawingSelect" onchange="updateSelectedImage()">
             <option value="">Select a drawing...</option>
             <option value="path/to/image1.jpg">Drawing 1</option>
             <option value="path/to/image2.jpg">Drawing 2</option>
             <option value="path/to/image3.jpg">Drawing 3</option>
-            <!-- Add more drawings as needed -->
+            <!-- Add more as needed -->
         </select>
 
-        <!-- ✅ Selected image now appears directly below the dropdown -->
+        <!-- ✅ Image container with a clickable link -->
         <div id="selectedImageContainer" style="display: none; text-align: center; margin-top: 20px;">
-            <img id="selectedImage" src="" alt="Selected Drawing" style="width: 100%; max-width: 600px;">
-            <div id="overlayContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+            <a id="imageLink" href="" target="_blank">
+                <img id="selectedImage" src="" alt="Selected Drawing" style="width: 100%; max-width: 600px; cursor: pointer;">
+            </a>
         </div>
 
         <div id="beamContainer"></div>
 
         <h2>Installation Progress:</h2>
 
-        <!-- ✅ Fixed Progress Bar -->
         <div class="progress-container">
             <div id="progress-bar">
                 <span id="progress-text">0%</span>
@@ -50,12 +50,14 @@
             const dropdown = document.getElementById("drawingSelect");
             const selectedImage = document.getElementById("selectedImage");
             const imageContainer = document.getElementById("selectedImageContainer");
+            const imageLink = document.getElementById("imageLink");
 
             if (dropdown.value) {
-                selectedImage.src = dropdown.value;
-                imageContainer.style.display = "block"; // Show the image
+                selectedImage.src = dropdown.value;  // Set new image
+                imageLink.href = dropdown.value;  // Make it clickable
+                imageContainer.style.display = "block";  // Show the image
             } else {
-                imageContainer.style.display = "none"; // Hide if no selection
+                imageContainer.style.display = "none";  // Hide if no selection
             }
         }
     </script>
