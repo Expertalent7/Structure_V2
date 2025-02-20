@@ -115,11 +115,12 @@ function updateProgress(data) {
         return;
     }
 
+    // ✅ Convert `Progress` to a number if it's a string
     let installedBeams = data.filter(beam => parseInt(beam.Progress) === 100).length;
     let totalBeams = data.length;
-    let progress = (installedBeams / totalBeams) * 100;
+    let progress = totalBeams > 0 ? (installedBeams / totalBeams) * 100 : 0;
 
-    console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress}%`);
+    console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress.toFixed(1)}%`);
 
     progressBar.style.width = progress + "%";
     progressText.innerText = progress.toFixed(1) + "%";
