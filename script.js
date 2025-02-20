@@ -1,7 +1,8 @@
 async function loadDrawings() {
     try {
+        // Fetch Drawings JSON
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
-        if (!response.ok) throw new Error("Failed to load data!");
+        if (!response.ok) throw new Error("Failed to load drawings data!");
 
         const data = await response.json();
         const selectElement = document.getElementById("drawingSelect");
@@ -28,8 +29,25 @@ async function loadDrawings() {
             handleDrawingChange(this.value, data);
         });
 
+        // ✅ Fetch beam status and update progress bar
+        loadBeamStatus();
+
     } catch (error) {
         console.error("❌ Error loading drawings:", error);
+    }
+}
+
+// ✅ Function to fetch and process beam status
+async function loadBeamStatus() {
+    try {
+        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json"); // Adjust to match actual filename
+        if (!response.ok) throw new Error("Failed to load beam status data!");
+
+        const data = await response.json();
+        updateProgress(data);
+
+    } catch (error) {
+        console.error("❌ Error fetching beam status:", error);
     }
 }
 
@@ -49,6 +67,7 @@ function handleDrawingChange(selectedFolder, data) {
     displayImages(selectedDrawing["Images"], selectedDrawing["Drawing Name"]);
 }
 
+// ✅ Function to display images for a selected drawing
 function displayImages(imageUrls, drawingName) {
     const imageContainer = document.getElementById("beamContainer");
 
@@ -75,6 +94,23 @@ function displayImages(imageUrls, drawingName) {
         img.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.1)";
         imageContainer.appendChild(img);
     });
+}
+
+// ✅ Function to update installation progress
+function updateProgress(data) {
+    if (!data || data.length === 0) {
+        console.warn("⚠ No beam data found!");
+        return;
+    }
+
+    let installedBeams = data.filter(beam => beam.Progress === "100").length;
+    let totalBeams = data.length;
+    let progress = (installedBeams / totalBeams) * 100;
+
+    console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress}%`);
+
+    document.getElementById("progress-bar").style.width = progress + "%";
+    document.getElementById("progress-text").innerText = progress.toFixed(1) + "%";
 }
 
 // ✅ Ensure function runs when the page loads
