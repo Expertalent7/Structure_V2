@@ -103,6 +103,66 @@ function displayImages(imageUrls, drawingName) {
     });
 }
 
+function selectImage(imageUrl) {
+    const selectedImageContainer = document.getElementById("selectedImageContainer");
+    const selectedImage = document.getElementById("selectedImage");
+
+    if (!selectedImageContainer || !selectedImage) {
+        console.error("❌ Error: Selected image container not found!");
+        return;
+    }
+
+    // ✅ Show the selected image
+    selectedImage.src = imageUrl;
+    selectedImageContainer.style.display = "block";
+
+    // ✅ Load beam overlays
+    loadBeamOverlays();
+}
+
+async function loadBeamOverlays() {
+    try {
+        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json"); // Adjust filename if needed
+        if (!response.ok) throw new Error("Failed to load beam data!");
+
+        const beams = await response.json();
+        const overlayContainer = document.getElementById("overlayContainer");
+
+        if (!overlayContainer) {
+            console.error("❌ Error: Beam overlay container not found!");
+            return;
+        }
+
+        // ✅ Clear previous overlays
+        overlayContainer.innerHTML = "";
+
+        beams.forEach(beam => {
+            let beamDiv = document.createElement("div");
+            beamDiv.classList.add("beam-overlay");
+
+            // ✅ Set beam position (Assuming coordinates exist)
+            beamDiv.style.left = beam.Coordinates.x + "px";
+            beamDiv.style.top = beam.Coordinates.y + "px";
+            beamDiv.style.width = beam.Coordinates.width + "px";
+            beamDiv.style.height = beam.Coordinates.height + "px";
+
+            // ✅ Apply color based on progress
+            if (beam.Progress === "100") {
+                beamDiv.style.backgroundColor = "green"; // Installed
+            } else if (beam.Progress >= "50") {
+                beamDiv.style.backgroundColor = "yellow"; // In progress
+            } else {
+                beamDiv.style.backgroundColor = "red"; // Not installed
+            }
+
+            overlayContainer.appendChild(beamDiv);
+        });
+
+    } catch (error) {
+        console.error("❌ Error loading beam overlays:", error);
+    }
+}
+
 
 // ✅ Function to update installation progress
 function updateProgress(data) {
