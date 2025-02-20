@@ -56,10 +56,13 @@ function handleDrawingChange(selectedDrawingName) {
                 return;
             }
 
+            // ✅ Display images for the selected drawing
             displayImages(selectedDrawing["Images"], selectedDrawing["Drawing Name"]);
+
         })
         .catch(error => console.error("❌ Error loading drawing data:", error));
 }
+
 
 // ✅ Display Images & Ensure Proper Overlay Management
 function displayImages(imageUrls, drawingName) {
@@ -118,19 +121,27 @@ function selectImage(imageUrl, drawingName) {
         return;
     }
 
+    if (!isValidImageURL(imageUrl)) {
+        console.error("❌ Error: Cannot open invalid image URL.");
+        alert("Invalid image URL!");
+        return;
+    }
+
     selectedImage.src = imageUrl;
     imageLink.href = imageUrl;
     imageLink.target = "_blank";
     selectedImageContainer.style.display = "block";
-    selectedImage.style.display = "block"; 
+    selectedImage.style.display = "block"; // ✅ Ensure the image is visible
 
-    loadBeamOverlays(drawingName);
+    // ✅ Load overlays for the selected image
+    loadBeamOverlays(imageUrl);
 }
 
+
 // ✅ Load & Display Beams Overlays for Selected Image
-async function loadBeamOverlays(drawingName) {
+async function loadBeamOverlays(selectedImageURL) {
     try {
-        console.log(`🔍 Loading beam overlays for: ${drawingName}`);
+        console.log(`🔍 Fetching beam data for image: ${selectedImageURL}`);
 
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json");
         if (!response.ok) throw new Error("Failed to load beam data!");
@@ -142,41 +153,45 @@ async function loadBeamOverlays(drawingName) {
             console.error("❌ Error: Overlay container not found!");
             return;
         }
-        overlayContainer.innerHTML = ""; // ✅ Clear previous overlays
+        
+        overlayContainer.innerHTML = ""; // ✅ Clear previous overlays before applying new ones
 
-        beamsData
-            .filter(beam => beam.Image_Name === drawingName) // ✅ Show only beams for this image
-            .forEach(beam => {
-                if (!beam.Coordinates || !beam.Coordinates.x || !beam.Coordinates.y) {
-                    console.warn(`⚠ Skipping beam ${beam.Beam_ID} due to missing coordinates`);
-                    return;
-                }
+        // ✅ Filter beams by Image_ID
+        const filteredBeams = beamsData.filter(beam => beam.Image_ID === selectedImageURL);
 
-                let beamOverlay = document.createElement("div");
-                beamOverlay.classList.add("beam-overlay");
+        filteredBeams.forEach(beam => {
+            if (!beam.Coordinates || !beam.Coordinates.x || !beam.Coordinates.y) {
+                console.warn(`⚠ Skipping beam ${beam.Beam_ID} due to missing coordinates`);
+                return;
+            }
 
-                beamOverlay.style.position = "absolute";
-                beamOverlay.style.left = `${beam.Coordinates.x}px`;
-                beamOverlay.style.top = `${beam.Coordinates.y}px`;
-                beamOverlay.style.width = `${beam.Coordinates.width}px`;
-                beamOverlay.style.height = `${beam.Coordinates.height}px`;
+            let beamOverlay = document.createElement("div");
+            beamOverlay.classList.add("beam-overlay");
 
-                let progress = parseInt(beam.Progress) || 0;
-                beamOverlay.style.backgroundColor = progress >= 100 ? "green" : progress >= 50 ? "yellow" : "red";
+            beamOverlay.style.position = "absolute";
+            beamOverlay.style.left = `${beam.Coordinates.x}px`;
+            beamOverlay.style.top = `${beam.Coordinates.y}px`;
+            beamOverlay.style.width = `${beam.Coordinates.width}px`;
+            beamOverlay.style.height = `${beam.Coordinates.height}px`;
 
-                let imageContainer = document.getElementById("selectedImageContainer");
-                if (imageContainer) {
-                    imageContainer.appendChild(beamOverlay);
-                } else {
-                    console.warn(`⚠ No image container found for Beam_ID: ${beam.Beam_ID}`);
-                }
-            });
+            let progress = parseInt(beam.Progress) || 0;
+            beamOverlay.style.backgroundColor = progress >= 100 ? "green" : progress >= 50 ? "yellow" : "red";
 
-        console.log("✅ Beam overlays applied successfully.");
+            let imageContainer = document.getElementById("selectedImageContainer");
+            if (imageContainer) {
+                imageContainer.appendChild(beamOverlay);
+            } else {
+                console.warn(`⚠ No image container found for Beam_ID: ${beam.Beam_ID}`);
+            }
+        });
+
+        console.log(`✅ Applied ${filteredBeams.length} overlays for image: ${selectedImageURL}`);
+
     } catch (error) {
         console.error("❌ Error loading beam overlays:", error);
     }
 }
+
 
 // ✅ Function to update installation progress
 function updateProgress(data) {
