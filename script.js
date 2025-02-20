@@ -103,7 +103,6 @@ function updateProgress(data) {
         return;
     }
 
-    // ✅ Ensure progress bar elements exist before updating
     let progressBar = document.getElementById("progress-bar");
     let progressText = document.getElementById("progress-text");
 
@@ -112,14 +111,12 @@ function updateProgress(data) {
         return;
     }
 
-    // ✅ Calculate progress
     let installedBeams = data.filter(beam => parseInt(beam.Progress) === 100).length;
     let totalBeams = data.length;
     let progress = (installedBeams / totalBeams) * 100;
 
     console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress}%`);
 
-    // ✅ Update the progress bar without creating extra elements
     progressBar.style.width = progress + "%";
     progressText.innerText = progress.toFixed(1) + "%";
 }
