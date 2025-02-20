@@ -92,9 +92,17 @@ function displayImages(imageUrls, drawingName) {
         img.style.border = "1px solid #ccc";
         img.style.borderRadius = "5px";
         img.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.1)";
+        img.classList.add("selectable-image");
+
+        // ✅ Add click event to select an image
+        img.addEventListener("click", function () {
+            selectImage(url);
+        });
+
         imageContainer.appendChild(img);
     });
 }
+
 
 // ✅ Function to update installation progress
 function updateProgress(data) {
