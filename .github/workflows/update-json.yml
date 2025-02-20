@@ -18,9 +18,14 @@ jobs:
 
     - name: Fetch updated JSON from Google Drive
       run: |
-        FILE_ID="${{ 1fru8p2v4eEr_Bu7Tsr2_f_objKC7lTWZ }}"  # Secure way to store file ID
+        FILE_ID="1fru8p2v4eEr_Bu7Tsr2_f_objKC7lTWZ"  # Correctly formatted file ID
         FILENAME="data/drawings_data.json"
-        wget --no-check-certificate "https://docs.google.com/uc?export=download&id=$FILE_ID" -O $FILENAME
+        
+        # Try downloading using Google Drive's export link
+        wget --no-check-certificate "https://drive.google.com/uc?export=download&id=$FILE_ID" -O $FILENAME || {
+          echo "❌ Error: Failed to download JSON file!"
+          exit 1
+        }
 
     - name: Verify JSON file exists
       run: |
