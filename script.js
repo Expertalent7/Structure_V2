@@ -119,15 +119,19 @@ function updateProgress(data) {
     let installedBeams = data.filter(beam => parseInt(beam.Progress) === 100).length;
     let totalBeams = data.length;
     let progress = totalBeams > 0 ? (installedBeams / totalBeams) * 100 : 0;
-    
+
     console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress.toFixed(1)}%`);
 
-    // ✅ Force a visual update
-    progressBar.style.width = progress.toFixed(1) + "%";
-    progressText.innerText = progress.toFixed(1) + "%";
+    // ✅ Force JavaScript to apply the new width
+    requestAnimationFrame(() => {
+        progressBar.style.width = progress.toFixed(1) + "%";
+        progressText.innerText = progress.toFixed(1) + "%";
+    });
 
-    // ✅ Debug: Check if width is being applied
-    console.log("🔹 Updated progress-bar width:", progressBar.style.width);
+    // ✅ Debugging to check if width is really being set
+    setTimeout(() => {
+        console.log("🔍 Debug: Progress Bar Width After Update:", progressBar.style.width);
+    }, 500);
 }
 
 
