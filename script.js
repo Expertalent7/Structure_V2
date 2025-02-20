@@ -1,51 +1,67 @@
-sync function loadDrawings() {
-            try {
-                // ✅ Fetch data from JSON
-                const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
-                if (!response.ok) throw new Error("Failed to load drawings data!");
+document.addEventListener("DOMContentLoaded", function () {
+    loadDrawings();
 
-                const data = await response.json();
-                const selectElement = document.getElementById("drawingSelect");
+    const drawingSelect = document.getElementById("drawingSelect");
+    if (drawingSelect) {
+        drawingSelect.addEventListener("change", updateSelectedImage);
+    }
+});
 
-                if (!selectElement) {
-                    console.error("❌ Error: Select element not found!");
-                    return;
-                }
+// ✅ Function to load drawings dynamically
+async function loadDrawings() {
+    try {
+        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
+        if (!response.ok) throw new Error("Failed to load drawings data!");
 
-                // ✅ Clear previous entries and add default option
-                selectElement.innerHTML = '<option value="">Select a drawing...</option>';
+        const data = await response.json();
+        const selectElement = document.getElementById("drawingSelect");
 
-                data.forEach(drawing => {
-                    let option = document.createElement("option");
-                    option.value = drawing["Images"][0]; // Set the first image as default value
-                    option.textContent = drawing["Drawing Name"];
-                    selectElement.appendChild(option);
-                });
-
-            } catch (error) {
-                console.error("❌ Error loading drawings:", error);
-            }
+        if (!selectElement) {
+            console.error("❌ Error: Select element not found!");
+            return;
         }
 
-        function updateSelectedImage() {
-            const dropdown = document.getElementById("drawingSelect");
-            const selectedImage = document.getElementById("selectedImage");
-            const imageContainer = document.getElementById("selectedImageContainer");
-            const imageLink = document.getElementById("imageLink");
+        // ✅ Clear previous entries and add default option
+        selectElement.innerHTML = '<option value="">Select a drawing...</option>';
 
-            if (dropdown.value) {
-                selectedImage.src = dropdown.value;
-                imageLink.href = dropdown.value;
-                selectedImage.style.display = "block"; // Show image
-                imageContainer.style.display = "block";  // Show the image container
-            } else {
-                imageContainer.style.display = "none";  // Hide if no selection
-                selectedImage.style.display = "none";   // Hide the image
+        data.forEach(drawing => {
+            if (drawing["Images"] && drawing["Images"].length > 0) {
+                let option = document.createElement("option");
+                option.value = drawing["Images"][0]; // Set the first valid image
+                option.textContent = drawing["Drawing Name"];
+                selectElement.appendChild(option);
             }
-        }
+        });
 
-        document.addEventListener("DOMContentLoaded", loadDrawings);
+    } catch (error) {
+        console.error("❌ Error loading drawings:", error);
+    }
+}
 
+// ✅ Function to update selected image
+function updateSelectedImage() {
+    const dropdown = document.getElementById("drawingSelect");
+    const selectedImage = document.getElementById("selectedImage");
+    const imageContainer = document.getElementById("selectedImageContainer");
+    const imageLink = document.getElementById("imageLink");
+
+    if (dropdown.value && isValidImageURL(dropdown.value)) {
+        selectedImage.src = dropdown.value;
+        imageLink.href = dropdown.value;
+        selectedImage.style.display = "block"; // Show image
+        imageContainer.style.display = "block";  // Show the image container
+    } else {
+        imageContainer.style.display = "none";  // Hide if no selection
+        selectedImage.style.display = "none";   // Hide the image
+    }
+}
+
+// ✅ Function to check if a URL is a valid image
+function isValidImageURL(url) {
+    return url.includes("googleusercontent.com") || url.includes(".jpg") || url.includes(".png");
+}
+
+// ✅ Function to fetch and process beam status
 async function loadBeamStatus() {
     try {
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json");
@@ -59,6 +75,7 @@ async function loadBeamStatus() {
     }
 }
 
+// ✅ Function to handle drawing selection and display images
 function handleDrawingChange(selectedDrawingName, data) {
     if (!selectedDrawingName) {
         console.warn("⚠ No drawing selected.");
@@ -72,7 +89,7 @@ function handleDrawingChange(selectedDrawingName, data) {
     }
 
     // ✅ Ensure only valid image URLs are used
-    const validImages = selectedDrawing["Images"].filter(url => url.includes("googleusercontent.com") || url.includes(".jpg"));
+    const validImages = selectedDrawing["Images"].filter(url => isValidImageURL(url));
 
     if (validImages.length === 0) {
         console.warn("⚠ No valid images found for this drawing.");
@@ -82,6 +99,7 @@ function handleDrawingChange(selectedDrawingName, data) {
     loadBeamStatus();
 }
 
+// ✅ Function to display images for a selected drawing
 function displayImages(imageUrls, drawingName) {
     const imageContainer = document.getElementById("beamContainer");
 
@@ -100,8 +118,7 @@ function displayImages(imageUrls, drawingName) {
     imageUrls.forEach((url, index) => {
         let img = document.createElement("img");
 
-        // ✅ Ensure we are not mistakenly trying to load a folder ID
-        if (!url.includes("googleusercontent.com") && !url.includes(".jpg")) {
+        if (!isValidImageURL(url)) {
             console.warn(`⚠ Skipping invalid entry: ${url}`);
             return;
         }
@@ -125,7 +142,7 @@ function displayImages(imageUrls, drawingName) {
     console.log(`✅ Loaded ${imageUrls.length} images for ${drawingName}`);
 }
 
-
+// ✅ Function to update selected image and prevent folder IDs
 function selectImage(imageUrl, drawingName) {
     const selectedImageContainer = document.getElementById("selectedImageContainer");
     const selectedImage = document.getElementById("selectedImage");
@@ -136,77 +153,19 @@ function selectImage(imageUrl, drawingName) {
         return;
     }
 
-    // ✅ If the URL is a Google Drive FOLDER ID, prevent opening it as an image
-    if (imageUrl.includes("drive.google.com") || imageUrl.length === 33) {
-        console.error("❌ Error: Cannot open Google Drive folder directly as an image.");
-        alert("Selected item is a Google Drive folder, not an image!");
+    if (!isValidImageURL(imageUrl)) {
+        console.error("❌ Error: Cannot open invalid image URL.");
+        alert("Invalid image URL!");
         return;
     }
 
-    // ✅ Set the correct image path
     selectedImage.src = imageUrl;
     imageLink.href = imageUrl;
     imageLink.target = "_blank";
     selectedImageContainer.style.display = "block";
 }
 
-
-async function loadBeamOverlays(drawingName) {
-    try {
-        console.log(`🔍 Loading beam data for: ${drawingName}`);
-
-        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json");
-        if (!response.ok) throw new Error(`Failed to load beam data! HTTP Status: ${response.status}`);
-
-        const beams = await response.json();
-        if (!Array.isArray(beams)) throw new Error("Invalid JSON format: Expected an array.");
-
-        let overlayContainer = document.getElementById("overlayContainer");
-        if (!overlayContainer) {
-            overlayContainer = document.createElement("div");
-            overlayContainer.id = "overlayContainer";
-            document.body.appendChild(overlayContainer);
-        }
-
-        overlayContainer.innerHTML = "";
-
-        beams.forEach(beam => {
-            if (!beam.Coordinates || beam.Coordinates.x === undefined || beam.Coordinates.y === undefined) {
-                console.error(`❌ Skipping beam due to missing coordinates:`, beam);
-                return;
-            }
-
-            const x = parseFloat(beam.Coordinates.x);
-            const y = parseFloat(beam.Coordinates.y);
-            const width = parseFloat(beam.Coordinates.width) || 10;
-            const height = parseFloat(beam.Coordinates.height) || 10;
-
-            if (isNaN(x) || isNaN(y)) {
-                console.error(`❌ Invalid numerical coordinates for beam:`, beam);
-                return;
-            }
-
-            let beamDiv = document.createElement("div");
-            beamDiv.classList.add("beam-overlay");
-
-            beamDiv.style.position = "absolute";
-            beamDiv.style.left = `${x}px`;
-            beamDiv.style.top = `${y}px`;
-            beamDiv.style.width = `${width}px`;
-            beamDiv.style.height = `${height}px`;
-
-            let progress = parseInt(beam.Progress) || 0;
-            beamDiv.style.backgroundColor = progress >= 100 ? "green" : progress >= 50 ? "yellow" : "red";
-
-            overlayContainer.appendChild(beamDiv);
-        });
-
-        console.log("✅ Beam overlays loaded successfully.");
-    } catch (error) {
-        console.error("❌ Error loading beam overlays:", error);
-    }
-}
-
+// ✅ Function to update installation progress
 function updateProgress(data) {
     if (!data || data.length === 0) {
         console.warn("⚠ No beam data found!");
