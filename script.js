@@ -58,13 +58,16 @@ function handleDrawingChange(selectedDrawingName, data) {
         return;
     }
 
-    // ✅ Ensure we only use valid image URLs
+    // ✅ Ensure only valid image URLs are used
     const validImages = selectedDrawing["Images"].filter(url => url.includes("googleusercontent.com") || url.includes(".jpg"));
+
+    if (validImages.length === 0) {
+        console.warn("⚠ No valid images found for this drawing.");
+    }
 
     displayImages(validImages, selectedDrawing["Drawing Name"]);
     loadBeamStatus();
 }
-
 
 function displayImages(imageUrls, drawingName) {
     const imageContainer = document.getElementById("beamContainer");
@@ -84,10 +87,10 @@ function displayImages(imageUrls, drawingName) {
     imageUrls.forEach((url, index) => {
         let img = document.createElement("img");
 
-        // ✅ Skip Folder ID if mistakenly included
-        if (url.length === 33 && !url.includes("googleusercontent.com")) {
-            console.warn(`⚠ Skipping folder ID in image list: ${url}`);
-            return; // Prevents the 404 request
+        // ✅ Ensure we are not mistakenly trying to load a folder ID
+        if (!url.includes("googleusercontent.com") && !url.includes(".jpg")) {
+            console.warn(`⚠ Skipping invalid entry: ${url}`);
+            return;
         }
 
         img.src = url;
@@ -105,9 +108,9 @@ function displayImages(imageUrls, drawingName) {
 
         imageContainer.appendChild(img);
     });
+
+    console.log(`✅ Loaded ${imageUrls.length} images for ${drawingName}`);
 }
-
-
 
 
 function selectImage(imageUrl, drawingName) {
