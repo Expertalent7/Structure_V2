@@ -141,9 +141,9 @@ function selectImage(imageUrl, drawingName) {
 }
 
 // ✅ Apply Overlays
-async function loadBeamOverlays(imageId) {
+async function loadBeamOverlays(selectedImageURL) {
     try {
-        console.log(`🔍 Fetching beam data for image ID: ${imageId}`);
+        console.log(`🔍 Fetching beam data for image ID: ${selectedImageURL}`);
 
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json");
         if (!response.ok) throw new Error("Failed to load beam data!");
@@ -155,12 +155,17 @@ async function loadBeamOverlays(imageId) {
             console.error("❌ Error: Overlay container not found!");
             return;
         }
+        
+        overlayContainer.innerHTML = ""; // ✅ Clear previous overlays
 
-        overlayContainer.innerHTML = "";
+        // ✅ Filter beams by Image_ID
+        const filteredBeams = beamsData.filter(beam => beam.Image_ID === selectedImageURL);
 
-        const filteredBeams = beamsData.filter(beam => beam.Image_ID === imageId);
+        console.log(`✅ Found ${filteredBeams.length} beams linked to this image.`); // Debug log
 
         filteredBeams.forEach(beam => {
+            console.log(`🟢 Beam found: ${beam.Beam_ID} | X: ${beam.Coordinates.x}, Y: ${beam.Coordinates.y}`);
+
             if (!beam.Coordinates || !beam.Coordinates.x || !beam.Coordinates.y) {
                 console.warn(`⚠ Skipping beam ${beam.Beam_ID} due to missing coordinates`);
                 return;
@@ -186,9 +191,10 @@ async function loadBeamOverlays(imageId) {
             }
         });
 
-        console.log(`✅ Applied ${filteredBeams.length} overlays for image ID: ${imageId}`);
+        console.log(`✅ Applied ${filteredBeams.length} overlays for image: ${selectedImageURL}`);
 
     } catch (error) {
         console.error("❌ Error loading beam overlays:", error);
     }
 }
+
