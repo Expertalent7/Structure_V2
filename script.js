@@ -1,7 +1,5 @@
-// ✅ Function to load available drawings into the dropdown
 async function loadDrawings() {
     try {
-        // ✅ Fetch Drawings JSON
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
         if (!response.ok) throw new Error("Failed to load drawings data!");
 
@@ -13,18 +11,15 @@ async function loadDrawings() {
             return;
         }
 
-        // ✅ Clear previous entries and add default option
         selectElement.innerHTML = '<option value="">Select a drawing...</option>';
 
-        // ✅ Populate dropdown correctly
         data.forEach(drawing => {
             let option = document.createElement("option");
-            option.value = drawing["Folder ID"]; // Ensure it matches your data structure
+            option.value = drawing["Folder ID"];
             option.textContent = drawing["Drawing Name"];
             selectElement.appendChild(option);
         });
 
-        // ✅ Attach event listener to handle selection changes
         selectElement.removeEventListener("change", handleDrawingChange);
         selectElement.addEventListener("change", function () {
             handleDrawingChange(this.value, data);
@@ -35,10 +30,9 @@ async function loadDrawings() {
     }
 }
 
-// ✅ Function to fetch and process beam status
 async function loadBeamStatus() {
     try {
-        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json"); // Adjust filename if needed
+        const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json");
         if (!response.ok) throw new Error("Failed to load beam status data!");
 
         const data = await response.json();
@@ -49,7 +43,6 @@ async function loadBeamStatus() {
     }
 }
 
-// ✅ Function to handle drawing selection and display images
 function handleDrawingChange(selectedFolder, data) {
     if (!selectedFolder) {
         console.warn("⚠ No drawing selected.");
@@ -63,10 +56,9 @@ function handleDrawingChange(selectedFolder, data) {
     }
 
     displayImages(selectedDrawing["Images"], selectedDrawing["Drawing Name"]);
-    loadBeamStatus(); // ✅ Force progress update after drawing selection
+    loadBeamStatus();
 }
 
-// ✅ Function to display images for a selected drawing
 function displayImages(imageUrls, drawingName) {
     const imageContainer = document.getElementById("beamContainer");
 
@@ -75,7 +67,7 @@ function displayImages(imageUrls, drawingName) {
         return;
     }
 
-    imageContainer.innerHTML = ""; // Clear previous images
+    imageContainer.innerHTML = "";
 
     if (!imageUrls || imageUrls.length === 0) {
         imageContainer.innerHTML = "<p>⚠ No images found for this drawing.</p>";
@@ -84,7 +76,7 @@ function displayImages(imageUrls, drawingName) {
 
     imageUrls.forEach((url, index) => {
         let img = document.createElement("img");
-        img.src = `https://expertalent7.github.io/Structure_V2/data/images/${url}`; // ✅ Ensures correct path
+        img.src = url;
         img.alt = `${drawingName} - Image ${index + 1}`;
         img.style.width = "150px";
         img.style.margin = "5px";
@@ -93,16 +85,14 @@ function displayImages(imageUrls, drawingName) {
         img.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.1)";
         img.classList.add("selectable-image");
 
-        // ✅ Click event to select an image
         img.addEventListener("click", function () {
-            selectImage(img.src, drawingName);
+            selectImage(url, drawingName);
         });
 
         imageContainer.appendChild(img);
     });
 }
 
-// ✅ Function to select an image and load overlays
 function selectImage(imageUrl, drawingName) {
     const selectedImageContainer = document.getElementById("selectedImageContainer");
     const selectedImage = document.getElementById("selectedImage");
@@ -112,25 +102,22 @@ function selectImage(imageUrl, drawingName) {
         return;
     }
 
-    selectedImage.src = imageUrl; // ✅ Update image source
+    selectedImage.src = imageUrl;
     selectedImageContainer.style.display = "block";
 
-    loadBeamOverlays(drawingName); // ✅ Load beam overlays
+    loadBeamOverlays(drawingName);
 }
 
-// ✅ Function to load and display beam overlays
 async function loadBeamOverlays(drawingName) {
     try {
         console.log(`🔍 Loading beam data for: ${drawingName}`);
 
-        // ✅ Fetch the JSON file
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json");
         if (!response.ok) throw new Error(`Failed to load beam data! HTTP Status: ${response.status}`);
 
         const beams = await response.json();
         if (!Array.isArray(beams)) throw new Error("Invalid JSON format: Expected an array.");
 
-        // ✅ Ensure overlayContainer exists
         let overlayContainer = document.getElementById("overlayContainer");
         if (!overlayContainer) {
             overlayContainer = document.createElement("div");
@@ -138,7 +125,6 @@ async function loadBeamOverlays(drawingName) {
             document.body.appendChild(overlayContainer);
         }
 
-        // ✅ Clear previous overlays
         overlayContainer.innerHTML = "";
 
         beams.forEach(beam => {
@@ -178,7 +164,6 @@ async function loadBeamOverlays(drawingName) {
     }
 }
 
-// ✅ Function to update installation progress
 function updateProgress(data) {
     if (!data || data.length === 0) {
         console.warn("⚠ No beam data found!");
@@ -197,17 +182,10 @@ function updateProgress(data) {
     let totalBeams = data.length;
     let progress = totalBeams > 0 ? (installedBeams / totalBeams) * 100 : 0;
 
-    console.log(`✅ Installed: ${installedBeams}, Total: ${totalBeams}, Progress: ${progress.toFixed(1)}%`);
-
     requestAnimationFrame(() => {
-        progressBar.style.width = progress.toFixed(1) + "%";
-        progressText.innerText = progress.toFixed(1) + "%";
+        progressBar.style.width = `${progress.toFixed(1)}%`;
+        progressText.innerText = `${progress.toFixed(1)}%`;
     });
-
-    setTimeout(() => {
-        console.log("🔍 Debug: Progress Bar Width After Update:", progressBar.style.width);
-    }, 500);
 }
 
-// ✅ Ensure function runs when the page loads
 document.addEventListener("DOMContentLoaded", loadDrawings);
