@@ -27,16 +27,22 @@ async function loadDrawings() {
         data.forEach(drawing => {
             if (drawing["Images"] && drawing["Images"].length > 0) {
                 let option = document.createElement("option");
-                option.value = drawing["Images"][0]; // Set the first valid image
+                option.value = drawing["Drawing Name"]; // Store Drawing Name
                 option.textContent = drawing["Drawing Name"];
                 selectElement.appendChild(option);
             }
+        });
+
+        // ✅ Attach event listener
+        selectElement.addEventListener("change", function () {
+            handleDrawingChange(this.value, data);
         });
 
     } catch (error) {
         console.error("❌ Error loading drawings:", error);
     }
 }
+
 
 // ✅ Function to update selected image
 function updateSelectedImage() {
@@ -88,16 +94,10 @@ function handleDrawingChange(selectedDrawingName, data) {
         return;
     }
 
-    // ✅ Ensure only valid image URLs are used
-    const validImages = selectedDrawing["Images"].filter(url => isValidImageURL(url));
-
-    if (validImages.length === 0) {
-        console.warn("⚠ No valid images found for this drawing.");
-    }
-
-    displayImages(validImages, selectedDrawing["Drawing Name"]);
-    loadBeamStatus();
+    // ✅ Display all images related to the drawing
+    displayImages(selectedDrawing["Images"], selectedDrawing["Drawing Name"]);
 }
+
 
 // ✅ Function to display images for a selected drawing
 function displayImages(imageUrls, drawingName) {
@@ -108,7 +108,7 @@ function displayImages(imageUrls, drawingName) {
         return;
     }
 
-    imageContainer.innerHTML = "";
+    imageContainer.innerHTML = ""; // ✅ Clear previous images
 
     if (!imageUrls || imageUrls.length === 0) {
         imageContainer.innerHTML = "<p>⚠ No images found for this drawing.</p>";
@@ -142,6 +142,7 @@ function displayImages(imageUrls, drawingName) {
     console.log(`✅ Loaded ${imageUrls.length} images for ${drawingName}`);
 }
 
+
 // ✅ Function to update selected image and prevent folder IDs
 function selectImage(imageUrl, drawingName) {
     const selectedImageContainer = document.getElementById("selectedImageContainer");
@@ -164,6 +165,7 @@ function selectImage(imageUrl, drawingName) {
     imageLink.target = "_blank";
     selectedImageContainer.style.display = "block";
 }
+
 
 // ✅ Function to update installation progress
 function updateProgress(data) {
