@@ -183,5 +183,18 @@
     "Progress": "100",
     "Scanned_By": "mounirkhaled9@gmail.com",
     "Timestamp": "2/18/2025 10:49:41 PM"
+  },
+  {
+    "Beam_ID": "beam a",
+    "Beam_Name": "beam a",
+    "Progress": "100",
+    "Scanned_By": "",
+    "Timestamp": "2/18/2025 10:37:22 PM",
+    "Coordinates": {
+      "x": "125",
+      "y": "158",
+      "width": "143",
+      "height": "7"
+    }
   }
 ]
