@@ -24,5 +24,20 @@
       "width": "94",
       "height": "5"
     }
+  },
+  {
+    "Beam_ID": "beam i",
+    "Beam_Name": "Beam I",
+    "Progress": "40",
+    "Scanned_By": "mounirkhaled9@gmail.com",
+    "Timestamp": "2/20/2025 1:15:51 PM",
+    "Drawing_Name": "",
+    "Image_ID": "1Yv_bfoX0Q882avXvyznfPXt7hqsPq2cq",
+    "Coordinates": {
+      "x": "310",
+      "y": "158",
+      "width": "142",
+      "height": "14"
+    }
   }
 ]
