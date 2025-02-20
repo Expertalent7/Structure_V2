@@ -35,7 +35,7 @@ body {
 
 /* ✅ Progress Bar Styling */
 .progress-container {
-    width: 50%;
+    width: 100%;
     max-width: 400px;
     background-color: #ccc;
     border-radius: 5px;
@@ -45,16 +45,16 @@ body {
 }
 
 #progress-bar {
-    width: 0%;
     height: 20px;
-    background: green;
+    background-color: green;
     text-align: center;
     color: white;
     line-height: 20px;
     font-weight: bold;
-    transition: width 0.3s ease-in-out;
-    position: relative;
+    transition: width 0.3s ease-in-out; /* ✅ Smooth animation */
+    min-width: 2%; /* ✅ Prevents the bar from being stuck */
 }
+
 
 /* ✅ Fix alignment of progress text */
 #progress-text {
