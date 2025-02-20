@@ -15,13 +15,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Ensures full commit history for rebase
 
     - name: Fetch updated JSON from Google Drive
       run: |
-        FILE_ID="1jF_li2ZvXB3lD4HiqFsp-0Mh5Frb_Hb5"  # ✅ Ensure this file ID is correct
+        FILE_ID="1jF_li2ZvXB3lD4HiqFsp-0Mh5Frb_Hb5"
         FILENAME="data/drawings_data.json"
         
-        # ✅ Download JSON file
         wget --no-check-certificate "https://drive.google.com/uc?export=download&id=$FILE_ID" -O $FILENAME || {
           echo "❌ Error: Failed to download JSON file!"
           exit 1
@@ -44,20 +45,22 @@ jobs:
           exit 1
         fi
 
-    - name: Pull latest changes from GitHub before pushing
+    - name: Configure Git
       run: |
         git config --global user.email "github-actions@github.com"
         git config --global user.name "github-actions"
-        git pull --rebase origin main || echo "⚠ No changes to pull"
+
+    - name: Pull latest changes from GitHub
+      run: |
+        git pull --rebase --autostash origin main || echo "⚠ No changes to pull"
 
     - name: Commit and push if changed
       run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@github.com"
-        
         git add data/drawings_data.json
         git commit -m "Updated JSON - $(date +'%Y-%m-%d %H:%M:%S')" || exit 0
 
-        # ✅ Ensure the local branch is up-to-date before pushing
-        git pull --rebase origin main
-        git push origin main
+        # ✅ Merge strategy to prevent conflicts
+        git pull --rebase origin main || git merge --strategy-option=ours origin/main
+
+        # ✅ Push changes to main
+        git push origin main || echo "⚠ No changes to push"
