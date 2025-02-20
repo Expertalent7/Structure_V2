@@ -18,7 +18,7 @@ jobs:
 
     - name: Fetch updated JSON from Google Drive
       run: |
-        FILE_ID="1fru8p2v4eEr_Bu7Tsr2_f_objKC7lTWZ"  # Correctly formatted file ID
+        FILE_ID="10ljqsdNYSu6yASH1MwLXlk8Qq6Uxz1QM"  # Correctly formatted file ID
         FILENAME="data/drawings_data.json"
         
         # Try downloading using Google Drive's export link
