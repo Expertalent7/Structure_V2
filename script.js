@@ -56,13 +56,10 @@ function handleDrawingChange(selectedDrawingName) {
                 return;
             }
 
-            // ✅ Display images for the selected drawing
             displayImages(selectedDrawing["Images"], selectedDrawing["Drawing Name"]);
-
         })
         .catch(error => console.error("❌ Error loading drawing data:", error));
 }
-
 
 // ✅ Display Images & Ensure Proper Overlay Management
 function displayImages(imageUrls, drawingName) {
@@ -128,20 +125,25 @@ function selectImage(imageUrl, drawingName) {
     }
 
     selectedImage.src = imageUrl;
+    selectedImage.dataset.imageId = extractImageID(imageUrl); // ✅ Extract Image_ID
     imageLink.href = imageUrl;
     imageLink.target = "_blank";
     selectedImageContainer.style.display = "block";
     selectedImage.style.display = "block"; // ✅ Ensure the image is visible
 
-    // ✅ Load overlays for the selected image
-    loadBeamOverlays(imageUrl);
+    loadBeamOverlays(selectedImage.dataset.imageId);
 }
 
+// ✅ Extract Image ID from Google Image URL
+function extractImageID(imageUrl) {
+    const match = imageUrl.match(/\/d\/([^/]+)/);
+    return match ? match[1] : null;
+}
 
 // ✅ Load & Display Beams Overlays for Selected Image
-async function loadBeamOverlays(selectedImageURL) {
+async function loadBeamOverlays(imageId) {
     try {
-        console.log(`🔍 Fetching beam data for image: ${selectedImageURL}`);
+        console.log(`🔍 Fetching beam data for image ID: ${imageId}`);
 
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/beams-data.json");
         if (!response.ok) throw new Error("Failed to load beam data!");
@@ -153,11 +155,11 @@ async function loadBeamOverlays(selectedImageURL) {
             console.error("❌ Error: Overlay container not found!");
             return;
         }
-        
+
         overlayContainer.innerHTML = ""; // ✅ Clear previous overlays before applying new ones
 
         // ✅ Filter beams by Image_ID
-        const filteredBeams = beamsData.filter(beam => beam.Image_ID === selectedImageURL);
+        const filteredBeams = beamsData.filter(beam => beam.Image_ID === imageId);
 
         filteredBeams.forEach(beam => {
             if (!beam.Coordinates || !beam.Coordinates.x || !beam.Coordinates.y) {
@@ -185,35 +187,9 @@ async function loadBeamOverlays(selectedImageURL) {
             }
         });
 
-        console.log(`✅ Applied ${filteredBeams.length} overlays for image: ${selectedImageURL}`);
+        console.log(`✅ Applied ${filteredBeams.length} overlays for image ID: ${imageId}`);
 
     } catch (error) {
         console.error("❌ Error loading beam overlays:", error);
     }
-}
-
-
-// ✅ Function to update installation progress
-function updateProgress(data) {
-    if (!data || data.length === 0) {
-        console.warn("⚠ No beam data found!");
-        return;
-    }
-
-    let progressBar = document.getElementById("progress-bar");
-    let progressText = document.getElementById("progress-text");
-
-    if (!progressBar || !progressText) {
-        console.error("❌ Error: Progress bar or progress text not found in the HTML!");
-        return;
-    }
-
-    let installedBeams = data.filter(beam => parseInt(beam.Progress) === 100).length;
-    let totalBeams = data.length;
-    let progress = totalBeams > 0 ? (installedBeams / totalBeams) * 100 : 0;
-
-    requestAnimationFrame(() => {
-        progressBar.style.width = `${progress.toFixed(1)}%`;
-        progressText.innerText = `${progress.toFixed(1)}%`;
-    });
 }
