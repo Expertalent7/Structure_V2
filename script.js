@@ -46,21 +46,25 @@ async function loadBeamStatus() {
     }
 }
 
-function handleDrawingChange(selectedFolder, data) {
-    if (!selectedFolder) {
+function handleDrawingChange(selectedDrawingName, data) {
+    if (!selectedDrawingName) {
         console.warn("⚠ No drawing selected.");
         return;
     }
 
-    const selectedDrawing = data.find(d => d["Folder ID"] === selectedFolder);
+    const selectedDrawing = data.find(d => d["Drawing Name"] === selectedDrawingName);
     if (!selectedDrawing) {
-        console.warn("⚠ No drawing found for the selected folder.");
+        console.warn("⚠ No drawing found for the selected name.");
         return;
     }
 
-    displayImages(selectedDrawing["Images"], selectedDrawing["Drawing Name"]);
+    // ✅ Ensure we only use valid image URLs
+    const validImages = selectedDrawing["Images"].filter(url => url.includes("googleusercontent.com") || url.includes(".jpg"));
+
+    displayImages(validImages, selectedDrawing["Drawing Name"]);
     loadBeamStatus();
 }
+
 
 function displayImages(imageUrls, drawingName) {
     const imageContainer = document.getElementById("beamContainer");
@@ -80,10 +84,10 @@ function displayImages(imageUrls, drawingName) {
     imageUrls.forEach((url, index) => {
         let img = document.createElement("img");
 
-        // ✅ If the URL is a folder ID (not an actual image), skip it
+        // ✅ Skip Folder ID if mistakenly included
         if (url.length === 33 && !url.includes("googleusercontent.com")) {
-            console.warn(`⚠ Skipping folder ID: ${url}`);
-            return; // Skip invalid entries
+            console.warn(`⚠ Skipping folder ID in image list: ${url}`);
+            return; // Prevents the 404 request
         }
 
         img.src = url;
@@ -102,6 +106,7 @@ function displayImages(imageUrls, drawingName) {
         imageContainer.appendChild(img);
     });
 }
+
 
 
 
