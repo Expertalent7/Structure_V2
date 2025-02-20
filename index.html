@@ -11,6 +11,11 @@
     <script defer src="script.js"></script>
 </head>
 <body>
+<!-- ✅ Add new section for selected image -->
+<div id="selectedImageContainer" style="display: none; position: relative; margin-top: 20px;">
+    <img id="selectedImage" src="" alt="Selected Drawing" style="width: 100%; max-width: 600px;">
+    <div id="overlayContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+</div>
 
     <button id="darkModeToggle">🌙 Dark Mode</button>
 
