@@ -65,7 +65,11 @@ function handleDrawingChange(selectedFolder, data) {
     }
 
     displayImages(selectedDrawing["Images"], selectedDrawing["Drawing Name"]);
+
+    // ✅ Force progress update after drawing selection
+    loadBeamStatus();
 }
+
 
 // ✅ Function to display images for a selected drawing
 function displayImages(imageUrls, drawingName) {
