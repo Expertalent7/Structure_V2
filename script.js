@@ -132,6 +132,7 @@ function displayImages(imageUrls, drawingName) {
         img.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.1)";
         img.classList.add("selectable-image");
 
+        // ✅ Add Click Event to Select the Image
         img.addEventListener("click", function () {
             selectImage(url, drawingName);
         });
@@ -164,7 +165,9 @@ function selectImage(imageUrl, drawingName) {
     imageLink.href = imageUrl;
     imageLink.target = "_blank";
     selectedImageContainer.style.display = "block";
+    selectedImage.style.display = "block"; // ✅ Ensure the image is visible
 }
+
 
 
 // ✅ Function to update installation progress
