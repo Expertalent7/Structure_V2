@@ -77,10 +77,10 @@ function displayImages(imageUrls, drawingName) {
     imageUrls.forEach((url, index) => {
         let img = document.createElement("img");
 
-        // ✅ If URL contains Google Drive folder ID, prevent image loading
-        if (url.length === 33 || url.includes("drive.google.com/drive/folders/")) {
-            console.warn("⚠ Skipping folder ID in image list:", url);
-            return; // Skip folder IDs
+        // ✅ If the URL is a folder ID (not an actual image), skip it
+        if (url.length === 33 && !url.includes("googleusercontent.com")) {
+            console.warn(`⚠ Skipping folder ID: ${url}`);
+            return; // Skip invalid entries
         }
 
         img.src = url;
@@ -99,6 +99,7 @@ function displayImages(imageUrls, drawingName) {
         imageContainer.appendChild(img);
     });
 }
+
 
 
 function selectImage(imageUrl, drawingName) {
