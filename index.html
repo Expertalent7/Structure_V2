@@ -9,69 +9,29 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
     <script defer src="script.js"></script>
-
-    <style>
-        /* ✅ Improved Progress Bar Styling */
-        .progress-container {
-            width: 100%;
-            background-color: #ccc;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 10px;
-            position: relative;
-        }
-
-        #progress-bar {
-            width: 0%;
-            height: 20px;
-            background: green;
-            text-align: center;
-            color: white;
-            line-height: 20px;
-            font-weight: bold;
-            transition: width 0.3s ease-in-out;
-        }
-
-        /* ✅ Fix alignment of progress text */
-        #progress-text {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            top: 0;
-            font-weight: bold;
-            color: white;
-        }
-
-        #beamContainer {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-    </style>
 </head>
 <body>
 
-    <button id="darkModeToggle" class="toggle-btn">🌙 Dark Mode</button>
+    <button id="darkModeToggle">🌙 Dark Mode</button>
 
-    <h1>Beam Selection Tool</h1>
+    <div class="wrapper">
+        <h1>Beam Selection Tool</h1>
 
-    <select id="drawingSelect">
-        <option value="">Select a drawing...</option>
-    </select>
+        <select id="drawingSelect">
+            <option value="">Select a drawing...</option>
+        </select>
 
-    <div id="beamContainer"></div>
+        <div id="beamContainer"></div>
 
-    <h2>Installation Progress: <span id="progressValue">0%</span></h2>
+        <h2>Installation Progress: <span id="progress-text">0%</span></h2>
 
-    <!-- ✅ Fixed Progress Bar (Ensures JavaScript Works) -->
-    <div class="progress-container">
-        <div id="progress-bar">
-            <span id="progress-text">0%</span>
+        <!-- ✅ Fixed Progress Bar -->
+        <div class="progress-container">
+            <div id="progress-bar">0%</div>
         </div>
-    </div>
 
-    <p id="statusMessage">Loading beam status...</p>
+        <p id="statusMessage">Loading beam status...</p>
+    </div>
 
 </body>
 </html>
