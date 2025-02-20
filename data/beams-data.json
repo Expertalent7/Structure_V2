@@ -11,5 +11,18 @@
       "width": "94",
       "height": "5"
     }
+  },
+  {
+    "Beam_ID": "beam g",
+    "Beam_Name": "Beam G",
+    "Progress": "40",
+    "Scanned_By": "mounirkhaled9@gmail.com",
+    "Timestamp": "2/20/2025 12:12:42 PM",
+    "Coordinates": {
+      "x": "249",
+      "y": "300",
+      "width": "94",
+      "height": "5"
+    }
   }
 ]
