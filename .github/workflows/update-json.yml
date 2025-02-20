@@ -15,12 +15,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # ✅ Ensures full commit history for proper merging
 
     - name: Fetch updated JSON from Google Drive
       run: |
-        FILE_ID="10ljqsdNYSu6yASH1MwLXlk8Qq6Uxz1QM"  # ✅ Use permanent File ID
+        FILE_ID="1jF_li2ZvXB3lD4HiqFsp-0Mh5Frb_Hb5"  # ✅ Ensure this file ID is correct
         FILENAME="data/drawings_data.json"
         
         # ✅ Download JSON file
@@ -48,17 +46,12 @@ jobs:
 
     - name: Pull latest changes from GitHub before pushing
       run: |
-        git pull --rebase origin main || echo "✅ No conflicts, continuing..."
+        git config --global user.email "github-actions@github.com"
+        git config --global user.name "github-actions"
+        git pull --rebase origin main || echo "⚠ No changes to pull"
 
     - name: Commit and push if changed
       run: |
-        if git diff --quiet data/drawings_data.json; then
-          echo "✅ No changes detected in JSON file, skipping commit."
-          exit 0
-        fi
-
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@github.com"
         git add data/drawings_data.json
-        git commit -m "Updated JSON - $(date +'%Y-%m-%d %H:%M:%S')"
+        git commit -m "Updated JSON - $(date +'%Y-%m-%d %H:%M:%S')" || exit 0
         git push origin main
