@@ -39,6 +39,12 @@ async function loadDrawings() {
     }
 }
 
+// ✅ Function to check if a URL is a valid image
+function isValidImageURL(url) {
+    return url && (url.includes("googleusercontent.com") || url.includes(".jpg") || url.includes(".png"));
+}
+
+
 // ✅ Handle Image Selection
 function handleDrawingChange(selectedDrawingName) {
     if (!selectedDrawingName) {
