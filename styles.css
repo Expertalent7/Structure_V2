@@ -48,6 +48,7 @@ body {
 #progress-bar {
     height: 20px;
     width: 0%; /* ✅ Starts at 0 but updates */
+    min-width: 3%; /* ✅ Prevents very small values from being invisible */
     background-color: green;
     text-align: center;
     color: white;
@@ -65,9 +66,10 @@ body {
     text-align: center;
     font-weight: bold;
     color: white;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     z-index: 2;
-    left: 0;
-    top: 0;
 }
 
 /* ✅ Beam Container */
