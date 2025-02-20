@@ -18,7 +18,7 @@ jobs:
 
     - name: Fetch updated JSON from Google Drive
       run: |
-        FILE_ID="${{ secrets.GDRIVE_FILE_ID }}"  # Secure way to store file ID
+        FILE_ID="${{ 1fru8p2v4eEr_Bu7Tsr2_f_objKC7lTWZ }}"  # Secure way to store file ID
         FILENAME="data/drawings_data.json"
         wget --no-check-certificate "https://docs.google.com/uc?export=download&id=$FILE_ID" -O $FILENAME
 
