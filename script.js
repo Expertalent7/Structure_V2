@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// ✅ Load Drawings Dynamically
+// ✅ Load Drawings
 async function loadDrawings() {
     try {
         const response = await fetch("https://expertalent7.github.io/Structure_V2/data/drawings_data.json");
@@ -23,7 +23,6 @@ async function loadDrawings() {
             return;
         }
 
-        // ✅ Clear previous entries
         selectElement.innerHTML = '<option value="">Select a drawing...</option>';
 
         data.forEach(drawing => {
@@ -40,7 +39,7 @@ async function loadDrawings() {
     }
 }
 
-// ✅ Handle Image Selection & Show Overlay
+// ✅ Handle Image Selection
 function handleDrawingChange(selectedDrawingName) {
     if (!selectedDrawingName) {
         console.warn("⚠ No drawing selected.");
@@ -61,7 +60,7 @@ function handleDrawingChange(selectedDrawingName) {
         .catch(error => console.error("❌ Error loading drawing data:", error));
 }
 
-// ✅ Display Images & Ensure Proper Overlay Management
+// ✅ Display Images
 function displayImages(imageUrls, drawingName) {
     const imageContainer = document.getElementById("beamContainer");
 
@@ -70,7 +69,7 @@ function displayImages(imageUrls, drawingName) {
         return;
     }
 
-    imageContainer.innerHTML = ""; // ✅ Clear previous images
+    imageContainer.innerHTML = "";
 
     if (!imageUrls || imageUrls.length === 0) {
         imageContainer.innerHTML = "<p>⚠ No images found for this drawing.</p>";
@@ -102,12 +101,13 @@ function displayImages(imageUrls, drawingName) {
     console.log(`✅ Loaded ${imageUrls.length} images for ${drawingName}`);
 }
 
-// ✅ Validate Image URL
-function isValidImageURL(url) {
-    return url.includes("googleusercontent.com") || url.includes(".jpg") || url.includes(".png");
+// ✅ Extract Image_ID
+function extractImageID(imageUrl) {
+    const match = imageUrl.match(/\/d\/([^/]+)/);
+    return match ? match[1] : null;
 }
 
-// ✅ Select & Load Overlays
+// ✅ Select & Apply Overlays
 function selectImage(imageUrl, drawingName) {
     const selectedImageContainer = document.getElementById("selectedImageContainer");
     const selectedImage = document.getElementById("selectedImage");
@@ -125,22 +125,16 @@ function selectImage(imageUrl, drawingName) {
     }
 
     selectedImage.src = imageUrl;
-    selectedImage.dataset.imageId = extractImageID(imageUrl); // ✅ Extract Image_ID
+    selectedImage.dataset.imageId = extractImageID(imageUrl);
     imageLink.href = imageUrl;
     imageLink.target = "_blank";
     selectedImageContainer.style.display = "block";
-    selectedImage.style.display = "block"; // ✅ Ensure the image is visible
+    selectedImage.style.display = "block";
 
     loadBeamOverlays(selectedImage.dataset.imageId);
 }
 
-// ✅ Extract Image ID from Google Image URL
-function extractImageID(imageUrl) {
-    const match = imageUrl.match(/\/d\/([^/]+)/);
-    return match ? match[1] : null;
-}
-
-// ✅ Load & Display Beams Overlays for Selected Image
+// ✅ Apply Overlays
 async function loadBeamOverlays(imageId) {
     try {
         console.log(`🔍 Fetching beam data for image ID: ${imageId}`);
@@ -156,9 +150,8 @@ async function loadBeamOverlays(imageId) {
             return;
         }
 
-        overlayContainer.innerHTML = ""; // ✅ Clear previous overlays before applying new ones
+        overlayContainer.innerHTML = "";
 
-        // ✅ Filter beams by Image_ID
         const filteredBeams = beamsData.filter(beam => beam.Image_ID === imageId);
 
         filteredBeams.forEach(beam => {
