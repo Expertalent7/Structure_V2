@@ -54,5 +54,18 @@
       "width": "142",
       "height": "10"
     }
+  },
+  {
+    "Beam_ID": "beam a",
+    "Drawing_Name": "STC01-DTSK-SS10-L933P01-0002_B",
+    "Image_ID": "1Yv_bfoX0Q882avXvyznfPXt7hqsPq2cq",
+    "Progress": "100",
+    "Coordinates": {
+      "x": "125",
+      "y": "158",
+      "width": "143",
+      "height": "7"
+    },
+    "Timestamp": "2/21/2025 5:20:25 PM"
   }
 ]
